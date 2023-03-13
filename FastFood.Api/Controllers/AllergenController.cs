@@ -1,4 +1,5 @@
 ﻿using FastFood.Application.Allergen.Commands.CreateAllergen;
+using FastFood.Application.Allergen.Commands.UpdateAllergen;
 using FastFood.Application.Allergen.Queries.GetAllergenById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace FastFood.Api.Controllers
         public async Task<ActionResult> Create(CreateAllergenCommand command)
         {
             await _mediator.Send(command);
+
             return Ok();
         }
 
@@ -31,7 +33,23 @@ namespace FastFood.Api.Controllers
             {
                 Id = id
             });
+
             return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] AllergenDto dto)
+        {
+            var Request = new UpdateAllergenCommand()
+            {
+                Id = id,
+                Name = dto.Name,
+                Description = dto.Description
+            };
+            await _mediator.Send(Request);
+
+            return Ok();
         }
     }
 }

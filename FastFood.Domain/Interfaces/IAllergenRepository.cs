@@ -9,5 +9,7 @@ namespace FastFood.Domain.Interfaces
         Task<Allergen?> GetById(int id);
 
         Task<Allergen?> GetByName(string name);
+
+        Task Commit();
     }
 }

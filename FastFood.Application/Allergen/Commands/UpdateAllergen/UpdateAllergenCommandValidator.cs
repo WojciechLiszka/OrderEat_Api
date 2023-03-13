@@ -1,12 +1,16 @@
 ﻿using FastFood.Domain.Interfaces;
 using FluentValidation;
 
-namespace FastFood.Application.Allergen.Commands.CreateAllergen
+namespace FastFood.Application.Allergen.Commands.UpdateAllergen
 {
-    public class CreateAllergenCommandValidator : AbstractValidator<CreateAllergenCommand>
+    public class UpdateAllergenCommandValidator : AbstractValidator<UpdateAllergenCommand>
     {
-        public CreateAllergenCommandValidator(IAllergenRepository repository)
+        public UpdateAllergenCommandValidator(IAllergenRepository repository)
         {
+            RuleFor(c => c.Id)
+                .NotEmpty()
+                .NotNull()
+                .GreaterThan(0);
             RuleFor(c => c.Name)
                 .NotEmpty()
                 .NotNull()
