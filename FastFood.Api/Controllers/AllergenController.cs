@@ -47,6 +47,7 @@ namespace FastFood.Api.Controllers
                 Name = dto.Name,
                 Description = dto.Description
             };
+            
             await _mediator.Send(Request);
 
             return Ok();
