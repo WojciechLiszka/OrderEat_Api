@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Exceptions;
 using FastFood.Application.Allergen.Commands.CreateAllergen;
 using FastFood.Domain.Interfaces;
 using MediatR;

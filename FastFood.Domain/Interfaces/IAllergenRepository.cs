@@ -7,5 +7,7 @@ namespace FastFood.Domain.Interfaces
         Task Create(Allergen allergen);
 
         Task<Allergen?> GetById(int id);
+
+        Task<Allergen?> GetByName(string name);
     }
 }

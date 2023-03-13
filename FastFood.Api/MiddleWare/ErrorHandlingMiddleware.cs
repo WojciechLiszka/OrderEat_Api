@@ -1,8 +1,9 @@
-﻿namespace FastFood.Api.MiddleWare
+﻿using Domain.Exceptions;
+
+namespace FastFood.Api.MiddleWare
 {
     public class ErrorHandlingMiddleware : IMiddleware
     {
-        
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
@@ -14,7 +15,7 @@
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notFoundException.Message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync("Something went wrong");

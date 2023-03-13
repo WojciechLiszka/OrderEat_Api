@@ -27,6 +27,11 @@ namespace FastFood.Infrastructure.Repositories
             return result;
         }
 
-        
+        public async Task<Allergen?> GetByName(string name)
+        {
+            var result = await _dbContext.Allergens.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+
+            return result;
+        }
     }
 }
