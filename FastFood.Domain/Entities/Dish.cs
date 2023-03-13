@@ -13,5 +13,6 @@
 
         public List<Ingredient> BaseIngreedient { get; set; } = new List<Ingredient>();
         public List<SpecialDiet> AllowedDiets { get; set; } = new List<SpecialDiet>();
+        public List<Allergen> Allergens { get; set; } = new List<Allergen>();
     }
 }
