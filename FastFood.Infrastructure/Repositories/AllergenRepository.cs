@@ -19,10 +19,11 @@ namespace FastFood.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task Create(Allergen allergen)
+        public async Task<int> Create(Allergen allergen)
         {
             _dbContext.Allergens.Add(allergen);
             await _dbContext.SaveChangesAsync();
+            return allergen.Id;
         }
 
         public async Task<Allergen?> GetById(int id)

@@ -18,11 +18,11 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(CreateAllergenCommand command)
+        public async Task<ActionResult<string>> Create([FromQuery] CreateAllergenCommand command)
         {
-            await _mediator.Send(command);
+            var id = await _mediator.Send(command);
 
-            return Ok();
+            return Ok($"api/allergen/{id}");
         }
 
         [HttpGet]
@@ -39,7 +39,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] AllergenDto dto)
+        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] UpdateAllergenDto dto)
         {
             var Request = new UpdateAllergenCommand()
             {
@@ -47,7 +47,7 @@ namespace FastFood.Api.Controllers
                 Name = dto.Name,
                 Description = dto.Description
             };
-            
+
             await _mediator.Send(Request);
 
             return Ok();

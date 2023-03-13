@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FastFood.Application.Allergen.Commands.CreateAllergen
 {
-    public class CreateAllergenCommandHandler : IRequestHandler<CreateAllergenCommand>
+    public class CreateAllergenCommandHandler : IRequestHandler<CreateAllergenCommand,int>
     {
         private readonly IMapper _mapper;
         private readonly IAllergenRepository _repository;
@@ -15,10 +15,11 @@ namespace FastFood.Application.Allergen.Commands.CreateAllergen
             _repository = repository;
         }
 
-        public async Task Handle(CreateAllergenCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateAllergenCommand request, CancellationToken cancellationToken)
         {
             var allergen = _mapper.Map<Domain.Entities.Allergen>(request);
-            await _repository.Create(allergen);
+            var id=await _repository.Create(allergen);
+            return id;
         }
     }
 }

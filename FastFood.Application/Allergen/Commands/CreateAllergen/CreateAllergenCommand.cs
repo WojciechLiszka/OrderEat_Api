@@ -2,7 +2,7 @@
 
 namespace FastFood.Application.Allergen.Commands.CreateAllergen
 {
-    public class CreateAllergenCommand : AllergenDto, IRequest
+    public class CreateAllergenCommand : AllergenDto, IRequest<int>
     {
     }
 }
