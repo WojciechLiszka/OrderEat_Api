@@ -11,8 +11,10 @@
         public bool AllowedCustomization { get; set; }
         public bool IsAvilable { get; set; }
 
-        public List<Ingredient> BaseIngreedient { get; set; } = new List<Ingredient>();
-        public List<SpecialDiet> AllowedDiets { get; set; } = new List<SpecialDiet>();
-        public List<Allergen> Allergens { get; set; } = new List<Allergen>();
+        public Restaurant Restaurant { get; set; }
+
+        public List<Ingredient> BaseIngreedients { get; set; } = new List<Ingredient>();
+        public List<SpecialDiet> AllowedForDiets { get; set; } = new List<SpecialDiet>();
+        
     }
 }
