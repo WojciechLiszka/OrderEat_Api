@@ -7,8 +7,12 @@ namespace FastFood.Application.Mappings
     {
         public AllergenMappingProfile()
         {
-            CreateMap<Domain.Entities.Allergen, CreateAllergenCommand>()
+            CreateMap<CreateAllergenCommand, Domain.Entities.Allergen>();
+
+            CreateMap<AllergenDto, Domain.Entities.Allergen>()
                 .ReverseMap();
+
+                
         }
     }
 }
