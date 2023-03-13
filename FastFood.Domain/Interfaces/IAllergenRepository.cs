@@ -11,5 +11,7 @@ namespace FastFood.Domain.Interfaces
         Task<Allergen?> GetByName(string name);
 
         Task Commit();
+
+        Task Delete(Allergen allergen);
     }
 }

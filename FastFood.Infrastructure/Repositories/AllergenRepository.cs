@@ -39,5 +39,12 @@ namespace FastFood.Infrastructure.Repositories
 
             return result;
         }
+
+        public async Task Delete(Allergen allergen)
+        {
+            _dbContext.Allergens.Remove(allergen);
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

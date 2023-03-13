@@ -1,4 +1,5 @@
 ﻿using FastFood.Application.Allergen.Commands.CreateAllergen;
+using FastFood.Application.Allergen.Commands.DeleteAllergen;
 using FastFood.Application.Allergen.Commands.UpdateAllergen;
 using FastFood.Application.Allergen.Queries.GetAllergenById;
 using MediatR;
@@ -22,7 +23,7 @@ namespace FastFood.Api.Controllers
         {
             var id = await _mediator.Send(command);
 
-            return Ok($"api/allergen/{id}");
+            return Created($"api/allergen/{id}",null);
         }
 
         [HttpGet]
@@ -51,6 +52,17 @@ namespace FastFood.Api.Controllers
             await _mediator.Send(Request);
 
             return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
+        {
+            await _mediator.Send(new DeleteAllergenCommand() 
+            {
+                Id=id
+            });
+            return NoContent();
         }
     }
 }
