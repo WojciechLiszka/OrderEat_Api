@@ -46,5 +46,15 @@ namespace FastFood.Infrastructure.Repositories
 
             await _dbContext.SaveChangesAsync();
         }
+
+        public IQueryable<Allergen> Search(string? phrase)
+        {
+            var allergens = _dbContext
+                .Allergens
+                .Where(b => phrase == null
+                || b.Name.ToLower().Contains(phrase.ToLower())
+                || b.Description.ToLower().Contains(phrase.ToLower()));
+            return allergens;
+        }
     }
 }

@@ -13,5 +13,7 @@ namespace FastFood.Domain.Interfaces
         Task Commit();
 
         Task Delete(Allergen allergen);
+
+        IQueryable<Allergen> Search(string? phrase);
     }
 }
