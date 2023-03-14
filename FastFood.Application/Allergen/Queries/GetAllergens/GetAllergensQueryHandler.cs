@@ -10,10 +10,10 @@ namespace FastFood.Application.Allergen.Queries.GetAllergens
 {
     public class GetAllergensQueryHandler : IRequestHandler<GetAllergensQuery, PagedResult<AllergenDto>>
     {
-        private readonly IFastFoodRepository _repository;
+        private readonly IAllergenRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetAllergensQueryHandler(IFastFoodRepository repository, IMapper mapper)
+        public GetAllergensQueryHandler(IAllergenRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

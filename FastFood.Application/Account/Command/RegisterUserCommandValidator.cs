@@ -5,7 +5,7 @@ namespace FastFood.Application.Account.Command
 {
     public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
     {
-        public RegisterUserCommandValidator(IFastFoodRepository repository)
+        public RegisterUserCommandValidator(IAccountRepository repository)
         {
             RuleFor(x => x.Email)
                     .NotEmpty()

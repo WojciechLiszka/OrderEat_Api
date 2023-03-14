@@ -2,22 +2,18 @@
 
 namespace FastFood.Domain.Interfaces
 {
-    public interface IFastFoodRepository
+    public interface IAllergenRepository
     {
+        Task Commit();
+
         Task<int> Create(Allergen allergen);
+
+        Task Delete(Allergen allergen);
 
         Task<Allergen?> GetById(int id);
 
         Task<Allergen?> GetByName(string name);
 
-        Task Commit();
-
-        Task Delete(Allergen allergen);
-
         IQueryable<Allergen> Search(string? phrase);
-
-        bool EmailInUse(string email);
-
-        Task Register(User user);
     }
 }

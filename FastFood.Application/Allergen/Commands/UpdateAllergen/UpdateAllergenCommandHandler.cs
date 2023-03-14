@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Domain.Exceptions;
+﻿using Domain.Exceptions;
 using FastFood.Domain.Interfaces;
 using MediatR;
 
@@ -7,9 +6,9 @@ namespace FastFood.Application.Allergen.Commands.UpdateAllergen
 {
     public class UpdateAllergenCommandHandler : IRequestHandler<UpdateAllergenCommand>
     {
-        private readonly IFastFoodRepository _allergenrepository;
+        private readonly IAllergenRepository _allergenrepository;
 
-        public UpdateAllergenCommandHandler(IFastFoodRepository allergenrepository)
+        public UpdateAllergenCommandHandler(IAllergenRepository allergenrepository)
         {
             _allergenrepository = allergenrepository;
         }

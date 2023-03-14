@@ -7,10 +7,10 @@ namespace FastFood.Application.Account.Command
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
     {
-        private readonly IFastFoodRepository _repository;
+        private readonly IAccountRepository _repository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public RegisterUserCommandHandler(IFastFoodRepository repository,IPasswordHasher<User> passwordHasher)
+        public RegisterUserCommandHandler(IAccountRepository repository, IPasswordHasher<User> passwordHasher)
         {
             _repository = repository;
             _passwordHasher = passwordHasher;
@@ -23,7 +23,7 @@ namespace FastFood.Application.Account.Command
                 Email = request.Email
             };
 
-            var passwordhash=_passwordHasher.HashPassword(newUser, request.Password);
+            var passwordhash = _passwordHasher.HashPassword(newUser, request.Password);
 
             newUser.PasswordHash = passwordhash;
 

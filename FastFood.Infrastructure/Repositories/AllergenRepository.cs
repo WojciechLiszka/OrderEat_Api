@@ -5,21 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FastFood.Infrastructure.Repositories
 {
-    public class FastFoodRepository : IFastFoodRepository
+    public class AllergenRepository : IAllergenRepository
     {
         private readonly FastFoodDbContext _dbContext;
 
-            
-        
-
-        public async Task Register(User user)
-        {
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-            return;
-        }
-
-        public FastFoodRepository(FastFoodDbContext dbContext)
+        public AllergenRepository(FastFoodDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -66,9 +56,5 @@ namespace FastFood.Infrastructure.Repositories
                 || b.Description.ToLower().Contains(phrase.ToLower()));
             return allergens;
         }
-
-        public bool EmailInUse(string email)
-            => _dbContext.Users.Any(u => u.Email == email);
-
     }
 }

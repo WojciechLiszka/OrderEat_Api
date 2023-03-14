@@ -5,7 +5,7 @@ namespace FastFood.Application.Allergen.Commands.UpdateAllergen
 {
     public class UpdateAllergenDtoValidator:AbstractValidator<UpdateAllergenDto>
     {
-        public UpdateAllergenDtoValidator(IFastFoodRepository repository)
+        public UpdateAllergenDtoValidator(IAllergenRepository repository)
         {
             RuleFor(c => c.Name)
                 .NotEmpty()
