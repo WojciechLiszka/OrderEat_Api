@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FastFood.Domain.Interfaces;
+using FastFood.Infrastructure.Persistance;
 
 namespace FastFood.Infrastructure.Repositories
 {
-    internal class UserRepository
+    public class AccountRepository : IAccountRepository
     {
+        private readonly FastFoodDbContext _dbContext;
+
+        public AccountRepository(FastFoodDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
     }
 }
