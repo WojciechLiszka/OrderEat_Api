@@ -7,9 +7,9 @@ namespace FastFood.Application.Allergen.Commands.UpdateAllergen
 {
     public class UpdateAllergenCommandHandler : IRequestHandler<UpdateAllergenCommand>
     {
-        private readonly IAllergenRepository _allergenrepository;
+        private readonly IFastFoodRepository _allergenrepository;
 
-        public UpdateAllergenCommandHandler(IAllergenRepository allergenrepository)
+        public UpdateAllergenCommandHandler(IFastFoodRepository allergenrepository)
         {
             _allergenrepository = allergenrepository;
         }

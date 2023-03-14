@@ -6,9 +6,9 @@ namespace FastFood.Application.Allergen.Commands.DeleteAllergen
 {
     public class DeleteAllergenCommandHandler : IRequestHandler<DeleteAllergenCommand>
     {
-        private readonly IAllergenRepository _repository;
+        private readonly IFastFoodRepository _repository;
 
-        public DeleteAllergenCommandHandler(IAllergenRepository repository)
+        public DeleteAllergenCommandHandler(IFastFoodRepository repository)
         {
             _repository = repository;
         }

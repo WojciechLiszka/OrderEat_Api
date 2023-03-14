@@ -4,6 +4,7 @@ using FastFood.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FastFood.Infrastructure.Migrations
 {
     [DbContext(typeof(FastFoodDbContext))]
-    partial class FastFoodDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230314162933_fixed_User")]
+    partial class fixed_User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,7 +226,7 @@ namespace FastFood.Infrastructure.Migrations
                     b.Property<DateTime?>("DateofBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Dietid")
+                    b.Property<int>("Dietid")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -354,7 +357,9 @@ namespace FastFood.Infrastructure.Migrations
                 {
                     b.HasOne("FastFood.Domain.Entities.SpecialDiet", "Diet")
                         .WithMany()
-                        .HasForeignKey("Dietid");
+                        .HasForeignKey("Dietid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.OwnsOne("FastFood.Domain.Entities.UserContactDetails", "ContactDetails", b1 =>
                         {

@@ -1,14 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FastFood.Application.Account.Command;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
 {
     [ApiController]
-    public class AccountController
+    [Route("/api/account")]
+    public class AccountController : Controller
     {
-        [HttpPost]
-        public async Task Register()
-        {
+        private readonly IMediator _mediator;
 
+        public AccountController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<ActionResult> Register([FromQuery] RegisterUserCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

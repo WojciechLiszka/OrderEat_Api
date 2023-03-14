@@ -7,9 +7,9 @@ namespace FastFood.Application.Allergen.Commands.CreateAllergen
     public class CreateAllergenCommandHandler : IRequestHandler<CreateAllergenCommand,int>
     {
         private readonly IMapper _mapper;
-        private readonly IAllergenRepository _repository;
+        private readonly IFastFoodRepository _repository;
 
-        public CreateAllergenCommandHandler(IMapper mapper, IAllergenRepository repository)
+        public CreateAllergenCommandHandler(IMapper mapper, IFastFoodRepository repository)
         {
             _mapper = mapper;
             _repository = repository;

@@ -5,7 +5,7 @@ namespace FastFood.Application.Allergen.Commands.CreateAllergen
 {
     public class CreateAllergenCommandValidator : AbstractValidator<CreateAllergenCommand>
     {
-        public CreateAllergenCommandValidator(IAllergenRepository repository)
+        public CreateAllergenCommandValidator(IFastFoodRepository repository)
         {
             RuleFor(c => c.Name)
                 .NotEmpty()
