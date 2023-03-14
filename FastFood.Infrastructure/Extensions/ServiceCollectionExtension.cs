@@ -14,7 +14,7 @@ namespace FastFood.Infrastructure.Extensions
             services.AddDbContext<FastFoodDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("FastFood")));
 
             services.AddScoped<IAllergenRepository, AllergenRepository>();
-
+       
             services.AddScoped<IAccountRepository, AccountRepository>();
         }
     }
