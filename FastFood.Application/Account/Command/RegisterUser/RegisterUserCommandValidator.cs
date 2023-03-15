@@ -1,7 +1,7 @@
 ﻿using FastFood.Domain.Interfaces;
 using FluentValidation;
 
-namespace FastFood.Application.Account.Command
+namespace FastFood.Application.Account.Command.RegisterUser
 {
     public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
     {

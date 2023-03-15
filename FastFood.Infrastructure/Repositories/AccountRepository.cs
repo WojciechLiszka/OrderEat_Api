@@ -1,6 +1,7 @@
 ﻿using FastFood.Domain.Entities;
 using FastFood.Domain.Interfaces;
 using FastFood.Infrastructure.Persistance;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastFood.Infrastructure.Repositories
 {
@@ -22,5 +23,11 @@ namespace FastFood.Infrastructure.Repositories
 
         public bool EmailInUse(string email)
             => _dbContext.Users.Any(u => u.Email == email);
+
+        public async Task<User?> GetByEmail(string email)
+            => await _dbContext
+            .Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.Email == email);
     }
 }

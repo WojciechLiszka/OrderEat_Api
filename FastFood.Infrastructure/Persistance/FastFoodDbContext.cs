@@ -63,14 +63,14 @@ namespace FastFood.Infrastructure.Persistance
             modelBuilder.Entity<Ingredient>(eb =>
               {
                   eb.
-                  Property(e => e.Name) .
+                  Property(e => e.Name).
                   IsRequired()
-                  .HasMaxLength (50);
+                  .HasMaxLength(50);
 
                   eb.Property
                   (e => e.Description)
                   .IsRequired()
-                  .HasMaxLength (50);
+                  .HasMaxLength(50);
 
                   eb
                  .HasMany(c => c.Allergens)
@@ -79,7 +79,7 @@ namespace FastFood.Infrastructure.Persistance
             modelBuilder.Entity<User>(eb =>
             {
                 eb
-                .HasMany(c => c.Roles)
+                .HasOne(c => c.Role)
                 .WithMany(c => c.Users);
 
                 eb
@@ -123,7 +123,6 @@ namespace FastFood.Infrastructure.Persistance
                 .IsRequired()
                 .HasMaxLength(500);
             });
-
         }
     }
 }

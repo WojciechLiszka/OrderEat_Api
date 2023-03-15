@@ -3,7 +3,7 @@ using FastFood.Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace FastFood.Application.Account.Command
+namespace FastFood.Application.Account.Command.RegisterUser
 {
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand>
     {
@@ -20,7 +20,8 @@ namespace FastFood.Application.Account.Command
         {
             var newUser = new User()
             {
-                Email = request.Email
+                Email = request.Email,
+                Name = request.Name
             };
 
             var passwordhash = _passwordHasher.HashPassword(newUser, request.Password);

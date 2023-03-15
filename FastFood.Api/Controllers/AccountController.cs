@@ -1,4 +1,5 @@
 ﻿using FastFood.Application.Account.Command;
+using FastFood.Application.Account.Command.RegisterUser;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,14 @@ namespace FastFood.Api.Controllers
         {
             await _mediator.Send(command);
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult<string>> Login([FromQuery] LoginUserCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
         }
     }
 }
