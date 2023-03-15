@@ -40,6 +40,7 @@ namespace FastFood.Application.Account.Command.LoginUser
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.Name, $"{user.Name}"),
             };
             if (user.Role != null)

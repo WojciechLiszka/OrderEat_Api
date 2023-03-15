@@ -1,4 +1,4 @@
-﻿using Domain.Exceptions;
+﻿using Domain.Domain.Exceptions;
 
 namespace FastFood.Api.MiddleWare
 {

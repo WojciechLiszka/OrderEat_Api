@@ -1,4 +1,4 @@
-﻿using Domain.Exceptions;
+﻿using Domain.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
 using MediatR;
 
@@ -24,9 +24,8 @@ namespace FastFood.Application.Allergen.Commands.UpdateAllergen
 
             allergen.Name = request.Name;
             allergen.Description = request.Description;
-            await _allergenrepository.Commit();
 
-            return;
+            await _allergenrepository.Commit();
         }
     }
 }

@@ -3,7 +3,7 @@
     public class UserDto
     {
         public string Email { get; set; } = default!;
-        public string PasswordHash { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public DateTime DateofBirth { get; set; } = default!;
         public string ContactNumber { get; set; } = default!;
         public string Country { get; set; } = default!;

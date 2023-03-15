@@ -27,7 +27,13 @@ namespace FastFood.Infrastructure.Repositories
         public async Task<User?> GetByEmail(string email)
             => await _dbContext
             .Users
+            .Include(u => u.ContactDetails)
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Email == email);
+
+       public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

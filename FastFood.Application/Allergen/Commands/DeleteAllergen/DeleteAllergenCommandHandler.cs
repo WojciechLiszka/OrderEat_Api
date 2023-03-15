@@ -1,4 +1,4 @@
-﻿using Domain.Exceptions;
+﻿using Domain.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
 using MediatR;
 

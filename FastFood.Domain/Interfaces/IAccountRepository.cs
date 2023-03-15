@@ -9,5 +9,7 @@ namespace FastFood.Domain.Interfaces
         Task Register(User user);
 
         Task<User?> GetByEmail(string email);
+
+        Task Commit();
     }
 }

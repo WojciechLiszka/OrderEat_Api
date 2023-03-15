@@ -1,6 +1,8 @@
 ﻿using FastFood.Application.Account.Command;
 using FastFood.Application.Account.Command.RegisterUser;
+using FastFood.Application.Account.Command.UpdateUserDetails;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
@@ -30,6 +32,14 @@ namespace FastFood.Api.Controllers
         {
             var response = await _mediator.Send(command);
             return Ok(response);
+        }
+
+        [HttpPut]
+       // [Authorize]
+        public async Task<ActionResult> Update([FromQuery] UpdateUserDetailsCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }
