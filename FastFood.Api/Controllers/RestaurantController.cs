@@ -1,4 +1,5 @@
 ﻿using FastFood.Application.Restaurant.Commands.CreateRestaurant;
+using FastFood.Application.Restaurant.Commands.DeleteRestaurant;
 using FastFood.Application.Restaurant.Queries;
 using FastFood.Application.Restaurant.Queries.GetRestaurantById;
 using FastFood.Application.Restaurant.Queries.GetRestaurants;
@@ -43,6 +44,18 @@ namespace FastFood.Api.Controllers
         {
             var result = await _mediator.Send(query);
             return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("/api/restaurant/{id}")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
+        {
+            var request = new DeleteRestaurantCommand()
+            {
+                Id = id
+            };
+            await _mediator.Send(request);
+            return NoContent();
         }
     }
 }

@@ -11,5 +11,7 @@ namespace FastFood.Domain.Interfaces
         Task<Restaurant?> GetById(int id);
 
         IQueryable<Restaurant> Search(string? phrase);
+
+        Task Delete(Restaurant restaurant);
     }
 }
