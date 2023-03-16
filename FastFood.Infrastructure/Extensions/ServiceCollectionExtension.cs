@@ -16,6 +16,8 @@ namespace FastFood.Infrastructure.Extensions
             services.AddScoped<IAllergenRepository, AllergenRepository>();
        
             services.AddScoped<IAccountRepository, AccountRepository>();
+
+            services.AddScoped<IRestaurantRepository, RestaurantRepository>();
         }
     }
 }
