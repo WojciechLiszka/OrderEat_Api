@@ -11,5 +11,6 @@ namespace FastFood.Domain.Interfaces
         Task<User?> GetByEmail(string email);
 
         Task Commit();
+        Task Delete(User user);
     }
 }

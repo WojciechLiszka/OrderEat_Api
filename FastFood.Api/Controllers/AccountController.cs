@@ -1,8 +1,8 @@
 ﻿using FastFood.Application.Account.Command;
+using FastFood.Application.Account.Command.DeleteUser;
 using FastFood.Application.Account.Command.RegisterUser;
 using FastFood.Application.Account.Command.UpdateUserDetails;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
@@ -35,11 +35,17 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPut]
-       // [Authorize]
         public async Task<ActionResult> Update([FromQuery] UpdateUserDetailsCommand command)
         {
             await _mediator.Send(command);
             return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromQuery] DeleteUserCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
         }
     }
 }
