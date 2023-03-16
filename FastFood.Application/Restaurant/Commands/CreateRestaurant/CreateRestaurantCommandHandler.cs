@@ -1,6 +1,7 @@
 ﻿using FastFood.Domain.Interfaces;
 using MediatR;
 
+
 namespace FastFood.Application.Restaurant.Commands.CreateRestaurant
 {
     public class CreateRestaurantCommandHandler : IRequestHandler<CreateRestaurantCommand, string>

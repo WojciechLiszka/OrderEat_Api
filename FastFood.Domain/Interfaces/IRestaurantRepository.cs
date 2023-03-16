@@ -9,5 +9,7 @@ namespace FastFood.Domain.Interfaces
         Task<Restaurant?> GetByName(string name);
 
         Task<Restaurant?> GetById(int id);
+
+        IQueryable<Restaurant> Search(string? phrase);
     }
 }

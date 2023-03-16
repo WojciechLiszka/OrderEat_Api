@@ -1,6 +1,8 @@
 ﻿using FastFood.Application.Restaurant.Commands.CreateRestaurant;
 using FastFood.Application.Restaurant.Queries;
 using FastFood.Application.Restaurant.Queries.GetRestaurantById;
+using FastFood.Application.Restaurant.Queries.GetRestaurants;
+using FastFood.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +35,13 @@ namespace FastFood.Api.Controllers
                 Id = id
             };
             var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PagedResult<GetRestaurantDto>>> Get([FromQuery] GetRestaurantsQuery query)
+        {
+            var result = await _mediator.Send(query);
             return Ok(result);
         }
     }

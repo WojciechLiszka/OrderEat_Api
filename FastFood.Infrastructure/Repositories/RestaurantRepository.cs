@@ -31,5 +31,15 @@ namespace FastFood.Infrastructure.Repositories
             var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
             return restaurant;
         }
+
+        public IQueryable<Restaurant> Search(string? phrase)
+        {
+            var restaurants = _dbContext
+               .Restaurants
+               .Where(b => phrase == null
+               || b.Name.ToLower().Contains(phrase.ToLower())
+               || b.Description.ToLower().Contains(phrase.ToLower()));
+            return restaurants;
+        }
     }
 }
