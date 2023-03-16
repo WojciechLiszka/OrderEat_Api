@@ -7,5 +7,7 @@ namespace FastFood.Domain.Interfaces
         Task Create(Restaurant restaurant);
 
         Task<Restaurant?> GetByName(string name);
+
+        Task<Restaurant?> GetById(int id);
     }
 }

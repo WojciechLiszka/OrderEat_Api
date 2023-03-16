@@ -20,6 +20,12 @@ namespace FastFood.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<Restaurant?> GetById(int id)
+        {
+            var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(x => x.Id == id);
+            return restaurant;
+        }
+
         public async Task<Restaurant?> GetByName(string name)
         {
             var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
