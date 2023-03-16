@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FastFood.Application.Restaurant;
 using FastFood.Application.Restaurant.Queries;
 
 namespace FastFood.Application.Mappings
@@ -13,7 +12,8 @@ namespace FastFood.Application.Mappings
                 .ForMember(d => d.Country, opt => opt.MapFrom(src => src.ContactDetails.Country))
                 .ForMember(d => d.City, opt => opt.MapFrom(src => src.ContactDetails.City))
                 .ForMember(d => d.Street, opt => opt.MapFrom(src => src.ContactDetails.Street))
-                .ForMember(d => d.ApartmentNumber, opt => opt.MapFrom(src => src.ContactDetails.ApartmentNumber));
+                .ForMember(d => d.ApartmentNumber, opt => opt.MapFrom(src => src.ContactDetails.ApartmentNumber))
+                .ForMember(d => d.ContactNumber, opt => opt.MapFrom(src => src.ContactDetails.ContactNumber));
         }
     }
 }

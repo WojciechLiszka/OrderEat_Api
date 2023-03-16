@@ -1,5 +1,6 @@
 ﻿using FastFood.Application.Restaurant.Commands.CreateRestaurant;
 using FastFood.Application.Restaurant.Commands.DeleteRestaurant;
+using FastFood.Application.Restaurant.Commands.UpdateRestaurant;
 using FastFood.Application.Restaurant.Queries;
 using FastFood.Application.Restaurant.Queries.GetRestaurantById;
 using FastFood.Application.Restaurant.Queries.GetRestaurants;
@@ -56,6 +57,25 @@ namespace FastFood.Api.Controllers
             };
             await _mediator.Send(request);
             return NoContent();
+        }
+
+        [HttpPut]
+        [Route("/api/restaurant/{id}")]
+        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] UpdateRestaurantDto dto)
+        {
+            var request = new UpdateRestaurantCommand()
+            {
+                Id = id,
+                Description = dto.Description,
+                ContactNumber = dto.ContactNumber,
+                Email = dto.Email,
+                Country = dto.Country,
+                City = dto.City,
+                Street = dto.Street,
+                ApartmentNumber = dto.ApartmentNumber
+            };
+            await _mediator.Send(request);
+            return Ok();
         }
     }
 }
