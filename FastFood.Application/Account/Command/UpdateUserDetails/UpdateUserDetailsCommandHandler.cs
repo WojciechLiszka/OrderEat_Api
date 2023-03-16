@@ -37,6 +37,7 @@ namespace FastFood.Application.Account.Command.UpdateUserDetails
             {
                 // ToDo user.Role==new RoleUser
             }
+            await _repository.Commit();
         }
     }
 }
