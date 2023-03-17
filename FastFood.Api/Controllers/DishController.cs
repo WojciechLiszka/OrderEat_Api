@@ -1,5 +1,6 @@
 ﻿using FastFood.Application.Dish;
 using FastFood.Application.Dish.Command.CreateDish;
+using FastFood.Application.Dish.Command.UpdateDish;
 using FastFood.Application.Dish.Queries;
 using FastFood.Application.Dish.Queries.GedDishesFromRestaurant;
 using FastFood.Application.Dish.Queries.GetDishById;
@@ -52,6 +53,26 @@ namespace FastFood.Api.Controllers
             var dto = await _mediator.Send(request);
 
             return Ok(dto);
+        }
+
+        [HttpPut]
+        [Route("dish/{id}")]
+        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] DishDto dto)
+        {
+            var request = new UpdateDishCommand()
+            {
+                DishId = id,
+                Name = dto.Name,
+                Description = dto.Description,
+
+                BasePrize = dto.BasePrize,
+                BaseCaloricValue = dto.BaseCaloricValue,
+
+                AllowedCustomization = dto.AllowedCustomization,
+                IsAvilable = dto.IsAvilable
+            };
+            await _mediator.Send(request);
+            return Ok();
         }
 
         [HttpGet]

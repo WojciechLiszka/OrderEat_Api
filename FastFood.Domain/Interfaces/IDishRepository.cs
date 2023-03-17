@@ -4,6 +4,8 @@ namespace FastFood.Domain.Interfaces
 {
     public interface IDishRepository
     {
+        Task Commit();
+
         Task Create(Domain.Entities.Dish dish);
 
         Task<Dish> GetById(int id);
