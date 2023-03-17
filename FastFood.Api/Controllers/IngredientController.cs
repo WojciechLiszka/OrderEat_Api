@@ -1,5 +1,7 @@
 ﻿using FastFood.Application.Ingredient.Command;
 using FastFood.Application.Ingredient.Command.CreateIngredient;
+using FastFood.Application.Ingredient.Queries;
+using FastFood.Application.Ingredient.Queries.GetIngredientById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +34,18 @@ namespace FastFood.Api.Controllers
             var id = await _mediator.Send(request);
 
             return Created($"api/ingredient/{id}", null);
+        }
+
+        [HttpGet]
+        [Route("ingredient/{id}")]
+        public async Task<ActionResult<GetIngredientDto>> GetById([FromRoute] int id)
+        {
+            var request = new GetIngredientByIdCommand()
+            {
+                Id = id
+            };
+            var response = await _mediator.Send(request);
+            return Ok(response);
         }
     }
 }
