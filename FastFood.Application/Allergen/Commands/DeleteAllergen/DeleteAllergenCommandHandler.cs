@@ -18,7 +18,7 @@ namespace FastFood.Application.Allergen.Commands.DeleteAllergen
             var allergen = await _repository.GetById(request.Id);
             if (allergen == null)
             {
-                throw new NotFoundException("Domain not found");
+                throw new NotFoundException("Allergen not found");
             }
             await _repository.Delete(allergen);
         }
