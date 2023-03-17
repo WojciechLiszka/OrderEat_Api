@@ -1,9 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FastFood.Application.Ingredient.Command;
+using FastFood.Application.Ingredient.Command.CreateIngredient;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
 {
     [ApiController]
+    [Route("api")]
     public class IngredientController : Controller
     {
+        private readonly IMediator _mediator;
+
+        public IngredientController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        [Route("dish/{dishId}/ingredient")]
+        public async Task<ActionResult<string>> Create([FromRoute] int dishId, [FromQuery] IngredientDto dto)
+        {
+            var request = new CreateIngredientCommand()
+            {
+                DishId = dishId,
+                Name = dto.Name,
+                Description = dto.Description,
+                Prize = dto.Prize,
+                IsRequired = dto.IsRequired
+            };
+
+            var id = await _mediator.Send(request);
+
+            return Created($"api/ingredient/{id}", null);
+        }
     }
 }

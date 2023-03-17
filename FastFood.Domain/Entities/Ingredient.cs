@@ -3,7 +3,7 @@
     public class Ingredient
     {
         public int Id { get; set; }
-        public int Name { get; set; }
+        public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public int Prize { get; set; }
         public bool IsRequired { get; set; }
