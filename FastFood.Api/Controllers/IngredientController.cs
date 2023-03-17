@@ -1,5 +1,6 @@
 ﻿using FastFood.Application.Ingredient.Command;
 using FastFood.Application.Ingredient.Command.CreateIngredient;
+using FastFood.Application.Ingredient.Command.DeleteIngredient;
 using FastFood.Application.Ingredient.Queries;
 using FastFood.Application.Ingredient.Queries.GetIngredientById;
 using MediatR;
@@ -46,6 +47,18 @@ namespace FastFood.Api.Controllers
             };
             var response = await _mediator.Send(request);
             return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("ingredient/{id}")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
+        {
+            var request = new DeleteIngredientCommand()
+            {
+                Id = id
+            };
+            await _mediator.Send(request);
+            return NoContent();
         }
     }
 }

@@ -7,5 +7,7 @@ namespace FastFood.Domain.Interfaces
         Task Create(Ingredient ingredient);
 
         Task<Ingredient?> GetById(int Id);
+
+        Task Delete(Ingredient ingredient);
     }
 }
