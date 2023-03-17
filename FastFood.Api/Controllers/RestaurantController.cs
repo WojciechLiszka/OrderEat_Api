@@ -55,7 +55,9 @@ namespace FastFood.Api.Controllers
             {
                 Id = id
             };
+
             await _mediator.Send(request);
+
             return NoContent();
         }
 
@@ -74,7 +76,9 @@ namespace FastFood.Api.Controllers
                 Street = dto.Street,
                 ApartmentNumber = dto.ApartmentNumber
             };
+
             await _mediator.Send(request);
+
             return Ok();
         }
     }

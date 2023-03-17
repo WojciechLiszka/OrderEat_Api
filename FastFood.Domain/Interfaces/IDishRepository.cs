@@ -6,7 +6,9 @@ namespace FastFood.Domain.Interfaces
     {
         Task Commit();
 
-        Task Create(Domain.Entities.Dish dish);
+        Task Create(Dish dish);
+        
+        Task Delete(Dish dish);
 
         Task<Dish> GetById(int id);
 

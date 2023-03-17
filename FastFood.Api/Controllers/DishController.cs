@@ -1,5 +1,6 @@
 ﻿using FastFood.Application.Dish;
 using FastFood.Application.Dish.Command.CreateDish;
+using FastFood.Application.Dish.Command.DeleteDish;
 using FastFood.Application.Dish.Command.UpdateDish;
 using FastFood.Application.Dish.Queries;
 using FastFood.Application.Dish.Queries.GedDishesFromRestaurant;
@@ -37,7 +38,9 @@ namespace FastFood.Api.Controllers
                 AllowedCustomization = dto.AllowedCustomization,
                 IsAvilable = dto.IsAvilable,
             };
+
             var id = await _mediator.Send(request);
+
             return Created($"/api/restaurant/{restaurantid}/dish", null);
         }
 
@@ -71,7 +74,9 @@ namespace FastFood.Api.Controllers
                 AllowedCustomization = dto.AllowedCustomization,
                 IsAvilable = dto.IsAvilable
             };
+
             await _mediator.Send(request);
+
             return Ok();
         }
 
@@ -88,8 +93,24 @@ namespace FastFood.Api.Controllers
                 SortBy = dto.SortBy,
                 SortDirection = dto.SortDirection
             };
+
             var result = await _mediator.Send(request);
+
             return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("dish/{id}")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
+        {
+            var request = new DeleteDishCommand()
+            {
+                id = id
+            };
+
+            await _mediator.Send(request);
+
+            return NoContent();
         }
     }
 }

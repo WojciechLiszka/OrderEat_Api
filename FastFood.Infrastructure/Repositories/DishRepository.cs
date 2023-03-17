@@ -25,6 +25,12 @@ namespace FastFood.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task Delete(Dish dish)
+        {
+            _dbContext.Remove(dish);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<Dish> GetById(int id)
         {
             var dish = await _dbContext.Dishes.FirstOrDefaultAsync(d => d.Id == id);

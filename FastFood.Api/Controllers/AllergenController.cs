@@ -70,6 +70,7 @@ namespace FastFood.Api.Controllers
             {
                 Id = id
             });
+
             return NoContent();
         }
     }
