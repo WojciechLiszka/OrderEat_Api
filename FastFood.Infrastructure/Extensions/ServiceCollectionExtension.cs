@@ -20,6 +20,8 @@ namespace FastFood.Infrastructure.Extensions
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 
             services.AddScoped<IDishRepository, DishRepository>();
+
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
         }
     }
 }
