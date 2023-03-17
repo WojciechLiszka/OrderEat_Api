@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
 
-namespace FastFood.Application.Allergen.Queries.GetAllergens
+namespace FastFood.Application.Dish.Queries.GedDishesFromRestaurant
 {
-    public class GetAllergensQueryValidator : AbstractValidator<GetAllergensQuery>
+    public class GetDishesFromRestaurantQueryValidator : AbstractValidator<GetDishesFromRestaurantQuery>
     {
         private readonly int[] allowedPageSizes = new[] { 5, 10, 15 };
 
         private readonly string[] allowedSortByColumnNames =
-            {nameof(Domain.Entities.Allergen.Name), nameof(Domain.Entities.Allergen.Description)};
+            {nameof(Domain.Entities.Dish.Name), nameof(Domain.Entities.Dish.Description)};
 
-        public GetAllergensQueryValidator()
+        public GetDishesFromRestaurantQueryValidator()
         {
             RuleFor(r => r.PageNumber).GreaterThanOrEqualTo(1);
             RuleFor(r => r.PageSize).Custom((value, context) =>

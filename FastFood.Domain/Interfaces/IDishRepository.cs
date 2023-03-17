@@ -7,5 +7,7 @@ namespace FastFood.Domain.Interfaces
         Task Create(Domain.Entities.Dish dish);
 
         Task<Dish> GetById(int id);
+
+        IQueryable<Dish> Search(int id,string? phrase);
     }
 }

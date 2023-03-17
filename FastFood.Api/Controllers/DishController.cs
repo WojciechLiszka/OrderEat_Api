@@ -1,7 +1,9 @@
 ﻿using FastFood.Application.Dish;
 using FastFood.Application.Dish.Command.CreateDish;
 using FastFood.Application.Dish.Queries;
+using FastFood.Application.Dish.Queries.GedDishesFromRestaurant;
 using FastFood.Application.Dish.Queries.GetDishById;
+using FastFood.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,6 +52,23 @@ namespace FastFood.Api.Controllers
             var dto = await _mediator.Send(request);
 
             return Ok(dto);
+        }
+
+        [HttpGet]
+        [Route("/restaurant/{restaurantid}/dish")]
+        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
+        {
+            var request = new GetDishesFromRestaurantQuery()
+            {
+                RestaurantId = restaurantid,
+                SearchPhrase = dto.SearchPhrase,
+                PageNumber = dto.PageNumber,
+                PageSize = dto.PageSize,
+                SortBy = dto.SortBy,
+                SortDirection = dto.SortDirection
+            };
+            var result = await _mediator.Send(request);
+            return Ok(result);
         }
     }
 }

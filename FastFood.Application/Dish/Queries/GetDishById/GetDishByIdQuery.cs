@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FastFood.Domain.Models;
+using MediatR;
 
 namespace FastFood.Application.Dish.Queries.GetDishById
 {

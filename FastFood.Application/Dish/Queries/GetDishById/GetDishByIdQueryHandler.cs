@@ -3,6 +3,7 @@ using Domain.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
 using MediatR;
 
+
 namespace FastFood.Application.Dish.Queries.GetDishById
 {
     public class GetDishByIdQueryHandler : IRequestHandler<GetDishByIdQuery, GetDishDto>
