@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using FastFood.Application.Ingredient.Queries;
+using MediatR;
 
 namespace FastFood.Application.Ingredient.Command.UpdateIngredient
 {
-    public class UpdateIngredientCommand : IngredientDto, IRequest
+    public class UpdateIngredientCommand : GetIngredientDto, IRequest
     {
-        public int Id { get; set; }
     }
 }

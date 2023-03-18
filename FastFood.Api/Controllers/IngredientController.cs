@@ -1,6 +1,7 @@
 ﻿using FastFood.Application.Ingredient.Command;
 using FastFood.Application.Ingredient.Command.CreateIngredient;
 using FastFood.Application.Ingredient.Command.DeleteIngredient;
+using FastFood.Application.Ingredient.Command.UpdateIngredient;
 using FastFood.Application.Ingredient.Queries;
 using FastFood.Application.Ingredient.Queries.GetIngredientById;
 using FastFood.Application.Ingredient.Queries.GetIngredientsFromDish;
@@ -76,6 +77,15 @@ namespace FastFood.Api.Controllers
             var result = await _mediator.Send(request);
 
             return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("ingredient")]
+        public async Task<ActionResult> Update([FromQuery] UpdateIngredientCommand command)
+        {
+            await _mediator.Send(command);
+
+            return Ok();
         }
     }
 }

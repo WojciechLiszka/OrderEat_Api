@@ -14,6 +14,11 @@ namespace FastFood.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task Create(Ingredient ingredient)
         {
             _dbContext.Add(ingredient);
