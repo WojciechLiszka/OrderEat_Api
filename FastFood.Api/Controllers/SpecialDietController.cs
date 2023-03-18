@@ -1,4 +1,5 @@
-﻿using FastFood.Application.SpecialDiet.Commands;
+﻿using FastFood.Application.Dish.Command.AddDietToDish;
+using FastFood.Application.SpecialDiet.Commands;
 using FastFood.Application.SpecialDiet.Commands.CreateSpecialDiet;
 using FastFood.Application.SpecialDiet.Commands.DeleteSpecialDiet;
 using FastFood.Application.SpecialDiet.Commands.UpdateSpecialDiet;
@@ -27,6 +28,19 @@ namespace FastFood.Api.Controllers
         {
             var response = await _mediator.Send(command);
             return Created($"api/specialDiet/{response}", null);
+        }
+
+        [HttpPatch]
+        [Route("{dietId}/dish/{dishId}")]
+        public async Task<ActionResult> AddDietToDish([FromRoute] int dishId, [FromRoute] int dietId)
+        {
+            var request = new AddDietToDishCommand()
+            {
+                DietId = dietId,
+                DishId = dishId
+            };
+            await _mediator.Send(request);
+            return Ok();
         }
 
         [HttpPut]
@@ -82,6 +96,7 @@ namespace FastFood.Api.Controllers
                 SortBy = dto.SortBy,
                 SortDirection = dto.SortDirection
             };
+
             var result = await _mediator.Send(request);
 
             return Ok(result);

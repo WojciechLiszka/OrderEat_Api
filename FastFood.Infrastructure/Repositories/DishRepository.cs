@@ -31,17 +31,24 @@ namespace FastFood.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Dish> GetById(int id)
+        public async Task<Dish?> GetById(int id)
         {
             var dish = await _dbContext.Dishes.FirstOrDefaultAsync(d => d.Id == id);
             return dish;
         }
 
-        public async Task<Dish> GetByIdWithIngredients(int id)
+        public async Task<Dish?> GetByIdWithAllowedDiets(int id)
+        {
+            var dish = await _dbContext.Dishes
+               .Include(x => x.AllowedForDiets)
+               .FirstOrDefaultAsync(d => d.Id == id);
+            return dish;
+        }
+
+        public async Task<Dish?> GetByIdWithIngredients(int id)
         {
             var dish = await _dbContext.Dishes
                 .Include(x => x.BaseIngreedients)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             return dish;
