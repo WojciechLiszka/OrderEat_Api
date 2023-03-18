@@ -12,5 +12,6 @@ namespace FastFood.Domain.Interfaces
 
         Task Delete(SpecialDiet specialDiet);
 
+        IQueryable<SpecialDiet> Search(string? phrase);
     }
 }

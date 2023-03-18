@@ -36,5 +36,15 @@ namespace FastFood.Infrastructure.Repositories
             var diet = await _dbContext.Diets.FirstOrDefaultAsync(d => d.Id == id);
             return diet;
         }
+
+        public IQueryable<SpecialDiet> Search(string? phrase)
+        {
+            var diets = _dbContext
+                .Diets
+                .Where(b => phrase == null
+               || b.Name.ToLower().Contains(phrase.ToLower())
+               || b.Description.ToLower().Contains(phrase.ToLower()));
+            return diets;
+        }
     }
 }

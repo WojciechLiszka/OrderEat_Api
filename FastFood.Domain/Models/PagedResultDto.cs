@@ -1,6 +1,6 @@
 ﻿using FastFood.Domain.Models;
 
-namespace FastFood.Application.Dish.Queries
+namespace FastFood.Domain.Models
 {
     public class PagedResultDto
     {
