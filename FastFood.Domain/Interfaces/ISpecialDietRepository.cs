@@ -9,5 +9,8 @@ namespace FastFood.Domain.Interfaces
         Task Create(SpecialDiet specialDiet);
 
         Task<SpecialDiet> GetById(int id);
+
+        Task Delete(SpecialDiet specialDiet);
+
     }
 }

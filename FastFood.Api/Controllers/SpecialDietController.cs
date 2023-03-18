@@ -1,5 +1,6 @@
 ﻿using FastFood.Application.SpecialDiet.Commands;
 using FastFood.Application.SpecialDiet.Commands.CreateSpecialDiet;
+using FastFood.Application.SpecialDiet.Commands.DeleteSpecialDiet;
 using FastFood.Application.SpecialDiet.Commands.UpdateSpecialDiet;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,18 @@ namespace FastFood.Api.Controllers
             await _mediator.Send(request);
 
             return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
+        {
+            var request = new DeleteSpecialDietCommand()
+            {
+                Id = id
+            };
+            await _mediator.Send(request);
+            return NoContent();
         }
     }
 }
