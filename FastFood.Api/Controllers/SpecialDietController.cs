@@ -2,6 +2,8 @@
 using FastFood.Application.SpecialDiet.Commands.CreateSpecialDiet;
 using FastFood.Application.SpecialDiet.Commands.DeleteSpecialDiet;
 using FastFood.Application.SpecialDiet.Commands.UpdateSpecialDiet;
+using FastFood.Application.SpecialDiet.Queries;
+using FastFood.Application.SpecialDiet.Queries.GetSpecialDietById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +53,20 @@ namespace FastFood.Api.Controllers
             };
             await _mediator.Send(request);
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<GetDietDto>> GetById([FromRoute] int id)
+        {
+            var request = new GetSpecialDietByIdQuery()
+            {
+                Id = id
+            };
+
+            var result = await _mediator.Send(request);
+
+            return Ok(result);
         }
     }
 }

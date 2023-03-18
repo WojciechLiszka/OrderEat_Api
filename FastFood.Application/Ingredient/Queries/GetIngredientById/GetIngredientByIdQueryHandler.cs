@@ -5,18 +5,18 @@ using MediatR;
 
 namespace FastFood.Application.Ingredient.Queries.GetIngredientById
 {
-    public class GetIngredientByIdCommandHandler : IRequestHandler<GetIngredientByIdCommand, GetIngredientDto>
+    public class GetIngredientByIdQueryHandler : IRequestHandler<GetIngredientByIdQuery, GetIngredientDto>
     {
         private readonly IIngredientRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetIngredientByIdCommandHandler(IIngredientRepository repository, IMapper mapper)
+        public GetIngredientByIdQueryHandler(IIngredientRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-        public async Task<GetIngredientDto> Handle(GetIngredientByIdCommand request, CancellationToken cancellationToken)
+        public async Task<GetIngredientDto> Handle(GetIngredientByIdQuery request, CancellationToken cancellationToken)
         {
             var ingredient = await _repository.GetById(request.Id);
 

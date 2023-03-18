@@ -43,7 +43,7 @@ namespace FastFood.Api.Controllers
         [Route("ingredient/{id}")]
         public async Task<ActionResult<GetIngredientDto>> GetById([FromRoute] int id)
         {
-            var request = new GetIngredientByIdCommand()
+            var request = new GetIngredientByIdQuery()
             {
                 Id = id
             };

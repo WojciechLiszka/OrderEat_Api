@@ -2,7 +2,7 @@
 
 namespace FastFood.Application.Ingredient.Queries.GetIngredientById
 {
-    public class GetIngredientByIdCommand : IRequest<GetIngredientDto>
+    public class GetIngredientByIdQuery : IRequest<GetIngredientDto>
     {
         public int Id { get; set; }
     }
