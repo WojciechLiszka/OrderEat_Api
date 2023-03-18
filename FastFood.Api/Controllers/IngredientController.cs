@@ -3,6 +3,7 @@ using FastFood.Application.Ingredient.Command.CreateIngredient;
 using FastFood.Application.Ingredient.Command.DeleteIngredient;
 using FastFood.Application.Ingredient.Queries;
 using FastFood.Application.Ingredient.Queries.GetIngredientById;
+using FastFood.Application.Ingredient.Queries.GetIngredientsFromDish;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -57,8 +58,24 @@ namespace FastFood.Api.Controllers
             {
                 Id = id
             };
+
             await _mediator.Send(request);
+
             return NoContent();
+        }
+
+        [HttpGet]
+        [Route("dish/{id}/ingredient")]
+        public async Task<ActionResult<List<GetIngredientDto>>> GetFromDish([FromRoute] int id)
+        {
+            var request = new GetIngredientsFromDishQuery()
+            {
+                DishId = id
+            };
+
+            var result = await _mediator.Send(request);
+
+            return Ok(result);
         }
     }
 }

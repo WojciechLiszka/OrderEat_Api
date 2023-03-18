@@ -37,6 +37,16 @@ namespace FastFood.Infrastructure.Repositories
             return dish;
         }
 
+        public async Task<Dish> GetByIdWithIngredients(int id)
+        {
+            var dish = await _dbContext.Dishes
+                .Include(x => x.BaseIngreedients)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            return dish;
+        }
+
         public IQueryable<Dish> Search(int id, string? phrase)
         {
             var dishes = _dbContext.Dishes.Where(d => d.Restaurant.Id == id
