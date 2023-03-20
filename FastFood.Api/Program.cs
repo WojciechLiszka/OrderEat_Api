@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 builder.Services.AddControllers().AddFluentValidation();

@@ -21,6 +21,11 @@ namespace FastFood.Api.MiddleWare
                 context.Response.StatusCode = 400;
                 await context.Response.WriteAsync(badRequestException.Message);
             }
+            catch (ForbiddenException forbiddenException)
+            {
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync("You are not allowed to this operation");
+            }
             catch (Exception)
             {
                 context.Response.StatusCode = 500;
