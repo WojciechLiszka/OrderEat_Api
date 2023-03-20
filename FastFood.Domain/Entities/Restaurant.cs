@@ -9,5 +9,6 @@
 
         public RestaurantContactDetails ContactDetails { get; set; } = default!;
         public List<Dish> Dishes { get; set; } = new List<Dish>();
+        public int CreatedById { get; set; }
     }
 }

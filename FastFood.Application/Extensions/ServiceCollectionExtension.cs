@@ -1,12 +1,14 @@
-﻿using FastFood.Domain.Entities;
+﻿using FastFood.Application.Authorization;
+using FastFood.Domain.Entities;
 using FastFood.Domain.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 
 namespace FastFood.Application.Extensions
 {
@@ -45,6 +47,7 @@ namespace FastFood.Application.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
                 };
             });
+            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
 
             services.AddAuthorization();
         }
