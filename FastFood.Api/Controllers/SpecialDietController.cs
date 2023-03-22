@@ -31,7 +31,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPatch]
-        [Route("{dietId}/dish/{dishId}")]
+        [Route("api/specialDiet/{dietId}/dish/{dishId}")]
         public async Task<ActionResult> AddDietToDish([FromRoute] int dishId, [FromRoute] int dietId)
         {
             var request = new AddDietToDishCommand()
@@ -44,7 +44,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("api/specialDiet/{id}")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] DietDto dto)
         {
             var request = new UpdateSpecialDietCommand()
@@ -60,7 +60,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
+        [Route("api/specialDiet/{id}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var request = new DeleteSpecialDietCommand()
@@ -72,7 +72,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("api/specialDiet/{id}")]
         public async Task<ActionResult<GetDietDto>> GetById([FromRoute] int id)
         {
             var request = new GetSpecialDietByIdQuery()

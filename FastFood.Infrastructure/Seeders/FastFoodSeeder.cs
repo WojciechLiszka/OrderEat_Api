@@ -7,10 +7,12 @@ namespace FastFood.Infrastructure.Seeders
     public class FastFoodSeeder
     {
         private readonly FastFoodDbContext _dbContext;
+        private readonly IEnumerable<Role> roles;
 
         public FastFoodSeeder(FastFoodDbContext dbContext)
         {
             _dbContext = dbContext;
+            roles = GetRoles();
         }
 
         public async Task Seed()
@@ -24,10 +26,10 @@ namespace FastFood.Infrastructure.Seeders
                 }
                 if (!_dbContext.Roles.Any())
                 {
-                    var roles = GetRoles();
                     _dbContext.Roles.AddRange(roles);
                     await _dbContext.SaveChangesAsync();
                 }
+                
             }
         }
 

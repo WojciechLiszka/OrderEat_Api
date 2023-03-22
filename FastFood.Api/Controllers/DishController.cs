@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FastFood.Api.Controllers
 {
     [ApiController]
-    [Route("/api")]
+    [Route("api")]
     public class DishController : Controller
     {
         private readonly IMediator _mediator;
@@ -23,7 +23,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/restaurant/{restaurantid}/dish")]
+        [Route("restaurant/{restaurantid}/dish")]
         public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromQuery] DishDto dto)
         {
             var request = new CreateDishCommand()
@@ -81,7 +81,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/restaurant/{restaurantid}/dish")]
+        [Route("restaurant/{restaurantid}/dish")]
         public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()

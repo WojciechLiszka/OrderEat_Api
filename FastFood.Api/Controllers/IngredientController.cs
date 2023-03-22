@@ -22,7 +22,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPost]
-        [Route("dish/{dishId}/ingredient")]
+        [Route("api/dish/{dishId}/ingredient")]
         public async Task<ActionResult<string>> Create([FromRoute] int dishId, [FromQuery] IngredientDto dto)
         {
             var request = new CreateIngredientCommand()
@@ -40,7 +40,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("ingredient/{id}")]
+        [Route("api/ingredient/{id}")]
         public async Task<ActionResult<GetIngredientDto>> GetById([FromRoute] int id)
         {
             var request = new GetIngredientByIdQuery()
@@ -52,7 +52,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("ingredient/{id}")]
+        [Route("api/ingredient/{id}")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var request = new DeleteIngredientCommand()
@@ -66,7 +66,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("dish/{id}/ingredient")]
+        [Route("api/dish/{id}/ingredient")]
         public async Task<ActionResult<List<GetIngredientDto>>> GetFromDish([FromRoute] int id)
         {
             var request = new GetIngredientsFromDishQuery()
@@ -80,7 +80,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPut]
-        [Route("ingredient")]
+        [Route("api/ingredient")]
         public async Task<ActionResult> Update([FromQuery] UpdateIngredientCommand command)
         {
             await _mediator.Send(command);
