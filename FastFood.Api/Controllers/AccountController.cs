@@ -2,6 +2,7 @@
 using FastFood.Application.Account.Command.DeleteUser;
 using FastFood.Application.Account.Command.RegisterUser;
 using FastFood.Application.Account.Command.UpdateUserDetails;
+using FastFood.Application.Account.Commands.UpdateUserRole;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +47,19 @@ namespace FastFood.Api.Controllers
         {
             await _mediator.Send(command);
             return NoContent();
+        }
+
+        [HttpPatch]
+        [Route("/{userEmail}/role/{roleId}")]
+        public async Task<ActionResult> ChangeRole([FromRoute] string userEmail, [FromRoute] int roleId)
+        {
+            var request = new UpdateUserRoleCommand()
+            {
+                RoleId = roleId,
+                UserEmail = userEmail
+            };
+            await _mediator.Send(request);
+            return Ok();
         }
     }
 }
