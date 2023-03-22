@@ -34,6 +34,7 @@ namespace FastFood.Application.Account.Commands.UpdateUserRole
                 throw new BadRequestException($"User is already in Role: {role.Name}");
             }
             user.Role = role;
+            await _accountRepository.Commit();
         }
     }
 }

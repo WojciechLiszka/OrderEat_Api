@@ -1,6 +1,7 @@
 using FastFood.Api.MiddleWare;
 using FastFood.Application.Extensions;
 using FastFood.Infrastructure.Extensions;
+using FastFood.Infrastructure.Seeders;
 using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+
+var seeder = scope.ServiceProvider.GetRequiredService<FastFoodSeeder>();
+
+await seeder.Seed();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
