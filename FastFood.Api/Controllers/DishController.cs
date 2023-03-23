@@ -7,12 +7,14 @@ using FastFood.Application.Dish.Queries.GedDishesFromRestaurant;
 using FastFood.Application.Dish.Queries.GetDishById;
 using FastFood.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
 {
     [ApiController]
     [Route("api")]
+    [Authorize]
     public class DishController : Controller
     {
         private readonly IMediator _mediator;
@@ -24,6 +26,8 @@ namespace FastFood.Api.Controllers
 
         [HttpPost]
         [Route("restaurant/{restaurantid}/dish")]
+        [Authorize(Roles ="Admin,Owner")]
+        
         public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromQuery] DishDto dto)
         {
             var request = new CreateDishCommand()
@@ -46,6 +50,7 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Route("dish/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<GetDishDto>> GetById([FromRoute] int id)
         {
             var request = new GetDishByIdQuery()
@@ -60,6 +65,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPut]
         [Route("dish/{id}")]
+        [Authorize (Roles = "Admin,Owner")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] DishDto dto)
         {
             var request = new UpdateDishCommand()
@@ -82,6 +88,7 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Route("restaurant/{restaurantid}/dish")]
+        [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()
@@ -101,6 +108,7 @@ namespace FastFood.Api.Controllers
 
         [HttpDelete]
         [Route("dish/{id}")]
+        [Authorize(Roles ="Admin,Owner")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var request = new DeleteDishCommand()

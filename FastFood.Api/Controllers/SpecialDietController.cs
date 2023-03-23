@@ -8,12 +8,14 @@ using FastFood.Application.SpecialDiet.Queries.GetSpecialDietById;
 using FastFood.Application.SpecialDiet.Queries.GetSpecialDiets;
 using FastFood.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
 {
     [ApiController]
     [Route("api/specialDiet")]
+    [Authorize]
     public class SpecialDietController : Controller
     {
         private readonly IMediator _mediator;
@@ -24,6 +26,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<string>> Create([FromQuery] CreateSpecialDietCommand command)
         {
             var response = await _mediator.Send(command);
@@ -32,6 +35,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPatch]
         [Route("api/specialDiet/{dietId}/dish/{dishId}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> AddDietToDish([FromRoute] int dishId, [FromRoute] int dietId)
         {
             var request = new AddDietToDishCommand()
@@ -45,6 +49,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPut]
         [Route("api/specialDiet/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] DietDto dto)
         {
             var request = new UpdateSpecialDietCommand()
@@ -61,6 +66,7 @@ namespace FastFood.Api.Controllers
 
         [HttpDelete]
         [Route("api/specialDiet/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var request = new DeleteSpecialDietCommand()
@@ -73,6 +79,7 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Route("api/specialDiet/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<GetDietDto>> GetById([FromRoute] int id)
         {
             var request = new GetSpecialDietByIdQuery()
@@ -86,6 +93,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetDietDto>>> Get([FromQuery] PagedResultDto dto)
         {
             var request = new GetSpecialDietsQuery()

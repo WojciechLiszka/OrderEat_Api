@@ -50,7 +50,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPatch]
-        [Route("/{userEmail}/role/{roleId}")]
+        [Route("{userEmail}/role/{roleId}")]
         public async Task<ActionResult> ChangeRole([FromRoute] string userEmail, [FromRoute] int roleId)
         {
             var request = new UpdateUserRoleCommand()

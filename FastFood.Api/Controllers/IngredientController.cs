@@ -6,12 +6,14 @@ using FastFood.Application.Ingredient.Queries;
 using FastFood.Application.Ingredient.Queries.GetIngredientById;
 using FastFood.Application.Ingredient.Queries.GetIngredientsFromDish;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
 {
     [ApiController]
     [Route("api")]
+    [Authorize]
     public class IngredientController : Controller
     {
         private readonly IMediator _mediator;
@@ -23,6 +25,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPost]
         [Route("api/dish/{dishId}/ingredient")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult<string>> Create([FromRoute] int dishId, [FromQuery] IngredientDto dto)
         {
             var request = new CreateIngredientCommand()
@@ -41,6 +44,7 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Route("api/ingredient/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<GetIngredientDto>> GetById([FromRoute] int id)
         {
             var request = new GetIngredientByIdQuery()
@@ -53,6 +57,7 @@ namespace FastFood.Api.Controllers
 
         [HttpDelete]
         [Route("api/ingredient/{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var request = new DeleteIngredientCommand()
@@ -67,6 +72,7 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Route("api/dish/{id}/ingredient")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<GetIngredientDto>>> GetFromDish([FromRoute] int id)
         {
             var request = new GetIngredientsFromDishQuery()

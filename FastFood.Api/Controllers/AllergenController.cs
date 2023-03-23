@@ -4,12 +4,14 @@ using FastFood.Application.Allergen.Commands.UpdateAllergen;
 using FastFood.Application.Allergen.Queries.GetAllergenById;
 using FastFood.Application.Allergen.Queries.GetAllergens;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
 {
     [ApiController]
     [Route("api/allergen")]
+    [Authorize]
     public class AllergenController : Controller
     {
         private readonly IMediator _mediator;
@@ -20,6 +22,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult<string>> Create([FromQuery] CreateAllergenCommand command)
         {
             var id = await _mediator.Send(command);
@@ -28,6 +31,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<AllergenDto>>> Get([FromQuery] GetAllergensQuery query)
         {
             var response = await _mediator.Send(query);
@@ -35,6 +39,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("{id}")]
         public async Task<ActionResult<AllergenDto>> GetById([FromRoute] int id)
         {
@@ -48,6 +53,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles ="Admin")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] UpdateAllergenDto dto)
         {
             var Request = new UpdateAllergenCommand()
@@ -64,6 +70,7 @@ namespace FastFood.Api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize (Roles = "Admin")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             await _mediator.Send(new DeleteAllergenCommand()

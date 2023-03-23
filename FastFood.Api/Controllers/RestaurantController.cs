@@ -6,12 +6,14 @@ using FastFood.Application.Restaurant.Queries.GetRestaurantById;
 using FastFood.Application.Restaurant.Queries.GetRestaurants;
 using FastFood.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastFood.Api.Controllers
 {
     [ApiController]
     [Route("/api/restaurant")]
+    [Authorize]
     public class RestaurantController : Controller
     {
         private readonly IMediator _mediator;
@@ -30,6 +32,7 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Route("/api/restaurant/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<GetRestaurantDto>> GetById([FromRoute] int id)
         {
             var request = new GetRestaurantByIdQuery()
@@ -41,6 +44,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetRestaurantDto>>> Get([FromQuery] GetRestaurantsQuery query)
         {
             var result = await _mediator.Send(query);
@@ -49,6 +53,7 @@ namespace FastFood.Api.Controllers
 
         [HttpDelete]
         [Route("/api/restaurant/{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var request = new DeleteRestaurantCommand()
@@ -63,6 +68,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPut]
         [Route("/api/restaurant/{id}")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] UpdateRestaurantDto dto)
         {
             var request = new UpdateRestaurantCommand()
