@@ -1,0 +1,3 @@
+@baseurl=https://localhost:7269
+
+get {{baseurl}}/api/restaurant?PageNumber=1&PageSize=5
