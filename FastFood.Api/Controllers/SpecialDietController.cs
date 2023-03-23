@@ -27,7 +27,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<string>> Create([FromQuery] CreateSpecialDietCommand command)
+        public async Task<ActionResult<string>> Create([FromBody] CreateSpecialDietCommand command)
         {
             var response = await _mediator.Send(command);
             return Created($"api/specialDiet/{response}", null);
@@ -50,7 +50,7 @@ namespace FastFood.Api.Controllers
         [HttpPut]
         [Route("api/specialDiet/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] DietDto dto)
+        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DietDto dto)
         {
             var request = new UpdateSpecialDietCommand()
             {

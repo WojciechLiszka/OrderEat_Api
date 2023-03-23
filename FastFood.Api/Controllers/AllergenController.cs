@@ -23,7 +23,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles ="Admin")]
-        public async Task<ActionResult<string>> Create([FromQuery] CreateAllergenCommand command)
+        public async Task<ActionResult<string>> Create([FromBody] CreateAllergenCommand command)
         {
             var id = await _mediator.Send(command);
 
@@ -54,7 +54,7 @@ namespace FastFood.Api.Controllers
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles ="Admin")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] UpdateAllergenDto dto)
+        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateAllergenDto dto)
         {
             var Request = new UpdateAllergenCommand()
             {

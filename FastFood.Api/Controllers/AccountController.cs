@@ -21,7 +21,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult> Register([FromQuery] RegisterUserCommand command)
+        public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
         {
             await _mediator.Send(command);
             return Ok();
@@ -29,21 +29,21 @@ namespace FastFood.Api.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<string>> Login([FromQuery] LoginUserCommand command)
+        public async Task<ActionResult<string>> Login([FromBody] LoginUserCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update([FromQuery] UpdateUserDetailsCommand command)
+        public async Task<ActionResult> Update([FromBody] UpdateUserDetailsCommand command)
         {
             await _mediator.Send(command);
             return Ok();
         }
 
         [HttpDelete]
-        public async Task<ActionResult> Delete([FromQuery] DeleteUserCommand command)
+        public async Task<ActionResult> Delete([FromBody] DeleteUserCommand command)
         {
             await _mediator.Send(command);
             return NoContent();

@@ -28,7 +28,7 @@ namespace FastFood.Api.Controllers
         [Route("restaurant/{restaurantid}/dish")]
         [Authorize(Roles ="Admin,Owner")]
         
-        public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromQuery] DishDto dto)
+        public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromBody] DishDto dto)
         {
             var request = new CreateDishCommand()
             {
@@ -66,7 +66,7 @@ namespace FastFood.Api.Controllers
         [HttpPut]
         [Route("dish/{id}")]
         [Authorize (Roles = "Admin,Owner")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromQuery] DishDto dto)
+        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DishDto dto)
         {
             var request = new UpdateDishCommand()
             {
@@ -89,7 +89,7 @@ namespace FastFood.Api.Controllers
         [HttpGet]
         [Route("restaurant/{restaurantid}/dish")]
         [AllowAnonymous]
-        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
+        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromBody] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()
             {
