@@ -29,6 +29,10 @@ namespace FastFood.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<string>> Create([FromBody] CreateSpecialDietCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var response = await _mediator.Send(command);
             return Created($"api/specialDiet/{response}", null);
         }
@@ -52,6 +56,10 @@ namespace FastFood.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DietDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new UpdateSpecialDietCommand()
             {
                 Id = id,
@@ -96,6 +104,11 @@ namespace FastFood.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetDietDto>>> Get([FromQuery] PagedResultDto dto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new GetSpecialDietsQuery()
             {
                 SearchPhrase = dto.SearchPhrase,

@@ -25,6 +25,10 @@ namespace FastFood.Api.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<ActionResult<string>> Create([FromBody] CreateAllergenCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var id = await _mediator.Send(command);
 
             return Created($"api/allergen/{id}", null);
@@ -34,6 +38,10 @@ namespace FastFood.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<List<AllergenDto>>> Get([FromQuery] GetAllergensQuery query)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var response = await _mediator.Send(query);
             return Ok(response);
         }
@@ -56,6 +64,10 @@ namespace FastFood.Api.Controllers
         [Authorize(Roles ="Admin")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateAllergenDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var Request = new UpdateAllergenCommand()
             {
                 Id = id,

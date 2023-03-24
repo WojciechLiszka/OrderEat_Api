@@ -30,6 +30,10 @@ namespace FastFood.Api.Controllers
         
         public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromBody] DishDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new CreateDishCommand()
             {
                 RestaurantId = restaurantid,
@@ -68,6 +72,10 @@ namespace FastFood.Api.Controllers
         [Authorize (Roles = "Admin,Owner")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DishDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new UpdateDishCommand()
             {
                 DishId = id,
@@ -91,6 +99,10 @@ namespace FastFood.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromBody] PagedResultDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new GetDishesFromRestaurantQuery()
             {
                 RestaurantId = restaurantid,

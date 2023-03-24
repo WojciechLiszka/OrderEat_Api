@@ -28,6 +28,10 @@ namespace FastFood.Api.Controllers
         [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult<string>> Create([FromRoute] int dishId, [FromBody] IngredientDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new CreateIngredientCommand()
             {
                 DishId = dishId,
@@ -89,6 +93,10 @@ namespace FastFood.Api.Controllers
         [Route("api/ingredient")]
         public async Task<ActionResult> Update([FromBody] UpdateIngredientCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             await _mediator.Send(command);
 
             return Ok();

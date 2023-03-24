@@ -26,6 +26,10 @@ namespace FastFood.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> Create([FromBody] CreateRestaurantCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var id = await _mediator.Send(command);
             return Created($"api/restaurant/{id}", null);
         }
@@ -47,6 +51,10 @@ namespace FastFood.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetRestaurantDto>>> Get([FromQuery] GetRestaurantsQuery query)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var result = await _mediator.Send(query);
             return Ok(result);
         }
@@ -71,6 +79,10 @@ namespace FastFood.Api.Controllers
         [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateRestaurantDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new UpdateRestaurantCommand()
             {
                 Id = id,

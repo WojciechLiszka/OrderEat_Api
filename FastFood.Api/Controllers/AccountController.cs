@@ -32,6 +32,10 @@ namespace FastFood.Api.Controllers
         [Route("login")]
         public async Task<ActionResult<string>> Login([FromBody] LoginUserCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var response = await _mediator.Send(command);
             return Ok(response);
         }
@@ -39,6 +43,10 @@ namespace FastFood.Api.Controllers
         [HttpPut]
         public async Task<ActionResult> Update([FromBody] UpdateUserDetailsCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             await _mediator.Send(command);
             return Ok();
         }
@@ -46,6 +54,10 @@ namespace FastFood.Api.Controllers
         [HttpDelete]
         public async Task<ActionResult> Delete([FromBody] DeleteUserCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             await _mediator.Send(command);
             return NoContent();
         }
@@ -54,6 +66,10 @@ namespace FastFood.Api.Controllers
         [Route("{userEmail}/role/{roleId}")]
         public async Task<ActionResult> ChangeRole([FromRoute] string userEmail, [FromRoute] int roleId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var request = new UpdateUserRoleCommand()
             {
                 RoleId = roleId,

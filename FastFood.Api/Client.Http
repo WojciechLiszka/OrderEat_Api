@@ -2,7 +2,7 @@
 @token= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0QHRlc3QuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkpvaG4gRG9lIiwiZXhwIjoxNjgwOTU3ODAyLCJpc3MiOiJodHRwOi8vZmFzdGZvb2RhcGkuY29tIiwiYXVkIjoiaHR0cDovL2Zhc3Rmb29kYXBpLmNvbSJ9.L5YGzo5BETlzM7AHmuysf9TquraqmFFLKeHdj-qzmqs
 
 
-GET {{baseurl}}/api/restaurant?PageNumber=1&PageSize=5
+GET {{baseurl}}/api/restaurant?PageNumber=1&PageSize=15
 
 ###
 
@@ -49,7 +49,7 @@ Content-Type application/json
 Authorization: Bearer {{token}}
 
 {
-  "name": "McDonald",
+  "name": "KFC",
   "description": "Ronald McDonald's restaurants",
   "contactNumber": "+48990420567",
   "email": "mcdonald@test.com",
