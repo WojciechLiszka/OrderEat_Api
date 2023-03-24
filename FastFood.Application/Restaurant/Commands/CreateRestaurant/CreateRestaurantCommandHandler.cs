@@ -47,7 +47,7 @@ namespace FastFood.Application.Restaurant.Commands.CreateRestaurant
             await _repository.Create(newRestaurant);
             var useRole = _userContextService.GetUserRole;
 
-            if (useRole == "User" || useRole == null)
+            if (useRole == "User")
             {
                 var user = await _accountRepository.GetByEmail(_userContextService.GetUserEmail);
                 var ownerRole = await _roleRepository.GetByName("Owner");

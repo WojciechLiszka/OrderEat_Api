@@ -2,7 +2,6 @@
 using FastFood.Domain.Entities;
 using FastFood.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
-using FastFood.Infrastructure.Repositories;
 using MediatR;
 
 namespace FastFood.Application.Account.Command.UpdateUserDetails
@@ -11,13 +10,11 @@ namespace FastFood.Application.Account.Command.UpdateUserDetails
     {
         private readonly IAccountRepository _repository;
         private readonly IUserContextService _userContextService;
-        private readonly IRoleRepository _roleRepository;
 
-        public UpdateUserDetailsCommandHandler(IAccountRepository repository, IUserContextService userContextService, IRoleRepository roleRepository)
+        public UpdateUserDetailsCommandHandler(IAccountRepository repository, IUserContextService userContextService)
         {
             _repository = repository;
             _userContextService = userContextService;
-            _roleRepository = roleRepository;
         }
 
         public async Task Handle(UpdateUserDetailsCommand request, CancellationToken cancellationToken)
@@ -46,11 +43,6 @@ namespace FastFood.Application.Account.Command.UpdateUserDetails
             user.DateofBirth = request.DateofBirth;
             user.Name = request.Name;
 
-            if (user.Role == null)
-            {
-                var userRole = await _roleRepository.GetByName("User");
-                user.Role = userRole;
-            }
             await _repository.Commit();
         }
     }
