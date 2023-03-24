@@ -17,6 +17,7 @@ namespace FastFood.Application.Ingredient.Command.CreateIngredient
 
         public async Task<string> Handle(CreateIngredientCommand request, CancellationToken cancellationToken)
         {
+            
             var dish = await _dishRepository.GetById(request.DishId);
 
             if (dish == null)

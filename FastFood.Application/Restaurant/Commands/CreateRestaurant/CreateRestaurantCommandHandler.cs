@@ -1,5 +1,6 @@
 ﻿using FastFood.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
+using FastFood.Infrastructure.Repositories;
 using MediatR;
 
 namespace FastFood.Application.Restaurant.Commands.CreateRestaurant
@@ -8,11 +9,15 @@ namespace FastFood.Application.Restaurant.Commands.CreateRestaurant
     {
         private readonly IRestaurantRepository _repository;
         private readonly IUserContextService _userContextService;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public CreateRestaurantCommandHandler(IRestaurantRepository repository, IUserContextService userContextService)
+        public CreateRestaurantCommandHandler(IRestaurantRepository repository, IUserContextService userContextService, IRoleRepository roleRepository, IAccountRepository accountRepository)
         {
             _repository = repository;
             _userContextService = userContextService;
+            _roleRepository = roleRepository;
+            _accountRepository = accountRepository;
         }
 
         public async Task<string> Handle(CreateRestaurantCommand request, CancellationToken cancellationToken)
@@ -40,7 +45,15 @@ namespace FastFood.Application.Restaurant.Commands.CreateRestaurant
             };
 
             await _repository.Create(newRestaurant);
+            var useRole = _userContextService.GetUserRole;
 
+            if (useRole == "User" || useRole == null)
+            {
+                var user = await _accountRepository.GetByEmail(_userContextService.GetUserEmail);
+                var ownerRole = await _roleRepository.GetByName("Owner");
+                user.Role = ownerRole;
+                await _accountRepository.Commit();
+            }
 
             return newRestaurant.Id.ToString();
         }

@@ -23,6 +23,7 @@ namespace FastFood.Api.Controllers
         [Route("register")]
         public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
         {
+            
             await _mediator.Send(command);
             return Ok();
         }
