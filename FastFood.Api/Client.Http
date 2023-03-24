@@ -41,3 +41,28 @@ Authorization: Bearer {{token}}
   "street": "Warszawska",
   "apartmentNumber": "10/5"
 }
+
+###
+
+POST {{baseurl}}/api/restaurant
+Content-Type application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "McDonald",
+  "description": "Ronald McDonald's restaurants",
+  "contactNumber": "+48990420567",
+  "email": "mcdonald@test.com",
+  "country": "USA",
+  "city": "New York",
+  "street": "Millwind Street",
+  "apartmentNumber": "10"
+}
+###
+
+GET {{baseurl}}/api/restaurant/1 
+
+###
+
+
+

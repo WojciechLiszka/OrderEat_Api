@@ -33,7 +33,9 @@ namespace FastFood.Infrastructure.Repositories
 
         public async Task<Dish?> GetById(int id)
         {
-            var dish = await _dbContext.Dishes.FirstOrDefaultAsync(d => d.Id == id);
+            var dish = await _dbContext.Dishes
+                .Include(d => d.Restaurant)
+                .FirstOrDefaultAsync(d => d.Id == id);
             return dish;
         }
 
@@ -41,6 +43,7 @@ namespace FastFood.Infrastructure.Repositories
         {
             var dish = await _dbContext.Dishes
                .Include(x => x.AllowedForDiets)
+               .Include(d => d.Restaurant)
                .FirstOrDefaultAsync(d => d.Id == id);
             return dish;
         }

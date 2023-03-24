@@ -22,6 +22,7 @@ namespace FastFood.Application.Restaurant.Commands.CreateRestaurant
             {
                 throw new BadRequestException("Invalid user token");
             }
+
             var newRestaurant = new Domain.Entities.Restaurant()
             {
                 Name = request.Name,
@@ -39,6 +40,7 @@ namespace FastFood.Application.Restaurant.Commands.CreateRestaurant
             };
 
             await _repository.Create(newRestaurant);
+
 
             return newRestaurant.Id.ToString();
         }
