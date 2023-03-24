@@ -18,5 +18,11 @@ namespace FastFood.Infrastructure.Repositories
             var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Id == id);
             return role;
         }
+
+        public async Task<Role?> GetByName(string name)
+        {
+            var role = await _dbContext.Roles.FirstOrDefaultAsync(r => r.Name == name);
+            return role;
+        }
     }
 }

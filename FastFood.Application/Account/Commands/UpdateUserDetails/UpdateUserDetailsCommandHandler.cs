@@ -1,6 +1,8 @@
 ﻿using Domain.Domain.Exceptions;
 using FastFood.Domain.Entities;
+using FastFood.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
+using FastFood.Infrastructure.Repositories;
 using MediatR;
 
 namespace FastFood.Application.Account.Command.UpdateUserDetails
@@ -8,19 +10,30 @@ namespace FastFood.Application.Account.Command.UpdateUserDetails
     public class UpdateUserDetailsCommandHandler : IRequestHandler<UpdateUserDetailsCommand>
     {
         private readonly IAccountRepository _repository;
+        private readonly IUserContextService _userContextService;
+        private readonly IRoleRepository _roleRepository;
 
-        public UpdateUserDetailsCommandHandler(IAccountRepository repository)
+        public UpdateUserDetailsCommandHandler(IAccountRepository repository, IUserContextService userContextService, IRoleRepository roleRepository)
         {
             _repository = repository;
+            _userContextService = userContextService;
+            _roleRepository = roleRepository;
         }
 
         public async Task Handle(UpdateUserDetailsCommand request, CancellationToken cancellationToken)
         {
-            var user = await _repository.GetByEmail(request.Email);
+            var userEmail = _userContextService.GetUserEmail;
+            if (userEmail == null)
+            {
+                throw new BadRequestException("Invalid user Token");
+            }
+
+            var user = await _repository.GetByEmail(userEmail);
             if (user == null)
             {
                 throw new NotFoundException("Invalid user Token");
             }
+
             user.ContactDetails = new UserContactDetails()
             {
                 Country = request.Country,
@@ -35,7 +48,8 @@ namespace FastFood.Application.Account.Command.UpdateUserDetails
 
             if (user.Role == null)
             {
-                // ToDo user.Role==new RoleUser
+                var userRole = await _roleRepository.GetByName("User");
+                user.Role = userRole;
             }
             await _repository.Commit();
         }

@@ -1,3 +1,43 @@
 @baseurl=https://localhost:7269
+@token= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0QHRlc3QuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkpvaG4gRG9lIiwiZXhwIjoxNjgwOTQ4MzA1LCJpc3MiOiJodHRwOi8vZmFzdGZvb2RhcGkuY29tIiwiYXVkIjoiaHR0cDovL2Zhc3Rmb29kYXBpLmNvbSJ9.pjYptjr-mUYMjmS0L-7LY3IDOaRb3b5Vq3cc6wIjflM
 
-get {{baseurl}}/api/restaurant?PageNumber=1&PageSize=5
+
+GET {{baseurl}}/api/restaurant?PageNumber=1&PageSize=5
+
+###
+
+POST {{baseurl}}/api/account/register
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "testP$$w0rd",
+  "confirmPassword": "testP$$w0rd",
+  "name": "John Doe"
+}
+
+###
+
+POST {{baseurl}}/api/account/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "testP$$w0rd"
+}
+
+###
+
+PUT {{baseurl}}/api/account
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "John Doe",
+  "dateofBirth": "1990-01-21T10:58:09.365Z",
+  "contactNumber": "+48990420567",
+  "country": "Poland",
+  "city": "Kraków",
+  "street": "Warszawska",
+  "apartmentNumber": "10/5"
+}

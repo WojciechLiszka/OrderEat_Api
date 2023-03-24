@@ -7,11 +7,6 @@ namespace FastFood.Application.Account.Command.UpdateUserDetails
     {
         public UpdateUserDetailsCommandValidator()
         {
-            RuleFor(x => x.Email)
-                   .NotEmpty()
-                   .NotNull()
-                   .EmailAddress();
-
             RuleFor(x => x.ContactNumber)
                 .NotEmpty()
                 .NotNull()

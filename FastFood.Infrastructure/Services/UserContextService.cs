@@ -18,8 +18,10 @@ namespace FastFood.Infrastructure.Services
         public int? GetUserId =>
             User is null ? null : int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 
+        public string? GetUserEmail =>
+            User is null ? null : User.FindFirst(c => c.Type == ClaimTypes.Email).Value;
+
         public string? GetUserRole =>
             User is null ? null : User.FindFirst(c => c.Type == ClaimTypes.Role).Value;
-
     }
 }

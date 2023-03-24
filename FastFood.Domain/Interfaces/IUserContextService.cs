@@ -7,5 +7,6 @@ namespace FastFood.Domain.Interfaces
         ClaimsPrincipal User { get; }
         int? GetUserId { get; }
         string? GetUserRole { get; }
+        string? GetUserEmail { get; }
     }
 }

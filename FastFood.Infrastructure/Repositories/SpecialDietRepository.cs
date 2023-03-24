@@ -16,7 +16,7 @@ namespace FastFood.Infrastructure.Repositories
 
         public async Task Commit()
         {
-            _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task Create(SpecialDiet specialDiet)
@@ -31,7 +31,7 @@ namespace FastFood.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<SpecialDiet> GetById(int id)
+        public async Task<SpecialDiet?> GetById(int id)
         {
             var diet = await _dbContext.Diets.FirstOrDefaultAsync(d => d.Id == id);
             return diet;
