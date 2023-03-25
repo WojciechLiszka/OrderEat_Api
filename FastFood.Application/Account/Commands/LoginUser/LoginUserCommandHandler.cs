@@ -42,11 +42,9 @@ namespace FastFood.Application.Account.Command.LoginUser
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.Name, $"{user.Name}"),
+                new Claim(ClaimTypes.Role, $"{user.Role}")
             };
-            if (user.Role != null)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, $"{user.Role}"));
-            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
