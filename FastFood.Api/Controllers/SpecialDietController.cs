@@ -38,7 +38,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPatch]
-        [Route("api/specialDiet/{dietId}/dish/{dishId}")]
+        [Route("{dietId}/dish/{dishId}")]
         [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> AddDietToDish([FromRoute] int dishId, [FromRoute] int dietId)
         {
@@ -52,7 +52,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPut]
-        [Route("api/specialDiet/{id}")]
+        [Route("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DietDto dto)
         {
@@ -73,7 +73,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("api/specialDiet/{id}")]
+        [Route("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
@@ -86,7 +86,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("api/specialDiet/{id}")]
+        [Route("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<GetDietDto>> GetById([FromRoute] int id)
         {
