@@ -1,5 +1,5 @@
 @baseurl=https://localhost:7269
-@Usertoken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0QHRlc3QuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkpvaG4gRG9lIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiRmFzdEZvb2QuRG9tYWluLkVudGl0aWVzLlJvbGUiLCJleHAiOjE2ODA5NjM0OTMsImlzcyI6Imh0dHA6Ly9mYXN0Zm9vZGFwaS5jb20iLCJhdWQiOiJodHRwOi8vZmFzdGZvb2RhcGkuY29tIn0.td-A__GanNOziOcNOqfutySHMqxYk1BgCrLL4Sdsh5A
+@Usertoken= eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0QHRlc3QuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6IkpvaG4gRG9lIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiT3duZXIiLCJleHAiOjE2ODEyMzM3MDQsImlzcyI6Imh0dHA6Ly9mYXN0Zm9vZGFwaS5jb20iLCJhdWQiOiJodHRwOi8vZmFzdGZvb2RhcGkuY29tIn0.Z__vdy1VG9CzKIKMno8FQkP0_meo9EJRXOJIyCqWzQQ
 @Admintoken =eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0YWRtaW5AdGVzdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW5Vc2VyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE2ODEyMjQwNzgsImlzcyI6Imh0dHA6Ly9mYXN0Zm9vZGFwaS5jb20iLCJhdWQiOiJodHRwOi8vZmFzdGZvb2RhcGkuY29tIn0.3P5p3HDb32pk1J5LVb92GHECu9V4xSZ0sWHAcQMe1GY
 
 GET {{baseurl}}/api/restaurant?PageNumber=1&PageSize=15
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 PUT {{baseurl}}/api/account
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{Usertoken}}
 
 {
   "name": "John Doe",
@@ -53,7 +53,7 @@ Authorization: Bearer {{token}}
 
 POST {{baseurl}}/api/restaurant
 Content-Type application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{Usertoken}}
 
 {
   "name": "McDonald",
@@ -93,5 +93,65 @@ Authorization: Bearer {{Admintoken}}
   "name": "Vegetarian",
   "description": "Diet where you dont eat meat"
 }
+
 ###
-GET {{baseurl}}/api/specialDiet/2
+
+GET {{baseurl}}/api/specialDiet/1
+
+###
+
+GET {{baseurl}}/api/specialDiet?PageNumber=1&PageSize=15
+
+###
+
+PUT {{baseurl}}/api/specialDiet/1
+Content-Type application/json
+Authorization: Bearer {{Admintoken}}
+
+{
+     "name": "Vege",
+     "description": "Diet where you dont eat meat and animal products"
+}
+
+###
+
+DELETE {{baseurl}}/api/specialDiet/2
+Authorization: Bearer {{Admintoken}}
+
+###
+
+POST {{baseurl}}/api/restaurant/1/dish
+Authorization: Bearer {{Usertoken}}
+Content-Type application/json
+
+{
+  "name": "BigMac",
+  "description": "Well known McDonalds Burger",
+  "basePrize": 10.00,
+  "baseCaloricValue": 1000,
+  "allowedCustomization": true,
+  "isAvilable": true
+}
+
+###
+
+GET {{baseurl}}/api/dish/1
+
+###
+
+GET {{baseurl}}/api/restaurant/1/dish?PageNumber=1&PageSize=15
+
+###
+
+PUT {{baseurl}}/api/dish/1
+Content-Type application/json
+Authorization: Bearer {{Usertoken}}
+
+{
+  "name": "BigMac",
+  "description": "Well known McDonalds Burger",
+  "basePrize": 15.00,
+  "baseCaloricValue": 1000,
+  "allowedCustomization": true,
+  "isAvilable": true
+}

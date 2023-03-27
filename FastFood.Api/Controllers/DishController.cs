@@ -49,7 +49,7 @@ namespace FastFood.Api.Controllers
 
             var id = await _mediator.Send(request);
 
-            return Created($"/api/restaurant/{restaurantid}/dish", null);
+            return Created($"/api/dish/{id}", null);
         }
 
         [HttpGet]
@@ -97,7 +97,7 @@ namespace FastFood.Api.Controllers
         [HttpGet]
         [Route("restaurant/{restaurantid}/dish")]
         [AllowAnonymous]
-        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromBody] PagedResultDto dto)
+        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
         {
             if (!ModelState.IsValid)
             {
