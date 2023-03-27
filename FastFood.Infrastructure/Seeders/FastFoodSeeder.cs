@@ -66,7 +66,7 @@ namespace FastFood.Infrastructure.Seeders
             {
                 Email = "testadmin@test.com",
                 Name = "adminUser",
-                Role = _roles.FirstOrDefault(r => r.Name == "Admin")
+                Role = _dbContext.Roles.FirstOrDefault(r => r.Name == "Admin")
             };
 
             var passwordhash = _passwordHasher.HashPassword(user, "TestAdminP@$$w0rd");
