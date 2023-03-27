@@ -1,4 +1,6 @@
-﻿namespace FastFood.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace FastFood.Domain.Entities
 {
     public class Dish
     {
@@ -6,7 +8,8 @@
         public string Name { get; set; } = default!;
         public string Description { get; set; }= default!;
 
-        public int BasePrize { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal BasePrize { get; set; }
         public int BaseCaloricValue { get; set; }
 
         public bool AllowedCustomization { get; set; }

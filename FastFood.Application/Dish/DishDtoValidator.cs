@@ -20,8 +20,8 @@ namespace FastFood.Application.Dish
 
             RuleFor(c => c.BasePrize)
                 .NotEmpty()
-                .NotNull()
-                .GreaterThanOrEqualTo(1);
+                .NotNull();
+                
 
             RuleFor(c => c.BaseCaloricValue)
                 .NotEmpty()

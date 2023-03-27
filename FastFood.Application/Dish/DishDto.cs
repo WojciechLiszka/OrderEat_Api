@@ -5,7 +5,7 @@
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
 
-        public int BasePrize { get; set; } = 0;
+        public decimal BasePrize { get; set; } = 0;
         public int BaseCaloricValue { get; set; } = 0;
 
         public bool AllowedCustomization { get; set; }

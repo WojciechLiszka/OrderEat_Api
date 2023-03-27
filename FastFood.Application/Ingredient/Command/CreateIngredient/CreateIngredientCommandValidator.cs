@@ -20,8 +20,8 @@ namespace FastFood.Application.Ingredient.Command.CreateIngredient
 
             RuleFor(c => c.Prize)
                 .NotEmpty()
-                .NotNull()
-                .GreaterThanOrEqualTo(1);
+                .NotNull();
+                
         }
     }
 }

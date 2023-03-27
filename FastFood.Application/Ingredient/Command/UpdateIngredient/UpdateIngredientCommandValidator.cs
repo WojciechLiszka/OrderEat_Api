@@ -18,10 +18,7 @@ namespace FastFood.Application.Ingredient.Command.UpdateIngredient
                 .MinimumLength(3)
                 .MaximumLength(500);
 
-            RuleFor(c => c.Prize)
-                .NotEmpty()
-                .NotNull()
-                .GreaterThanOrEqualTo(1);
+            RuleFor(c => c.Prize).NotEmpty().NotNull();
         }
     }
 }
