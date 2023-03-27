@@ -67,3 +67,14 @@ GET {{baseurl}}/api/restaurant/1
 DELETE {{baseurl}}/api/restaurant/1
 Authorization: Bearer {{token}}
 
+###
+
+DELETE {{baseurl}}/api/account
+Content-Type application/json
+
+{
+  "email": "test@test.com",
+  "password": "testP$$w0rd"
+}
+
+###

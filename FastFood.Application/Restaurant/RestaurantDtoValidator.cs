@@ -1,10 +1,11 @@
-﻿using FluentValidation;
+﻿using FastFood.Domain.Interfaces;
+using FluentValidation;
 
 namespace FastFood.Application.Restaurant
 {
     public class RestaurantDtoValidator : AbstractValidator<RestaurantDto>
     {
-        public RestaurantDtoValidator()
+        public RestaurantDtoValidator(IRestaurantRepository repository)
         {
             RuleFor(m => m.Email)
                 .NotEmpty()
