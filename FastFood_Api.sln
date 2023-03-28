@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastFood.Domain", "FastFood
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastFood.Infrastructure", "FastFood.Infrastructure\FastFood.Infrastructure.csproj", "{EB5AA169-9FCC-41B5-8DC8-387199EF156A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastFood.Api", "FastFood.Api\FastFood.Api.csproj", "{60C3EE5B-43D7-4F89-9B46-0545E9E261BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FastFood.Api", "FastFood.Api\FastFood.Api.csproj", "{60C3EE5B-43D7-4F89-9B46-0545E9E261BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastFood.ApiTest", "FastFood.ApiTest\FastFood.ApiTest.csproj", "{9FCC32BB-9914-4B1A-91FB-1116DE7920B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{60C3EE5B-43D7-4F89-9B46-0545E9E261BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60C3EE5B-43D7-4F89-9B46-0545E9E261BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60C3EE5B-43D7-4F89-9B46-0545E9E261BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FCC32BB-9914-4B1A-91FB-1116DE7920B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FCC32BB-9914-4B1A-91FB-1116DE7920B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FCC32BB-9914-4B1A-91FB-1116DE7920B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FCC32BB-9914-4B1A-91FB-1116DE7920B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
