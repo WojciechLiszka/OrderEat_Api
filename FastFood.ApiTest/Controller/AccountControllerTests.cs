@@ -54,10 +54,10 @@ namespace FastFood.ApiTest.Controller
         [Theory]
         [InlineData("test@test.com", "testpassword", "notthesamepassword", "John Doe")]
         [InlineData("test@test.com", null, null, "John Doe")]
-        [InlineData("test@test.com", "testpassword", "notthesamepassword", null)]
-        [InlineData(null, "testpassword", "notthesamepassword", "John Doe")]
-        [InlineData("", "testpassword", "notthesamepassword", "John Doe")]
-        [InlineData("test@test.com", "testpassword", "notthesamepassword", "")]
+        [InlineData("test@test.com", "testpassword", "testpassword", null)]
+        [InlineData(null, "testpassword", "testpassword", "John Doe")]
+        [InlineData("", "testpassword", "testpassword", "John Doe")]
+        [InlineData("test@test.com", "testpassword", "testpassword", "")]
         [InlineData("test@test.com", "", "", "John Doe")]
         public async Task RegisterUser_ForInvalidRegisterUserDto_BadRequest(string email, string password, string confirmPassword, string name)
         {

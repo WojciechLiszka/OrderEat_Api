@@ -9,7 +9,8 @@ namespace FastFood.Application.Account.Command.RegisterUser
         {
             RuleFor(x => x.Email)
                     .NotEmpty()
-                    .EmailAddress();
+                    .EmailAddress()
+                    .Length(5, 254);
 
             RuleFor(x => x.Password).MinimumLength(6);
 
@@ -24,6 +25,10 @@ namespace FastFood.Application.Account.Command.RegisterUser
                             context.AddFailure("Email", "That email is taken");
                         }
                     });
+            RuleFor(x => x.Name)
+                .NotNull()
+                .NotEmpty()
+                .Length(3, 20);
         }
     }
 }
