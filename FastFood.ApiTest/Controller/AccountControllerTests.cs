@@ -13,7 +13,7 @@ namespace FastFood.ApiTest.Controller
     {
         private readonly HttpClient _client;
         private readonly WebApplicationFactory<Program> _factory;
-        private const string _route = "api/Account";
+        private const string _route = "api/account";
 
         public AccountControllerTests(WebApplicationFactory<Program> factory)
         {
