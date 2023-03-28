@@ -2,7 +2,7 @@ name: CI
 on:
   pull_request:
     branches:
-      - master-pipeline
+      - main
   workflow_dispatch:
 
 jobs:
