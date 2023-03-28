@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FastFood.Api\FastFood.Api.csproj" />
-    <ProjectReference Include="..\FastFood.Infrastructure\FastFood.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
