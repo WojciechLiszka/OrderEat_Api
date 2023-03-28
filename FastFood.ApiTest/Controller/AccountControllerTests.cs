@@ -1,5 +1,8 @@
 ﻿using FastFood.ApiTest.Authorization;
+using FastFood.ApiTest.Helpers;
+using FastFood.Application.Account.Command.RegisterUser;
 using FastFood.Infrastructure.Persistance;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +13,7 @@ namespace FastFood.ApiTest.Controller
     {
         private readonly HttpClient _client;
         private readonly WebApplicationFactory<Program> _factory;
+        private const string _route = "api/Account";
 
         public AccountControllerTests(WebApplicationFactory<Program> factory)
         {
@@ -28,7 +32,23 @@ namespace FastFood.ApiTest.Controller
                 });
             _client = _factory.CreateClient();
         }
-        [Fact]
 
+        [Fact]
+        public async Task RegisterUser_ForValidRegisterUserDto_ReturnsOk()
+        {
+            // arrange
+            var dto = new RegisterUserCommand()
+            {
+                Email = "test@test.com",
+                Password = "testpassword",
+                ConfirmPassword = "testpassword",
+                Name="John Doe"
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            // act
+            var response = await _client.PostAsync($"{_route}/register", httpContent);
+            // assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
     }
 }
