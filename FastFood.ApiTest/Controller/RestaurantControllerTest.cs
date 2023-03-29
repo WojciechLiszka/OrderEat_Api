@@ -213,19 +213,31 @@ namespace FastFood.ApiTest.Controller
         [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
         [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
         [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
-        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description&SortBy=ASC")]
-        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description&SortBy=DESC")]
-
         public async Task Get_ForValidQuery_ReturnOk(string query)
         {
             //arrange
-          
+
             //act
 
             var response = await _client.GetAsync($"{_route}{query}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=7")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
+        public async Task Get_ForInValidQuery_BadRequest(string query)
+        {
+            //arrange
+
+            //act
+
+            var response = await _client.GetAsync($"{_route}{query}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
     }
 }
