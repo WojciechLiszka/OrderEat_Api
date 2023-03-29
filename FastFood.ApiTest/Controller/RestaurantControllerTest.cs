@@ -70,7 +70,7 @@ namespace FastFood.ApiTest.Controller
                 new Claim(ClaimTypes.NameIdentifier, userId),
                 new Claim(ClaimTypes.Email,"test@email.com"),
                 new Claim(ClaimTypes.Name, "John Doe"),
-                new Claim(ClaimTypes.Role, $"Admin")
+                new Claim(ClaimTypes.Role, "Admin")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
@@ -206,6 +206,26 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description&SortBy=ASC")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description&SortBy=DESC")]
+
+        public async Task Get_ForValidQuery_ReturnOk(string query)
+        {
+            //arrange
+          
+            //act
+
+            var response = await _client.GetAsync($"{_route}{query}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
     }
 }
