@@ -1,7 +1,6 @@
 ﻿using FastFood.ApiTest.Helpers;
 using FastFood.Application.Restaurant.Commands.CreateRestaurant;
 using FastFood.Domain.Entities;
-using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -101,6 +100,45 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+        }
+
+        [Theory]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "")]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "", "1/10")]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", "TestCountry", "", "TestStreet", "1/10")]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", "", "TestCity", "TestStreet", "1/10")]
+        [InlineData("", "TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestName", "", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestName", "TestDescription", "111111111", "", "TestCountry", "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", null)]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", null, "1/10")]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", "TestCountry", null, "TestStreet", "1/10")]
+        [InlineData("TestName", "TestDescription", "111111111", "test@email.com", null, "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestName", null, "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestName", "TestDescription", "111111111", null, "TestCountry", "TestCity", "TestStreet", "1/10")]
+        public async Task CreateRestaurant_ForInvalidModel_BadRequest(string name, string description, string contactNumber, string email, string country, string city, string street, string apartmentNumber)
+        {
+            //arrange
+
+            var command = new CreateRestaurantCommand()
+            {
+                Name = name,
+                Description = description,
+                ContactNumber = contactNumber,
+                Email = email,
+                Country = country,
+                City = city,
+                Street = street,
+                ApartmentNumber = apartmentNumber
+            };
+
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _client.PostAsync(_route, httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
     }
 }
