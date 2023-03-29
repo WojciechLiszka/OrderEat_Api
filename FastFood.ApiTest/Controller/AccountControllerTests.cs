@@ -1,5 +1,4 @@
-﻿using FastFood.ApiTest.Authorization;
-using FastFood.ApiTest.Helpers;
+﻿using FastFood.ApiTest.Helpers;
 using FastFood.Application.Account.Command.RegisterUser;
 using FastFood.Infrastructure.Persistance;
 using FluentAssertions;
@@ -25,11 +24,12 @@ namespace FastFood.ApiTest.Controller
                         var dbContextOptions = services
                             .SingleOrDefault(service => service.ServiceType == typeof(Microsoft.EntityFrameworkCore.DbContextOptions<FastFoodDbContext>));
                         services.Remove(dbContextOptions);
-                        services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
+
                         services
                          .AddDbContext<FastFoodDbContext>(options => options.UseInMemoryDatabase("FastFoodDb"));
                     });
                 });
+
             _client = _factory.CreateClient();
         }
 
@@ -37,6 +37,7 @@ namespace FastFood.ApiTest.Controller
         public async Task RegisterUser_ForValidRegisterUserDto_ReturnsOk()
         {
             // arrange
+
             var command = new RegisterUserCommand()
             {
                 Email = "test@test.com",
@@ -46,8 +47,10 @@ namespace FastFood.ApiTest.Controller
             };
             var httpContent = command.ToJsonHttpContent();
             // act
+
             var response = await _client.PostAsync($"{_route}/register", httpContent);
             // assert
+
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
@@ -62,6 +65,7 @@ namespace FastFood.ApiTest.Controller
         public async Task RegisterUser_ForInvalidRegisterUserDto_BadRequest(string email, string password, string confirmPassword, string name)
         {
             // arrange
+
             var command = new RegisterUserCommand()
             {
                 Email = email,
@@ -71,8 +75,10 @@ namespace FastFood.ApiTest.Controller
             };
             var httpContent = command.ToJsonHttpContent();
             // act
+
             var response = await _client.PostAsync($"{_route}/register", httpContent);
             // assert
+
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
     }

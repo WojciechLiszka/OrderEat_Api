@@ -29,4 +29,8 @@
     <ProjectReference Include="..\FastFood.Api\FastFood.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Authorization\" />
+  </ItemGroup>
+
 </Project>
