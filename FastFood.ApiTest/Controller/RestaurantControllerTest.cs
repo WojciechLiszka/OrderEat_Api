@@ -179,5 +179,33 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
+        [Fact]
+        public async Task GetById_ForInvalId_ReturnNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+            //act
+
+            var response = await _client.GetAsync($"{_route}/452345");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
     }
 }
