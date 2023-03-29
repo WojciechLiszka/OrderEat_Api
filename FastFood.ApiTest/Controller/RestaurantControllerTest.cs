@@ -1,11 +1,13 @@
 ﻿using FastFood.ApiTest.Helpers;
 using FastFood.Application.Restaurant.Commands.CreateRestaurant;
 using FastFood.Domain.Entities;
+using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,9 +22,18 @@ namespace FastFood.ApiTest.Controller
         private readonly WebApplicationFactory<Program> _factory;
         private readonly HttpClient _client;
         private const string _route = "/api/restaurant";
+        private readonly IConfiguration _configuration;
+        private readonly AuthenticationSettings _authenticationSettings;
 
         public RestaurantControllerTest(WebApplicationFactory<Program> factory)
         {
+            _configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+            var authenticationSettings = new AuthenticationSettings();
+
+            _configuration.GetSection("Authentication").Bind(authenticationSettings);
+            _authenticationSettings = authenticationSettings;
             _factory = factory
                 .WithWebHostBuilder(builder =>
                 {
@@ -62,12 +73,12 @@ namespace FastFood.ApiTest.Controller
                 new Claim(ClaimTypes.Role, $"Admin")
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("PRIVATE_KEY_DONT_SHARE"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(15);
+            var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
 
-            var token = new JwtSecurityToken("http://fastfoodapi.com",
-                "http://fastfoodapi.com",
+            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
+                _authenticationSettings.JwtIssuer,
                 claims,
                 expires: expires,
                 signingCredentials: cred);
