@@ -239,5 +239,34 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
+
+        [Fact]
+        public async Task Delete_ForValidId_RetursNoContent()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+
+            await SeedRestaurant(restaurant);
+            //act
+
+            var response = await _client.DeleteAsync($"{_route}/{restaurant.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
     }
 }
