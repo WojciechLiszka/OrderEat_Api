@@ -19,49 +19,6 @@ namespace FastFood.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("register")]
-        public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
-        {
-            
-            await _mediator.Send(command);
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("login")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginUserCommand command)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            var response = await _mediator.Send(command);
-            return Ok(response);
-        }
-
-        [HttpPut]
-        public async Task<ActionResult> Update([FromBody] UpdateUserDetailsCommand command)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            await _mediator.Send(command);
-            return Ok();
-        }
-
-        [HttpDelete]
-        public async Task<ActionResult> Delete([FromBody] DeleteUserCommand command)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            await _mediator.Send(command);
-            return NoContent();
-        }
-
         [HttpPatch]
         [Route("{userEmail}/role/{roleId}")]
         public async Task<ActionResult> ChangeRole([FromRoute] string userEmail, [FromRoute] int roleId)
@@ -76,6 +33,48 @@ namespace FastFood.Api.Controllers
                 UserEmail = userEmail
             };
             await _mediator.Send(request);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromBody] DeleteUserCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<ActionResult<string>> Login([FromBody] LoginUserCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
+        {
+            
+            await _mediator.Send(command);
+            return Ok();
+        }
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody] UpdateUserDetailsCommand command)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _mediator.Send(command);
             return Ok();
         }
     }

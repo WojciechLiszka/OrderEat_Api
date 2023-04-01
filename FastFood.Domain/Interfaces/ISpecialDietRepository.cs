@@ -8,12 +8,12 @@ namespace FastFood.Domain.Interfaces
 
         Task Create(SpecialDiet specialDiet);
 
-        Task<SpecialDiet?> GetById(int id);
-
         Task Delete(SpecialDiet specialDiet);
 
-        IQueryable<SpecialDiet> Search(string? phrase);
+        Task<SpecialDiet?> GetById(int id);
 
         Task<SpecialDiet?> GetByName(string name);
+
+        IQueryable<SpecialDiet> Search(string? phrase);
     }
 }

@@ -12,9 +12,9 @@ namespace FastFood.Domain.Interfaces
 
         Task<Dish?> GetById(int id);
 
-        Task<Dish?> GetByIdWithIngredients(int id);
-
         Task<Dish?> GetByIdWithAllowedDiets(int id);
+
+        Task<Dish?> GetByIdWithIngredients(int id);
 
         IQueryable<Dish> Search(int id, string? phrase);
     }

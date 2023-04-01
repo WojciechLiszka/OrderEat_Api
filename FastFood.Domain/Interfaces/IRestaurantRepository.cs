@@ -7,12 +7,12 @@ namespace FastFood.Domain.Interfaces
         Task Commit();
         Task Create(Restaurant restaurant);
 
-        Task<Restaurant?> GetByName(string name);
+        Task Delete(Restaurant restaurant);
 
         Task<Restaurant?> GetById(int id);
 
-        IQueryable<Restaurant> Search(string? phrase);
+        Task<Restaurant?> GetByName(string name);
 
-        Task Delete(Restaurant restaurant);
+        IQueryable<Restaurant> Search(string? phrase);
     }
 }

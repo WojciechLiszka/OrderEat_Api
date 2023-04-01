@@ -46,19 +46,6 @@ namespace FastFood.Api.Controllers
             return Created($"api/ingredient/{id}", null);
         }
 
-        [HttpGet]
-        [Route("api/ingredient/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<GetIngredientDto>> GetById([FromRoute] int id)
-        {
-            var request = new GetIngredientByIdQuery()
-            {
-                Id = id
-            };
-            var response = await _mediator.Send(request);
-            return Ok(response);
-        }
-
         [HttpDelete]
         [Route("api/ingredient/{id}")]
         [Authorize(Roles = "Admin,Owner")]
@@ -74,6 +61,18 @@ namespace FastFood.Api.Controllers
             return NoContent();
         }
 
+        [HttpGet]
+        [Route("api/ingredient/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<GetIngredientDto>> GetById([FromRoute] int id)
+        {
+            var request = new GetIngredientByIdQuery()
+            {
+                Id = id
+            };
+            var response = await _mediator.Send(request);
+            return Ok(response);
+        }
         [HttpGet]
         [Route("api/dish/{id}/ingredient")]
         [AllowAnonymous]

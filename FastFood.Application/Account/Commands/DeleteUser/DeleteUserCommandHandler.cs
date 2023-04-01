@@ -8,9 +8,8 @@ namespace FastFood.Application.Account.Command.DeleteUser
 {
     public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand>
     {
-        private readonly IAccountRepository _repository;
         private readonly IPasswordHasher<User> _passwordHasher;
-
+        private readonly IAccountRepository _repository;
         public DeleteUserCommandHandler(IAccountRepository repository, IPasswordHasher<User> passwordHasher)
         {
             _repository = repository;

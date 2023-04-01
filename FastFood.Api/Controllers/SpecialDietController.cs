@@ -25,18 +25,6 @@ namespace FastFood.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<string>> Create([FromBody] CreateSpecialDietCommand command)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            var response = await _mediator.Send(command);
-            return Created($"api/specialDiet/{response}", null);
-        }
-
         [HttpPatch]
         [Route("{dietId}/dish/{dishId}")]
         [Authorize(Roles = "Admin,Owner")]
@@ -51,27 +39,17 @@ namespace FastFood.Api.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        [Route("{id}")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DietDto dto)
+        public async Task<ActionResult<string>> Create([FromBody] CreateSpecialDietCommand command)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-            var request = new UpdateSpecialDietCommand()
-            {
-                Id = id,
-                Name = dto.Name,
-                Description = dto.Description,
-            };
-
-            await _mediator.Send(request);
-
-            return Ok();
+            var response = await _mediator.Send(command);
+            return Created($"api/specialDiet/{response}", null);
         }
-
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
@@ -83,21 +61,6 @@ namespace FastFood.Api.Controllers
             };
             await _mediator.Send(request);
             return NoContent();
-        }
-
-        [HttpGet]
-        [Route("{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<GetDietDto>> GetById([FromRoute] int id)
-        {
-            var request = new GetSpecialDietByIdQuery()
-            {
-                Id = id
-            };
-
-            var result = await _mediator.Send(request);
-
-            return Ok(result);
         }
 
         [HttpGet]
@@ -121,6 +84,42 @@ namespace FastFood.Api.Controllers
             var result = await _mediator.Send(request);
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<GetDietDto>> GetById([FromRoute] int id)
+        {
+            var request = new GetSpecialDietByIdQuery()
+            {
+                Id = id
+            };
+
+            var result = await _mediator.Send(request);
+
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DietDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var request = new UpdateSpecialDietCommand()
+            {
+                Id = id,
+                Name = dto.Name,
+                Description = dto.Description,
+            };
+
+            await _mediator.Send(request);
+
+            return Ok();
         }
     }
 }

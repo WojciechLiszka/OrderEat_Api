@@ -34,31 +34,6 @@ namespace FastFood.Api.Controllers
             return Created($"api/restaurant/{id}", null);
         }
 
-        [HttpGet]
-        [Route("/api/restaurant/{id}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<GetRestaurantDto>> GetById([FromRoute] int id)
-        {
-            var request = new GetRestaurantByIdQuery()
-            {
-                Id = id
-            };
-            var result = await _mediator.Send(request);
-            return Ok(result);
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<PagedResult<GetRestaurantDto>>> Get([FromQuery] GetRestaurantsQuery query)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            var result = await _mediator.Send(query);
-            return Ok(result);
-        }
-
         [HttpDelete]
         [Route("/api/restaurant/{id}")]
         [Authorize(Roles = "Admin,Owner")]
@@ -74,6 +49,30 @@ namespace FastFood.Api.Controllers
             return NoContent();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<PagedResult<GetRestaurantDto>>> Get([FromQuery] GetRestaurantsQuery query)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("/api/restaurant/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<GetRestaurantDto>> GetById([FromRoute] int id)
+        {
+            var request = new GetRestaurantByIdQuery()
+            {
+                Id = id
+            };
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
         [HttpPut]
         [Route("/api/restaurant/{id}")]
         [Authorize(Roles = "Admin,Owner")]

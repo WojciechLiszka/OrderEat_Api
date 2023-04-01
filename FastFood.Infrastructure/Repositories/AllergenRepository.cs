@@ -26,6 +26,13 @@ namespace FastFood.Infrastructure.Repositories
             return allergen.Id;
         }
 
+        public async Task Delete(Allergen allergen)
+        {
+            _dbContext.Allergens.Remove(allergen);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<Allergen?> GetById(int id)
         {
             var result = await _dbContext.Allergens.FirstOrDefaultAsync(x => x.Id == id);
@@ -39,14 +46,6 @@ namespace FastFood.Infrastructure.Repositories
 
             return result;
         }
-
-        public async Task Delete(Allergen allergen)
-        {
-            _dbContext.Allergens.Remove(allergen);
-
-            await _dbContext.SaveChangesAsync();
-        }
-
         public IQueryable<Allergen> Search(string? phrase)
         {
             var allergens = _dbContext

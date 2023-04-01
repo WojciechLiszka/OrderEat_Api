@@ -34,6 +34,19 @@ namespace FastFood.Api.Controllers
             return Created($"api/allergen/{id}", null);
         }
 
+        [HttpDelete]
+        [Route("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
+        {
+            await _mediator.Send(new DeleteAllergenCommand()
+            {
+                Id = id
+            });
+
+            return NoContent();
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<List<AllergenDto>>> Get([FromQuery] GetAllergensQuery query)
@@ -78,19 +91,6 @@ namespace FastFood.Api.Controllers
             await _mediator.Send(Request);
 
             return Ok();
-        }
-
-        [HttpDelete]
-        [Route("{id}")]
-        [Authorize (Roles = "Admin")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
-        {
-            await _mediator.Send(new DeleteAllergenCommand()
-            {
-                Id = id
-            });
-
-            return NoContent();
         }
     }
 }

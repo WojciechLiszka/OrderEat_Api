@@ -14,11 +14,15 @@ namespace FastFood.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task Register(User user)
+        public async Task Commit()
         {
-            _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
-            return;
+        }
+
+        public async Task Delete(User user)
+        {
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
         }
 
         public bool EmailInUse(string email)
@@ -31,15 +35,11 @@ namespace FastFood.Infrastructure.Repositories
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Email == email);
 
-        public async Task Commit()
+        public async Task Register(User user)
         {
+            _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync();
-        }
-
-        public async Task Delete(User user)
-        {
-            _dbContext.Users.Remove(user);
-            await _dbContext.SaveChangesAsync();
+            return;
         }
     }
 }

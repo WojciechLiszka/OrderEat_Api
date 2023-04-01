@@ -4,9 +4,9 @@ namespace FastFood.Domain.Interfaces
 {
     public interface IUserContextService
     {
-        ClaimsPrincipal User { get; }
+        string? GetUserEmail { get; }
         int? GetUserId { get; }
         string? GetUserRole { get; }
-        string? GetUserEmail { get; }
+        ClaimsPrincipal User { get; }
     }
 }

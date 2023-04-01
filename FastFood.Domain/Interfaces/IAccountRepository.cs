@@ -4,13 +4,14 @@ namespace FastFood.Domain.Interfaces
 {
     public interface IAccountRepository
     {
-        bool EmailInUse(string email);
+        Task Commit();
 
-        Task Register(User user);
+        Task Delete(User user);
+
+        bool EmailInUse(string email);
 
         Task<User?> GetByEmail(string email);
 
-        Task Commit();
-        Task Delete(User user);
+        Task Register(User user);
     }
 }

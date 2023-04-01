@@ -10,10 +10,9 @@ namespace FastFood.ApiTest.Controller
 {
     public class AccountControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
+        private const string _route = "api/account";
         private readonly HttpClient _client;
         private readonly WebApplicationFactory<Program> _factory;
-        private const string _route = "api/account";
-
         public AccountControllerTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory
@@ -31,27 +30,6 @@ namespace FastFood.ApiTest.Controller
                 });
 
             _client = _factory.CreateClient();
-        }
-
-        [Fact]
-        public async Task RegisterUser_ForValidRegisterUserDto_ReturnsOk()
-        {
-            // arrange
-
-            var command = new RegisterUserCommand()
-            {
-                Email = "test@test.com",
-                Password = "testpassword",
-                ConfirmPassword = "testpassword",
-                Name = "John Doe"
-            };
-            var httpContent = command.ToJsonHttpContent();
-            // act
-
-            var response = await _client.PostAsync($"{_route}/register", httpContent);
-            // assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         [Theory]
@@ -80,6 +58,27 @@ namespace FastFood.ApiTest.Controller
             // assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task RegisterUser_ForValidRegisterUserDto_ReturnsOk()
+        {
+            // arrange
+
+            var command = new RegisterUserCommand()
+            {
+                Email = "test@test.com",
+                Password = "testpassword",
+                ConfirmPassword = "testpassword",
+                Name = "John Doe"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            // act
+
+            var response = await _client.PostAsync($"{_route}/register", httpContent);
+            // assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
     }
 }

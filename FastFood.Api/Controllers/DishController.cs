@@ -52,6 +52,21 @@ namespace FastFood.Api.Controllers
             return Created($"/api/dish/{id}", null);
         }
 
+        [HttpDelete]
+        [Route("dish/{id}")]
+        [Authorize(Roles = "Admin,Owner")]
+        public async Task<ActionResult> Delete([FromRoute] int id)
+        {
+            var request = new DeleteDishCommand()
+            {
+                id = id
+            };
+
+            await _mediator.Send(request);
+
+            return NoContent();
+        }
+
         [HttpGet]
         [Route("dish/{id}")]
         [AllowAnonymous]
@@ -65,6 +80,30 @@ namespace FastFood.Api.Controllers
             var dto = await _mediator.Send(request);
 
             return Ok(dto);
+        }
+
+        [HttpGet]
+        [Route("restaurant/{restaurantid}/dish")]
+        [AllowAnonymous]
+        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var request = new GetDishesFromRestaurantQuery()
+            {
+                RestaurantId = restaurantid,
+                SearchPhrase = dto.SearchPhrase,
+                PageNumber = dto.PageNumber,
+                PageSize = dto.PageSize,
+                SortBy = dto.SortBy,
+                SortDirection = dto.SortDirection
+            };
+
+            var result = await _mediator.Send(request);
+
+            return Ok(result);
         }
 
         [HttpPut]
@@ -92,45 +131,6 @@ namespace FastFood.Api.Controllers
             await _mediator.Send(request);
 
             return Ok();
-        }
-
-        [HttpGet]
-        [Route("restaurant/{restaurantid}/dish")]
-        [AllowAnonymous]
-        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            var request = new GetDishesFromRestaurantQuery()
-            {
-                RestaurantId = restaurantid,
-                SearchPhrase = dto.SearchPhrase,
-                PageNumber = dto.PageNumber,
-                PageSize = dto.PageSize,
-                SortBy = dto.SortBy,
-                SortDirection = dto.SortDirection
-            };
-
-            var result = await _mediator.Send(request);
-
-            return Ok(result);
-        }
-
-        [HttpDelete]
-        [Route("dish/{id}")]
-        [Authorize(Roles ="Admin,Owner")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
-        {
-            var request = new DeleteDishCommand()
-            {
-                id = id
-            };
-
-            await _mediator.Send(request);
-
-            return NoContent();
         }
     }
 }

@@ -20,13 +20,12 @@ namespace FastFood.ApiTest.Controller
 {
     public class RestaurantControllerTest : IClassFixture<WebApplicationFactory<Program>>
     {
-        private readonly WebApplicationFactory<Program> _factory;
-        private readonly HttpClient _adminClient;
-        private readonly HttpClient _ownerClient;
         private const string _route = "/api/restaurant";
-        private readonly IConfiguration _configuration;
+        private readonly HttpClient _adminClient;
         private readonly AuthenticationSettings _authenticationSettings;
-
+        private readonly IConfiguration _configuration;
+        private readonly WebApplicationFactory<Program> _factory;
+        private readonly HttpClient _ownerClient;
         public RestaurantControllerTest(WebApplicationFactory<Program> factory)
         {
             _configuration = new ConfigurationBuilder()
@@ -56,66 +55,6 @@ namespace FastFood.ApiTest.Controller
             _ownerClient = _factory.CreateClient();
             var ownerToken = GenerateJwtToken("Owner", "2");
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
-        }
-
-        private async Task SeedRestaurant(Restaurant restaurant)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
-
-            _dbContext.Restaurants.Add(restaurant);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        private string GenerateJwtToken(string roleName, string userId)
-        {
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Email,"test@email.com"),
-                new Claim(ClaimTypes.Name, "John Doe"),
-                new Claim(ClaimTypes.Role, roleName)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
-            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
-
-            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
-                _authenticationSettings.JwtIssuer,
-                claims,
-                expires: expires,
-                signingCredentials: cred);
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
-        }
-
-        [Fact]
-        public async Task CreateRestaurant_ForValidModel_ReturnsCreated()
-        {
-            //arrange
-
-            var command = new CreateRestaurantCommand()
-            {
-                Name = "TestName",
-                Description = "TestDescription",
-                ContactNumber = "111111111",
-                Email = "test@email.com",
-                Country = "TestCountry",
-                City = "TestCity",
-                Street = "TestStreet",
-                ApartmentNumber = "1/10"
-            };
-
-            var httpContent = command.ToJsonHttpContent();
-            //act
-
-            var response = await _adminClient.PostAsync(_route, httpContent);
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
         [Theory]
@@ -158,120 +97,29 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task GetById_ForValidId_ReturnOk()
+        public async Task CreateRestaurant_ForValidModel_ReturnsCreated()
         {
             //arrange
 
-            var restaurant = new Restaurant()
+            var command = new CreateRestaurantCommand()
             {
-                Name = "Name",
+                Name = "TestName",
                 Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
-            };
-            await SeedRestaurant(restaurant);
-            //act
-
-            var response = await _adminClient.GetAsync($"{_route}/{restaurant.Id}");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        }
-
-        [Fact]
-        public async Task GetById_ForInvalId_ReturnNotFound()
-        {
-            //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
-            };
-            await SeedRestaurant(restaurant);
-            //act
-
-            var response = await _adminClient.GetAsync($"{_route}/452345");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
-        }
-
-        [Theory]
-        [InlineData("?PageNumber=1&PageSize=15")]
-        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
-        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
-        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
-        public async Task Get_ForValidQuery_ReturnOk(string query)
-        {
-            //arrange
-
-            //act
-
-            var response = await _adminClient.GetAsync($"{_route}{query}");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        }
-
-        [Theory]
-        [InlineData("?PageNumber=1&PageSize=7")]
-        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
-        public async Task Get_ForInValidQuery_BadRequest(string query)
-        {
-            //arrange
-
-            //act
-
-            var response = await _adminClient.GetAsync($"{_route}{query}");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task Delete_ForValidId_RetursNoContent()
-        {
-            //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
+                ContactNumber = "111111111",
+                Email = "test@email.com",
+                Country = "TestCountry",
+                City = "TestCity",
+                Street = "TestStreet",
+                ApartmentNumber = "1/10"
             };
 
-            await SeedRestaurant(restaurant);
+            var httpContent = command.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.DeleteAsync($"{_route}/{restaurant.Id}");
+            var response = await _adminClient.PostAsync(_route, httpContent);
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
         [Fact]
@@ -331,6 +179,7 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
+
         [Fact]
         public async Task Delete_ForRestaurantOwner_ReturnsNoContent()
         {
@@ -358,6 +207,123 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task Delete_ForValidId_RetursNoContent()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+
+            await SeedRestaurant(restaurant);
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/{restaurant.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=7")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
+        public async Task Get_ForInValidQuery_BadRequest(string query)
+        {
+            //arrange
+
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}{query}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
+        public async Task Get_ForValidQuery_ReturnOk(string query)
+        {
+            //arrange
+
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}{query}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task GetById_ForInvalId_ReturnNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}/452345");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GetById_ForValidId_ReturnOk()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}/{restaurant.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         [Fact]
@@ -399,6 +365,40 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        private string GenerateJwtToken(string roleName, string userId)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim(ClaimTypes.Email,"test@email.com"),
+                new Claim(ClaimTypes.Name, "John Doe"),
+                new Claim(ClaimTypes.Role, roleName)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddDays(_authenticationSettings.JwtExpireDays);
+
+            var token = new JwtSecurityToken(_authenticationSettings.JwtIssuer,
+                _authenticationSettings.JwtIssuer,
+                claims,
+                expires: expires,
+                signingCredentials: cred);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.WriteToken(token);
+        }
+
+        private async Task SeedRestaurant(Restaurant restaurant)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Restaurants.Add(restaurant);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
