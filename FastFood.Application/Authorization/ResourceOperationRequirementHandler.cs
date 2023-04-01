@@ -15,7 +15,7 @@ namespace FastFood.Application.Authorization
             var userId = int.Parse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var userRole = context.User.FindFirst(c => c.Type == ClaimTypes.Role).Value;
 
-            if (resource.CreatedById ==userId || userRole == "Admin")
+            if (resource.CreatedById == userId || userRole == "Admin")
             {
                 context.Succeed(requirement);
             }

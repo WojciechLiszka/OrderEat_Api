@@ -21,7 +21,8 @@ namespace FastFood.ApiTest.Controller
     public class RestaurantControllerTest : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly WebApplicationFactory<Program> _factory;
-        private readonly HttpClient _client;
+        private readonly HttpClient _adminClient;
+        private readonly HttpClient _ownerClient;
         private const string _route = "/api/restaurant";
         private readonly IConfiguration _configuration;
         private readonly AuthenticationSettings _authenticationSettings;
@@ -49,9 +50,12 @@ namespace FastFood.ApiTest.Controller
                     });
                 });
 
-            _client = _factory.CreateClient();
-            var token = GenerateJwtToken("Admin", "1");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _adminClient = _factory.CreateClient();
+            var adminToken = GenerateJwtToken("Admin", "1");
+            _adminClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
+            _ownerClient = _factory.CreateClient();
+            var ownerToken = GenerateJwtToken("Owner", "2");
+            _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
         }
 
         private async Task SeedRestaurant(Restaurant restaurant)
@@ -71,7 +75,7 @@ namespace FastFood.ApiTest.Controller
                 new Claim(ClaimTypes.NameIdentifier, userId),
                 new Claim(ClaimTypes.Email,"test@email.com"),
                 new Claim(ClaimTypes.Name, "John Doe"),
-                new Claim(ClaimTypes.Role, "Admin")
+                new Claim(ClaimTypes.Role, roleName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authenticationSettings.JwtKey));
@@ -108,7 +112,7 @@ namespace FastFood.ApiTest.Controller
             var httpContent = command.ToJsonHttpContent();
             //act
 
-            var response = await _client.PostAsync(_route, httpContent);
+            var response = await _adminClient.PostAsync(_route, httpContent);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
@@ -147,7 +151,7 @@ namespace FastFood.ApiTest.Controller
             var httpContent = command.ToJsonHttpContent();
             //act
 
-            var response = await _client.PostAsync(_route, httpContent);
+            var response = await _adminClient.PostAsync(_route, httpContent);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
@@ -175,7 +179,7 @@ namespace FastFood.ApiTest.Controller
             await SeedRestaurant(restaurant);
             //act
 
-            var response = await _client.GetAsync($"{_route}/{restaurant.Id}");
+            var response = await _adminClient.GetAsync($"{_route}/{restaurant.Id}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -203,7 +207,7 @@ namespace FastFood.ApiTest.Controller
             await SeedRestaurant(restaurant);
             //act
 
-            var response = await _client.GetAsync($"{_route}/452345");
+            var response = await _adminClient.GetAsync($"{_route}/452345");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
@@ -220,7 +224,7 @@ namespace FastFood.ApiTest.Controller
 
             //act
 
-            var response = await _client.GetAsync($"{_route}{query}");
+            var response = await _adminClient.GetAsync($"{_route}{query}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -235,7 +239,7 @@ namespace FastFood.ApiTest.Controller
 
             //act
 
-            var response = await _client.GetAsync($"{_route}{query}");
+            var response = await _adminClient.GetAsync($"{_route}{query}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
@@ -264,7 +268,7 @@ namespace FastFood.ApiTest.Controller
             await SeedRestaurant(restaurant);
             //act
 
-            var response = await _client.DeleteAsync($"{_route}/{restaurant.Id}");
+            var response = await _adminClient.DeleteAsync($"{_route}/{restaurant.Id}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
@@ -293,10 +297,40 @@ namespace FastFood.ApiTest.Controller
             await SeedRestaurant(restaurant);
             //act
 
-            var response = await _client.DeleteAsync($"{_route}/63345");
+            var response = await _adminClient.DeleteAsync($"{_route}/63345");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_ForNotRestaurantOwner_ReturnForbidden()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 21451
+            };
+            await SeedRestaurant(restaurant);
+            var token = GenerateJwtToken("Owner", "1");
+            //act
+
+            var response = await _ownerClient.DeleteAsync($"{_route}/{restaurant.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -334,7 +368,7 @@ namespace FastFood.ApiTest.Controller
             var httpContent = command.ToJsonHttpContent();
             //act
 
-            var response = await _client.PutAsync($"{_route}/{restaurant.Id}", httpContent);
+            var response = await _adminClient.PutAsync($"{_route}/{restaurant.Id}", httpContent);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
