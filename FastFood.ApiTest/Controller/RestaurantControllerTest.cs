@@ -1,5 +1,6 @@
 ﻿using FastFood.ApiTest.Helpers;
 using FastFood.Application.Restaurant.Commands.CreateRestaurant;
+using FastFood.Application.Restaurant.Commands.UpdateRestaurant;
 using FastFood.Domain.Entities;
 using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
@@ -296,6 +297,47 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Update_ForValidModel_ReturnsOk()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var command = new UpdateRestaurantDto()
+            {
+                Description = "ValidTestDescription",
+                ContactNumber = "111111111",
+                Email = "Validtest@email.com",
+                Country = "ValidTestCountry",
+                City = "ValidTestCity",
+                Street = "ValidTestStreet",
+                ApartmentNumber = "1/10"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _client.PutAsync($"{_route}/{restaurant.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
     }
 }
