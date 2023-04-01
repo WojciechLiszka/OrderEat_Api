@@ -324,13 +324,40 @@ namespace FastFood.ApiTest.Controller
                 CreatedById = 21451
             };
             await SeedRestaurant(restaurant);
-            var token = GenerateJwtToken("Owner", "1");
             //act
 
             var response = await _ownerClient.DeleteAsync($"{_route}/{restaurant.Id}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+        [Fact]
+        public async Task Delete_ForRestaurantOwner_ReturnsNoContent()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 2
+            };
+            await SeedRestaurant(restaurant);
+            //act
+
+            var response = await _ownerClient.DeleteAsync($"{_route}/{restaurant.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
         [Fact]
