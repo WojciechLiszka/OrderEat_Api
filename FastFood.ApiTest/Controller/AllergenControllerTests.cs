@@ -71,6 +71,25 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
+        [Theory]
+        [InlineData("","TestDescription")]
+        [InlineData("TestName", "")]
+        [InlineData("TestName", null)]
+        public async Task Create_ForInvalidModel_ReturnsBadRequest(string name,string description)
+        {
+            var command = new CreateAllergenCommand()
+            {
+                Name = name,
+                Description = description
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync(_route, httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
 
         private string GenerateJwtToken(string roleName, string userId)
         {
