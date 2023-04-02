@@ -327,47 +327,6 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
-        [Fact]
-        public async Task Update_ForValidModel_ReturnsOk()
-        {
-            //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
-            };
-
-            await SeedRestaurant(restaurant);
-
-            var command = new UpdateRestaurantDto()
-            {
-                Description = "ValidTestDescription",
-                ContactNumber = "111111111",
-                Email = "Validtest@email.com",
-                Country = "ValidTestCountry",
-                City = "ValidTestCity",
-                Street = "ValidTestStreet",
-                ApartmentNumber = "1/10"
-            };
-            var httpContent = command.ToJsonHttpContent();
-            //act
-
-            var response = await _adminClient.PutAsync($"{_route}/{restaurant.Id}", httpContent);
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        }
-
         [Theory]
         [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "")]
         [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "", "1/10")]
@@ -418,6 +377,127 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Update_ForValidModel_ReturnsOk()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var command = new UpdateRestaurantDto()
+            {
+                Description = "ValidTestDescription",
+                ContactNumber = "111111111",
+                Email = "Validtest@email.com",
+                Country = "ValidTestCountry",
+                City = "ValidTestCity",
+                Street = "ValidTestStreet",
+                ApartmentNumber = "1/10"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/{restaurant.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Update_ForNotRestaueantOwner_ReturnsForbidden()
+        {
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 21345
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var command = new UpdateRestaurantDto()
+            {
+                Description = "ValidTestDescription",
+                ContactNumber = "111111111",
+                Email = "Validtest@email.com",
+                Country = "ValidTestCountry",
+                City = "ValidTestCity",
+                Street = "ValidTestStreet",
+                ApartmentNumber = "1/10"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PutAsync($"{_route}/{restaurant.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task Update_ForRestaueantOwner_ReturnsOK()
+        {
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 2
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var command = new UpdateRestaurantDto()
+            {
+                Description = "ValidTestDescription",
+                ContactNumber = "111111111",
+                Email = "Validtest@email.com",
+                Country = "ValidTestCountry",
+                City = "ValidTestCity",
+                Street = "ValidTestStreet",
+                ApartmentNumber = "1/10"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PutAsync($"{_route}/{restaurant.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
