@@ -2,9 +2,9 @@
 
 namespace FastFood.Application.Restaurant.Commands.UpdateRestaurant
 {
-    public class UpdateRestaurantCommandValidator : AbstractValidator<UpdateRestaurantCommand>
+    public class UpdateRestaurantDtoValidatior : AbstractValidator<UpdateRestaurantDto>
     {
-        public UpdateRestaurantCommandValidator()
+        public UpdateRestaurantDtoValidatior()
         {
             RuleFor(m => m.Email)
                .NotEmpty()

@@ -26,6 +26,7 @@ namespace FastFood.ApiTest.Controller
         private readonly IConfiguration _configuration;
         private readonly WebApplicationFactory<Program> _factory;
         private readonly HttpClient _ownerClient;
+
         public RestaurantControllerTest(WebApplicationFactory<Program> factory)
         {
             _configuration = new ConfigurationBuilder()
@@ -365,6 +366,58 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "")]
+        [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "", "1/10")]
+        [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "", "TestStreet", "1/10")]
+        [InlineData("TestDescription", "111111111", "test@email.com", "", "TestCity", "TestStreet", "1/10")]
+        [InlineData("", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestDescription", "111111111", "", "TestCountry", "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", null)]
+        [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", null, "1/10")]
+        [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", null, "TestStreet", "1/10")]
+        [InlineData("TestDescription", "111111111", "test@email.com", null, "TestCity", "TestStreet", "1/10")]
+        [InlineData(null, "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "1/10")]
+        [InlineData("TestDescription", "111111111", null, "TestCountry", "TestCity", "TestStreet", "1/10")]
+        public async Task Update_ForInvalidModel_ReturnsBadRequest(string description, string contactNumber, string email, string country, string city, string street, string apartmentNumber)
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var command = new UpdateRestaurantCommand()
+            {
+                Description = description,
+                ContactNumber = contactNumber,
+                Email = email,
+                Country = country,
+                City = city,
+                Street = street,
+                ApartmentNumber = apartmentNumber
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/{restaurant.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
