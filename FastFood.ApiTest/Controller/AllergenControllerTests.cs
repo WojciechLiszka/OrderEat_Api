@@ -1,5 +1,6 @@
 ﻿using FastFood.ApiTest.Helpers;
 using FastFood.Application.Allergen.Commands.CreateAllergen;
+using FastFood.Domain.Entities;
 using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
 using FluentAssertions;
@@ -53,6 +54,26 @@ namespace FastFood.ApiTest.Controller
             _adminClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
         }
 
+        [Theory]
+        [InlineData("", "TestDescription")]
+        [InlineData("TestName", "")]
+        [InlineData("TestName", null)]
+        public async Task Create_ForInvalidModel_ReturnsBadRequest(string name, string description)
+        {
+            var command = new CreateAllergenCommand()
+            {
+                Name = name,
+                Description = description
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync(_route, httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
         [Fact]
         public async Task Create_ForValidModel_ReturnsCreated()
         {
@@ -71,24 +92,24 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
-        [Theory]
-        [InlineData("","TestDescription")]
-        [InlineData("TestName", "")]
-        [InlineData("TestName", null)]
-        public async Task Create_ForInvalidModel_ReturnsBadRequest(string name,string description)
+
+        [Fact]
+        public async Task Delete_ForValidId_RetunrsNoContent()
         {
-            var command = new CreateAllergenCommand()
+            //arrange
+
+            var allergen = new Allergen()
             {
-                Name = name,
-                Description = description
+                Name = "TestName",
+                Description = "TestDescription"
             };
-            var httpContent = command.ToJsonHttpContent();
+            await SeedAllergen(allergen);
             //act
 
-            var response = await _adminClient.PostAsync(_route, httpContent);
+            var response = await _adminClient.DeleteAsync($"{_route}/{allergen.Id}");
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
@@ -113,6 +134,16 @@ namespace FastFood.ApiTest.Controller
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
+        }
+
+        private async Task SeedAllergen(Allergen allergen)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Allergens.Add(allergen);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
