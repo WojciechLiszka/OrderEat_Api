@@ -94,25 +94,6 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Delete_ForValidId_RetunrsNoContent()
-        {
-            //arrange
-
-            var allergen = new Allergen()
-            {
-                Name = "TestName",
-                Description = "TestDescription"
-            };
-            await SeedAllergen(allergen);
-            //act
-
-            var response = await _adminClient.DeleteAsync($"{_route}/{allergen.Id}");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
-        }
-
-        [Fact]
         public async Task Delete_ForInvalidId_RetunrsNotFound()
         {
             //arrange
@@ -131,6 +112,24 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public async Task Delete_ForValidId_RetunrsNoContent()
+        {
+            //arrange
+
+            var allergen = new Allergen()
+            {
+                Name = "TestName",
+                Description = "TestDescription"
+            };
+            await SeedAllergen(allergen);
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/{allergen.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
