@@ -132,6 +132,25 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
+        [Fact]
+        public async Task GetById_ForValidId_ReturnsOk()
+        {
+            //arrange
+
+            var allergen = new Allergen()
+            {
+                Name = "TestName",
+                Description = "TestDescription"
+            };
+            await SeedAllergen(allergen);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}/{allergen.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
         [Theory]
         [InlineData("ValidName", null)]
         [InlineData("", "ValidDescription")]
