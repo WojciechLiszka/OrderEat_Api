@@ -175,6 +175,27 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Theory]
+        [InlineData("?PageNumber=1&PageSize=7")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
+        public async Task Get_ForInvalidQueryParams_ReturnsBadRequest(string query)
+        {
+            //arrange
+
+            var allergen = new Allergen()
+            {
+                Name = "TestName",
+                Description = "TestDescription"
+            };
+            await SeedAllergen(allergen);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}{query}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
         [InlineData("ValidName", null)]
         [InlineData("", "ValidDescription")]
         [InlineData("ValidName", "")]
