@@ -17,9 +17,9 @@ namespace FastFood.Application.Restaurant
                 .NotNull()
                 .MinimumLength(1)
                 .MaximumLength(50)
-                .Custom((value, context) =>
+                .Custom(async (value, context) =>
                 {
-                    var existingRestaurant = repository.GetByName(value).Result;
+                    var existingRestaurant =await repository.GetByName(value);
                     if (existingRestaurant != null)
                     {
                         context.AddFailure($"{value} is not unique name for restaurant");
