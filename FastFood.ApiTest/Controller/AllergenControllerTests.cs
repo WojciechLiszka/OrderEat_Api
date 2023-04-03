@@ -82,7 +82,7 @@ namespace FastFood.ApiTest.Controller
 
             var command = new CreateAllergenCommand()
             {
-                Name = "TestName",
+                Name = "Name",
                 Description = "TestDecription"
             };
             var httpContent = command.ToJsonHttpContent();
@@ -146,6 +146,29 @@ namespace FastFood.ApiTest.Controller
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/{allergen.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
+        public async Task Get_ForValidQueryParams_ReturnsOk(string query)
+        {
+            //arrange
+
+            var allergen = new Allergen()
+            {
+                Name = "TestName",
+                Description = "TestDescription"
+            };
+            await SeedAllergen(allergen);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}{query}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);

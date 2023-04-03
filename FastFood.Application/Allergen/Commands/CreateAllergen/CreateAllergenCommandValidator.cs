@@ -14,7 +14,7 @@ namespace FastFood.Application.Allergen.Commands.CreateAllergen
                 .MaximumLength(45)
                 .Custom(async (value, context) =>
                 {
-                    var existingAllergen = await repository.GetByName(value);
+                    var existingAllergen =await repository.GetByName(value);
                     if (existingAllergen != null)
                     {
                         context.AddFailure($"{value} is not unique name for allergen");
