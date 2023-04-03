@@ -1,5 +1,6 @@
 ﻿using FastFood.ApiTest.Helpers;
 using FastFood.Application.Allergen.Commands.CreateAllergen;
+using FastFood.Application.Allergen.Commands.UpdateAllergen;
 using FastFood.Domain.Entities;
 using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
@@ -130,6 +131,32 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
+
+        [Fact]
+        public async Task Update_ForValidModel_ReturnsOk()
+        {
+            //arrange
+
+            var allergen = new Allergen()
+            {
+                Name = "TestName",
+                Description = "TestDescription"
+            };
+            await SeedAllergen(allergen);
+
+            var command = new UpdateAllergenDto()
+            {
+                Name = "ValidName",
+                Description = "ValidDescription"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/{allergen.Id}", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()

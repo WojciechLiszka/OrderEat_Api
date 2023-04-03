@@ -327,6 +327,46 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
+        [Fact]
+        public async Task Update_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var command = new UpdateRestaurantCommand()
+            {
+                Description = "ValidTestDescription",
+                ContactNumber = "111111111",
+                Email = "Validtest@email.com",
+                Country = "ValidTestCountry",
+                City = "ValidTestCity",
+                Street = "ValidTestStreet",
+                ApartmentNumber = "1/10"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/34524", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
         [Theory]
         [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "TestStreet", "")]
         [InlineData("TestDescription", "111111111", "test@email.com", "TestCountry", "TestCity", "", "1/10")]
@@ -378,47 +418,6 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
-
-        [Fact]
-        public async Task Update_ForInvalidId_ReturnsNotFound()
-        {
-            //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
-            };
-            await SeedRestaurant(restaurant);
-
-            var command = new UpdateRestaurantCommand()
-            {
-                Description = "ValidTestDescription",
-                ContactNumber = "111111111",
-                Email = "Validtest@email.com",
-                Country = "ValidTestCountry",
-                City = "ValidTestCity",
-                Street = "ValidTestStreet",
-                ApartmentNumber = "1/10"
-            };
-            var httpContent = command.ToJsonHttpContent();
-            //act
-
-            var response = await _adminClient.PutAsync($"{_route}/34524", httpContent);
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
-        }
-
         [Fact]
         public async Task Update_ForNotRestaueantOwner_ReturnsForbidden()
         {
