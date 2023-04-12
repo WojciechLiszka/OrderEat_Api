@@ -1,5 +1,9 @@
-﻿using FastFood.Domain.Models;
+﻿using FastFood.ApiTest.Helpers;
+using FastFood.Application.Dish;
+using FastFood.Domain.Entities;
+using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +19,6 @@ namespace FastFood.ApiTest.Controller
 {
     public class DishControllerTest : IClassFixture<WebApplicationFactory<Program>>
     {
-        private const string _route = "/api/restaurant";
         private readonly HttpClient _adminClient;
         private readonly AuthenticationSettings _authenticationSettings;
         private readonly IConfiguration _configuration;
@@ -53,6 +56,47 @@ namespace FastFood.ApiTest.Controller
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
         }
 
+        [Fact]
+        public async Task Create_ForValidModel_ReturnsCreated()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var dto = new DishDto()
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+
+                BasePrize = (decimal)10.50,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync($"/api/restaurant/{restaurant.Id}/dish", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
@@ -75,6 +119,26 @@ namespace FastFood.ApiTest.Controller
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
+        }
+
+        private async Task SeedRestaurant(Restaurant restaurant)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Restaurants.Add(restaurant);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedDish(Dish dish)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Dishes.Add(dish);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
