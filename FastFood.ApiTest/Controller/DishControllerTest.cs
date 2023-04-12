@@ -96,6 +96,48 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
+        [Fact]
+        public async Task Create_ForNotRestaurantOwner_ReturnsForbidden()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                CreatedById=1,
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+                
+            };
+            await SeedRestaurant(restaurant);
+
+            var dto = new DishDto()
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+
+                BasePrize = (decimal)10.50,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PostAsync($"/api/restaurant/{restaurant.Id}/dish", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
 
         [Theory]
         [InlineData(null, "TestDescription", 10.50, 1000, true, true)]
