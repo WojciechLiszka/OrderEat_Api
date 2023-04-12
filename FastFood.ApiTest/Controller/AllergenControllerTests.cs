@@ -132,8 +132,10 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
-        [Fact]
-        public async Task GetById_ForValidId_ReturnsOk()
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=7")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
+        public async Task Get_ForInvalidQueryParams_ReturnsBadRequest(string query)
         {
             //arrange
 
@@ -145,10 +147,10 @@ namespace FastFood.ApiTest.Controller
             await SeedAllergen(allergen);
             //act
 
-            var response = await _adminClient.GetAsync($"{_route}/{allergen.Id}");
+            var response = await _adminClient.GetAsync($"{_route}{query}");
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
 
         [Theory]
@@ -174,10 +176,8 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
-        [Theory]
-        [InlineData("?PageNumber=1&PageSize=7")]
-        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
-        public async Task Get_ForInvalidQueryParams_ReturnsBadRequest(string query)
+        [Fact]
+        public async Task GetById_ForValidId_ReturnsOk()
         {
             //arrange
 
@@ -189,12 +189,11 @@ namespace FastFood.ApiTest.Controller
             await SeedAllergen(allergen);
             //act
 
-            var response = await _adminClient.GetAsync($"{_route}{query}");
+            var response = await _adminClient.GetAsync($"{_route}/{allergen.Id}");
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
-
         [Theory]
         [InlineData("ValidName", null)]
         [InlineData("", "ValidDescription")]
