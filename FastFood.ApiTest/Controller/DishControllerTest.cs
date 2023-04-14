@@ -227,6 +227,62 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
+        public async Task Update_ForNonRestaurantOwner_ReturnsForbidden()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                CreatedById = 1,
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                Restaurant = restaurant
+            };
+            SeedDish(dish);
+
+            var dto = new DishDto()
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+
+                BasePrize = (decimal)10.50,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PutAsync($"api/dish/{dish.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
         public async Task Updade_ForInvalidId_ReturnsNotFound()
         {
             //arrange
@@ -312,6 +368,22 @@ namespace FastFood.ApiTest.Controller
         public async Task Update_ForValidModel_ReturnsOK()
         {
             //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                CreatedById = 1,
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
 
             var dish = new Dish()
             {
@@ -322,7 +394,8 @@ namespace FastFood.ApiTest.Controller
                 BaseCaloricValue = 1000,
 
                 AllowedCustomization = true,
-                IsAvilable = true
+                IsAvilable = true,
+                Restaurant = restaurant
             };
             SeedDish(dish);
 
