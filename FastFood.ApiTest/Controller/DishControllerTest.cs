@@ -57,25 +57,22 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Create_ForValidModel_ReturnsCreated()
+        public async Task Update_ForValidModel_ReturnsOK()
         {
             //arrange
 
-            var restaurant = new Restaurant()
+            var dish = new Dish()
             {
                 Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true
             };
-            await SeedRestaurant(restaurant);
+            SeedDish(dish);
 
             var dto = new DishDto()
             {
@@ -91,52 +88,10 @@ namespace FastFood.ApiTest.Controller
             var httpContent = dto.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PostAsync($"/api/restaurant/{restaurant.Id}/dish", httpContent);
+            var response = await _adminClient.PutAsync($"api/dish/{dish.Id}", httpContent);
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
-        }
-        [Fact]
-        public async Task Create_ForNotRestaurantOwner_ReturnsForbidden()
-        {
-            //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                CreatedById=1,
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
-                
-            };
-            await SeedRestaurant(restaurant);
-
-            var dto = new DishDto()
-            {
-                Name = "TestName",
-                Description = "TestDescription",
-
-                BasePrize = (decimal)10.50,
-                BaseCaloricValue = 1000,
-
-                AllowedCustomization = true,
-                IsAvilable = true
-            };
-            var httpContent = dto.ToJsonHttpContent();
-            //act
-
-            var response = await _ownerClient.PostAsync($"/api/restaurant/{restaurant.Id}/dish", httpContent);
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         [Theory]
@@ -183,6 +138,89 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Create_ForNotRestaurantOwner_ReturnsForbidden()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                CreatedById = 1,
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var dto = new DishDto()
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+
+                BasePrize = (decimal)10.50,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PostAsync($"/api/restaurant/{restaurant.Id}/dish", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task Create_ForValidModel_ReturnsCreated()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var dto = new DishDto()
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+
+                BasePrize = (decimal)10.50,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync($"/api/restaurant/{restaurant.Id}/dish", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
         [Fact]
@@ -250,16 +288,6 @@ namespace FastFood.ApiTest.Controller
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task SeedRestaurant(Restaurant restaurant)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
-
-            _dbContext.Restaurants.Add(restaurant);
-            await _dbContext.SaveChangesAsync();
-        }
-
         private async Task SeedDish(Dish dish)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
@@ -267,6 +295,16 @@ namespace FastFood.ApiTest.Controller
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
             _dbContext.Dishes.Add(dish);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedRestaurant(Restaurant restaurant)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync();
         }
     }
