@@ -227,6 +227,49 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
+        public async Task Delete_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                CreatedById = 1,
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                Restaurant = restaurant
+            };
+            SeedDish(dish);
+            //act
+
+            var response = await _adminClient.DeleteAsync($"api/dish/23452");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task Delete_ForValidid_ReturnsNoContent()
         {
             //arrange
@@ -270,7 +313,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Delete_ForInvalidId_ReturnsNotFound()
+        public async Task Delete_ForNonRestaurantOwner_ReturnsForbidden()
         {
             //arrange
 
@@ -306,10 +349,10 @@ namespace FastFood.ApiTest.Controller
             SeedDish(dish);
             //act
 
-            var response = await _adminClient.DeleteAsync($"api/dish/23452");
+            var response = await _ownerClient.DeleteAsync($"api/dish/{dish.Id}");
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         [Fact]
