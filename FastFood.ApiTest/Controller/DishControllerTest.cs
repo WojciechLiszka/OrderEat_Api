@@ -103,6 +103,50 @@ namespace FastFood.ApiTest.Controller
         [InlineData("Name", "T", 10.50, 1000, true, true)]
         [InlineData("Name", "TestDescription", -1, 1000, true, true)]
         [InlineData("Name", "TestDescription", 10.50, 0, true, true)]
+        public async Task Update_ForInvalidModel_ReturnsBadRequest(string name, string description, decimal basePrize, int baseCaloriValue, bool allowedCustomization, bool isAvilible)
+        {
+            //arrange
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true
+            };
+            SeedDish(dish);
+
+            var dto = new DishDto()
+            {
+                Name = name,
+                Description = description,
+                BasePrize = basePrize,
+                BaseCaloricValue = baseCaloriValue,
+                AllowedCustomization = allowedCustomization,
+                IsAvilable = isAvilible
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"api/dish/{dish.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
+        [InlineData(null, "TestDescription", 10.50, 1000, true, true)]
+        [InlineData("", "TestDescription", 10.50, 1000, true, true)]
+        [InlineData("Name", null, 10.50, 1000, true, true)]
+        [InlineData("Name", "", 10.50, 1000, true, true)]
+        [InlineData("N", "TestDescription", 10.50, 1000, true, true)]
+        [InlineData("Name", "T", 10.50, 1000, true, true)]
+        [InlineData("Name", "TestDescription", -1, 1000, true, true)]
+        [InlineData("Name", "TestDescription", 10.50, 0, true, true)]
         public async Task Create_ForInvalidModel_ReturnsBadRequest(string name, string description, decimal basePrize, int baseCaloriValue, bool allowedCustomization, bool isAvilible)
         {
             //arrange
