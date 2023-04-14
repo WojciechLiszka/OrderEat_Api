@@ -270,6 +270,49 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
+        public async Task Delete_ForNonRestaurantOwner_ReturnsForbidden()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                CreatedById = 1,
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                Restaurant = restaurant
+            };
+            SeedDish(dish);
+            //act
+
+            var response = await _ownerClient.DeleteAsync($"api/dish/{dish.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
         public async Task Delete_ForValidid_ReturnsNoContent()
         {
             //arrange
@@ -312,11 +355,14 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
-        [Fact]
-        public async Task Delete_ForNonRestaurantOwner_ReturnsForbidden()
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
+        public async Task Get_ForValidQueryParams_ReturnsOK(string query)
         {
             //arrange
-
             var restaurant = new Restaurant()
             {
                 Name = "Name",
@@ -333,7 +379,6 @@ namespace FastFood.ApiTest.Controller
                 }
             };
             await SeedRestaurant(restaurant);
-
             var dish = new Dish()
             {
                 Name = "Name",
@@ -344,15 +389,11 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
             };
             SeedDish(dish);
+
             //act
-
-            var response = await _ownerClient.DeleteAsync($"api/dish/{dish.Id}");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+            var response = await _adminClient.GetAsync($"api/restaurant/{restaurant.Id}/dish/{query}");
         }
 
         [Fact]
