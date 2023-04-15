@@ -26,8 +26,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPost]
         [Route("restaurant/{restaurantid}/dish")]
-        [Authorize(Roles ="Admin,Owner")]
-        
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromBody] DishDto dto)
         {
             if (!ModelState.IsValid)
@@ -87,10 +86,6 @@ namespace FastFood.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
             var request = new GetDishesFromRestaurantQuery()
             {
                 RestaurantId = restaurantid,
@@ -101,6 +96,13 @@ namespace FastFood.Api.Controllers
                 SortDirection = dto.SortDirection
             };
 
+            var validator = new GetDishesFromRestaurantQueryValidator();
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest();
+            }
+
             var result = await _mediator.Send(request);
 
             return Ok(result);
@@ -108,7 +110,7 @@ namespace FastFood.Api.Controllers
 
         [HttpPut]
         [Route("dish/{id}")]
-        [Authorize (Roles = "Admin,Owner")]
+        [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DishDto dto)
         {
             if (!ModelState.IsValid)
