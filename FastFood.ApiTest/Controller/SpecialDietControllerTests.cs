@@ -1,4 +1,5 @@
 ﻿using FastFood.ApiTest.Helpers;
+using FastFood.Application.SpecialDiet.Commands;
 using FastFood.Application.SpecialDiet.Commands.CreateSpecialDiet;
 using FastFood.Domain.Entities;
 using FastFood.Domain.Models;
@@ -19,6 +20,7 @@ namespace FastFood.ApiTest.Controller
 {
     public class SpecialDietControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
+        private const string _route = "api/specialDiet";
         private readonly HttpClient _adminClient;
         private readonly AuthenticationSettings _authenticationSettings;
         private readonly IConfiguration _configuration;
@@ -57,6 +59,32 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
+        public async Task Update_ForValid_RetursOK()
+        {
+            //arrange
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            var dto = new DietDto()
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/{diet.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
         public async Task Create_ForValidModel_ReturnsCreated()
         {
             //arrange
@@ -69,7 +97,7 @@ namespace FastFood.ApiTest.Controller
             var httpContent = command.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PostAsync("api/specialDiet", httpContent);
+            var response = await _adminClient.PostAsync(_route, httpContent);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
@@ -90,7 +118,7 @@ namespace FastFood.ApiTest.Controller
             var httpContent = command.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PostAsync("api/specialDiet", httpContent);
+            var response = await _adminClient.PostAsync(_route, httpContent);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
