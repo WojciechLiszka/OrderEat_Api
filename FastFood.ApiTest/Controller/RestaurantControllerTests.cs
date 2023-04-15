@@ -18,7 +18,7 @@ using System.Text;
 
 namespace FastFood.ApiTest.Controller
 {
-    public class RestaurantControllerTest : IClassFixture<WebApplicationFactory<Program>>
+    public class RestaurantControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private const string _route = "/api/restaurant";
         private readonly HttpClient _adminClient;
@@ -27,7 +27,7 @@ namespace FastFood.ApiTest.Controller
         private readonly WebApplicationFactory<Program> _factory;
         private readonly HttpClient _ownerClient;
 
-        public RestaurantControllerTest(WebApplicationFactory<Program> factory)
+        public RestaurantControllerTests(WebApplicationFactory<Program> factory)
         {
             _configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)

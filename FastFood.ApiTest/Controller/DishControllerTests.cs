@@ -17,7 +17,7 @@ using System.Text;
 
 namespace FastFood.ApiTest.Controller
 {
-    public class DishControllerTest : IClassFixture<WebApplicationFactory<Program>>
+    public class DishControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly HttpClient _adminClient;
         private readonly AuthenticationSettings _authenticationSettings;
@@ -25,7 +25,7 @@ namespace FastFood.ApiTest.Controller
         private readonly WebApplicationFactory<Program> _factory;
         private readonly HttpClient _ownerClient;
 
-        public DishControllerTest(WebApplicationFactory<Program> factory)
+        public DishControllerTests(WebApplicationFactory<Program> factory)
         {
             _configuration = new ConfigurationBuilder()
            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
