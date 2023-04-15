@@ -17,7 +17,7 @@ using System.Text;
 
 namespace FastFood.ApiTest.Controller
 {
-    public class SpecialDietControllerTests :IClassFixture<WebApplicationFactory<Program>>
+    public class SpecialDietControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly HttpClient _adminClient;
         private readonly AuthenticationSettings _authenticationSettings;
@@ -73,6 +73,27 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+        }
+
+        [Theory]
+        [InlineData("", "Description")]
+        [InlineData("Name", "")]
+        [InlineData(null, "Description")]
+        [InlineData("name", null)]
+        public async Task Create_ForInvalidModel_RetursBadRequest(string name, string description)
+        {
+            var command = new CreateSpecialDietCommand()
+            {
+                Name = name,
+                Description = description
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync("api/specialDiet", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
 
         private async Task seedDiet(SpecialDiet diet)
