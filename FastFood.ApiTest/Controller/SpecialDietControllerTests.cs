@@ -1,5 +1,9 @@
-﻿using FastFood.Domain.Models;
+﻿using FastFood.ApiTest.Helpers;
+using FastFood.Application.SpecialDiet.Commands.CreateSpecialDiet;
+using FastFood.Domain.Entities;
+using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +17,7 @@ using System.Text;
 
 namespace FastFood.ApiTest.Controller
 {
-    public class SpecialDietControllerTests
+    public class SpecialDietControllerTests :IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly HttpClient _adminClient;
         private readonly AuthenticationSettings _authenticationSettings;
@@ -51,6 +55,36 @@ namespace FastFood.ApiTest.Controller
             var ownerToken = GenerateJwtToken("Owner", "2");
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
         }
+
+        [Fact]
+        public async Task Create_ForValidModel_ReturnsCreated()
+        {
+            //arrange
+
+            var command = new CreateSpecialDietCommand()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync("api/specialDiet", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+        }
+
+        private async Task seedDiet(SpecialDiet diet)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Diets.Add(diet);
+            await _dbContext.SaveChangesAsync();
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
