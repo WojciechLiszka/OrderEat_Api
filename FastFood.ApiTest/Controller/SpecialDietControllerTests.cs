@@ -155,6 +155,32 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
 
+        [Fact]
+        public async Task Update_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            var dto = new DietDto()
+            {
+                Name = "TestName",
+                Description = "TestDescription",
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/35234", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
