@@ -108,6 +108,102 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
+        public async Task AddDishToDiet_ForInvalDishIdAndValidDietId_ReturnsNotFound()
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Test Name",
+                Description = "TestDescription",
+
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await seedDish(dish);
+            //act
+
+            var response = await _adminClient.PatchAsync($"{_route}/{diet.Id}/dish/6245", null);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+        [Fact]
+        public async Task AddDishToDiet_ForInvalDietIdAndValidDishId_ReturnsNotFound()
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Test Name",
+                Description = "TestDescription",
+
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await seedDish(dish);
+            //act
+
+            var response = await _adminClient.PatchAsync($"{_route}/4365/dish/{dish.Id}", null);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
         [Theory]
         [InlineData("", "Description")]
         [InlineData("Name", "")]
