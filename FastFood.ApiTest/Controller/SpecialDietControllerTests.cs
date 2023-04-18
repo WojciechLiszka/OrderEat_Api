@@ -87,7 +87,7 @@ namespace FastFood.ApiTest.Controller
 
             var command = new CreateSpecialDietCommand()
             {
-                Name = "Name",
+                Name = "TestName",
                 Description = "Description"
             };
             var httpContent = command.ToJsonHttpContent();
@@ -100,7 +100,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Update_ForValid_RetursOK()
+        public async Task Update_ForValidModel_RetursOK()
         {
             //arrange
 
@@ -124,6 +124,37 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
+        [Theory]
+        [InlineData("", "Description")]
+        [InlineData("Name", "")]
+        [InlineData(null, "Description")]
+        [InlineData("name", null)]
+        public async Task Update_ForInvalidModel_ReturnsOK(string name, string description)
+        {
+            //arrange
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            var dto = new DietDto()
+            {
+                Name = name,
+                Description = description,
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/{diet.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
