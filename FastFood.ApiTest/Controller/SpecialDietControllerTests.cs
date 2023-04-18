@@ -46,7 +46,8 @@ namespace FastFood.ApiTest.Controller
                         services.Remove(dbContextOptions);
 
                         services
-                         .AddDbContext<FastFoodDbContext>(options => options.UseInMemoryDatabase("FastFoodDb"));
+                         .AddDbContext<FastFoodDbContext>(options => options.UseInMemoryDatabase("FastFoodDb")
+                         .EnableSensitiveDataLogging());
                     });
                 });
 
@@ -56,6 +57,46 @@ namespace FastFood.ApiTest.Controller
             _ownerClient = _factory.CreateClient();
             var ownerToken = GenerateJwtToken("Owner", "2");
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
+        }
+
+        [Theory]
+        [InlineData("", "Description")]
+        [InlineData("Name", "")]
+        [InlineData(null, "Description")]
+        [InlineData("name", null)]
+        public async Task Create_ForInvalidModel_RetursBadRequest(string name, string description)
+        {
+            var command = new CreateSpecialDietCommand()
+            {
+                Name = name,
+                Description = description
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync(_route, httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Create_ForValidModel_ReturnsCreated()
+        {
+            //arrange
+
+            var command = new CreateSpecialDietCommand()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            var httpContent = command.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync(_route, httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
         [Fact]
@@ -83,57 +124,6 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
-
-        [Fact]
-        public async Task Create_ForValidModel_ReturnsCreated()
-        {
-            //arrange
-
-            var command = new CreateSpecialDietCommand()
-            {
-                Name = "Name",
-                Description = "Description"
-            };
-            var httpContent = command.ToJsonHttpContent();
-            //act
-
-            var response = await _adminClient.PostAsync(_route, httpContent);
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
-        }
-
-        [Theory]
-        [InlineData("", "Description")]
-        [InlineData("Name", "")]
-        [InlineData(null, "Description")]
-        [InlineData("name", null)]
-        public async Task Create_ForInvalidModel_RetursBadRequest(string name, string description)
-        {
-            var command = new CreateSpecialDietCommand()
-            {
-                Name = name,
-                Description = description
-            };
-            var httpContent = command.ToJsonHttpContent();
-            //act
-
-            var response = await _adminClient.PostAsync(_route, httpContent);
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
-        }
-
-        private async Task seedDiet(SpecialDiet diet)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
-
-            _dbContext.Diets.Add(diet);
-            await _dbContext.SaveChangesAsync();
-        }
-
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
@@ -156,6 +146,16 @@ namespace FastFood.ApiTest.Controller
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
+        }
+
+        private async Task seedDiet(SpecialDiet diet)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Diets.Add(diet);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

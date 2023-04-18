@@ -25,7 +25,6 @@ namespace FastFood.ApiTest.Controller
         private readonly AuthenticationSettings _authenticationSettings;
         private readonly IConfiguration _configuration;
         private readonly WebApplicationFactory<Program> _factory;
-        private readonly HttpClient _ownerClient;
 
         public AllergenControllerTests(WebApplicationFactory<Program> factory)
         {
@@ -46,7 +45,8 @@ namespace FastFood.ApiTest.Controller
                         services.Remove(dbContextOptions);
 
                         services
-                         .AddDbContext<FastFoodDbContext>(options => options.UseInMemoryDatabase("FastFoodDb"));
+                         .AddDbContext<FastFoodDbContext>(options => options.UseInMemoryDatabase("FastFoodDb")
+                         .EnableSensitiveDataLogging());
                     });
                 });
 

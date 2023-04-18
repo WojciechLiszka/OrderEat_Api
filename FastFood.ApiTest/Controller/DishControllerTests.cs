@@ -220,7 +220,7 @@ namespace FastFood.ApiTest.Controller
             var httpContent = dto.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PostAsync($"/api/restaurant/34563/dish", httpContent);
+            var response = await _adminClient.PostAsync("/api/restaurant/34563/dish", httpContent);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
@@ -230,24 +230,6 @@ namespace FastFood.ApiTest.Controller
         public async Task Delete_ForInvalidId_ReturnsNotFound()
         {
             //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                CreatedById = 1,
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
-            };
-            await SeedRestaurant(restaurant);
-
             var dish = new Dish()
             {
                 Name = "Name",
@@ -258,12 +240,11 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
             };
-            SeedDish(dish);
+            await SeedDish(dish);
             //act
 
-            var response = await _adminClient.DeleteAsync($"api/dish/23452");
+            var response = await _adminClient.DeleteAsync("api/dish/23452");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
@@ -276,9 +257,9 @@ namespace FastFood.ApiTest.Controller
 
             var restaurant = new Restaurant()
             {
-                Name = "Name",
+                Name = "RestaurantName",
                 Description = "TestDescription",
-                CreatedById = 1,
+                CreatedById = 3,
                 ContactDetails = new RestaurantContactDetails
                 {
                     ContactNumber = "111111111",
@@ -301,9 +282,9 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
+                RestaurantId = restaurant.Id
             };
-            SeedDish(dish);
+            await SeedDish(dish);
             //act
 
             var response = await _ownerClient.DeleteAsync($"api/dish/{dish.Id}");
@@ -344,9 +325,9 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
+                RestaurantId = restaurant.Id
             };
-            SeedDish(dish);
+            await SeedDish(dish);
             //act
 
             var response = await _adminClient.DeleteAsync($"api/dish/{dish.Id}");
@@ -388,7 +369,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
             };
-            SeedDish(dish);
+            await SeedDish(dish);
 
             //act
             var response = await _adminClient.GetAsync($"api/restaurant/{restaurant.Id}/dish/{query}");
@@ -431,7 +412,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
             };
-            SeedDish(dish);
+            await SeedDish(dish);
 
             //act
             var response = await _adminClient.GetAsync($"api/restaurant/{restaurant.Id}/dish/{query}");
@@ -470,9 +451,9 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
+                RestaurantId = restaurant.Id
             };
-            SeedDish(dish);
+            await SeedDish(dish);
             //act
 
             var response = await _adminClient.GetAsync($"api/dish/{dish.Id}");
@@ -512,9 +493,9 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
+                RestaurantId = restaurant.Id
             };
-            SeedDish(dish);
+            await SeedDish(dish);
             //act
 
             var response = await _adminClient.GetAsync($"api/dish/3456");
@@ -539,7 +520,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true
             };
-            SeedDish(dish);
+            await SeedDish(dish);
 
             var dto = new DishDto()
             {
@@ -585,7 +566,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true
             };
-            SeedDish(dish);
+            await SeedDish(dish);
 
             var dto = new DishDto()
             {
@@ -637,9 +618,9 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
+                RestaurantId = restaurant.Id
             };
-            SeedDish(dish);
+            await SeedDish(dish);
 
             var dto = new DishDto()
             {
@@ -693,9 +674,9 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
+                RestaurantId = restaurant.Id
             };
-            SeedDish(dish);
+            await SeedDish(dish);
 
             var dto = new DishDto()
             {
@@ -724,9 +705,9 @@ namespace FastFood.ApiTest.Controller
 
             var restaurant = new Restaurant()
             {
-                Name = "Name",
+                Name = "Test Name",
                 Description = "TestDescription",
-                CreatedById = 1,
+
                 ContactDetails = new RestaurantContactDetails
                 {
                     ContactNumber = "111111111",
@@ -741,7 +722,7 @@ namespace FastFood.ApiTest.Controller
 
             var dish = new Dish()
             {
-                Name = "Name",
+                Name = "TestName",
                 Description = "description",
 
                 BasePrize = (decimal)10.56,
@@ -749,9 +730,9 @@ namespace FastFood.ApiTest.Controller
 
                 AllowedCustomization = true,
                 IsAvilable = true,
-                Restaurant = restaurant
+                RestaurantId = restaurant.Id
             };
-            SeedDish(dish);
+            await SeedDish(dish);
 
             var dto = new DishDto()
             {

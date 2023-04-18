@@ -39,6 +39,10 @@ namespace FastFood.Infrastructure.Repositories
 
         public async Task<SpecialDiet?> GetByName(string name)
         {
+            if (name == null)
+            {
+                return null;
+            }
             var result = await _dbContext.Diets.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
 
             return result;

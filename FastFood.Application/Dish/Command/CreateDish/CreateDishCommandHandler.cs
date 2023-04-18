@@ -40,7 +40,7 @@ namespace FastFood.Application.Dish.Command.CreateDish
 
             var newDish = new Domain.Entities.Dish()
             {
-                Restaurant = restaurant,
+                RestaurantId = restaurant.Id,
                 Name = request.Name,
                 Description = request.Description,
                 BasePrize = request.BasePrize,

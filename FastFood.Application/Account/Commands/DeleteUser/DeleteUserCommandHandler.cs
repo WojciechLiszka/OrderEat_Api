@@ -29,7 +29,6 @@ namespace FastFood.Application.Account.Command.DeleteUser
                 throw new BadRequestException("Invalid email or password");
             }
             await _repository.Delete(user);
-
         }
     }
 }

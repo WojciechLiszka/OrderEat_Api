@@ -46,7 +46,8 @@ namespace FastFood.ApiTest.Controller
                         services.Remove(dbContextOptions);
 
                         services
-                         .AddDbContext<FastFoodDbContext>(options => options.UseInMemoryDatabase("FastFoodDb"));
+                         .AddDbContext<FastFoodDbContext>(options => options.UseInMemoryDatabase("FastFoodDb")
+                         .EnableSensitiveDataLogging());
                     });
                 });
 

@@ -12,12 +12,14 @@ namespace FastFood.Application.Dish.Command.UpdateDish
         private readonly IDishRepository _dishRepository;
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextService _userContext;
+        private readonly IRestaurantRepository _restaurantRepository;
 
-        public UpdateDishCommandHandler(IDishRepository dishRepository, IAuthorizationService authorizationService, IUserContextService userContext)
+        public UpdateDishCommandHandler(IDishRepository dishRepository, IAuthorizationService authorizationService, IUserContextService userContext,IRestaurantRepository restaurantRepository)
         {
             _dishRepository = dishRepository;
             _authorizationService = authorizationService;
             _userContext = userContext;
+            _restaurantRepository = restaurantRepository;
         }
 
         public async Task Handle(UpdateDishCommand request, CancellationToken cancellationToken)
@@ -28,7 +30,8 @@ namespace FastFood.Application.Dish.Command.UpdateDish
             {
                 throw new NotFoundException("Dish not found");
             }
-            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContext.User, dish.Restaurant, new ResourceOperationRequirement(ResourceOperation.Delete));
+            var restaurant = await _restaurantRepository.GetById(dish.RestaurantId);
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContext.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete));
 
             if (!authorizationResult.Succeeded)
             {

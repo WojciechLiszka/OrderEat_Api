@@ -34,7 +34,6 @@ namespace FastFood.Infrastructure.Repositories
         public async Task<Dish?> GetById(int id)
         {
             var dish = await _dbContext.Dishes
-                .Include(d=>d.Restaurant)
                 .FirstOrDefaultAsync(d => d.Id == id);
             return dish;
         }
@@ -43,7 +42,6 @@ namespace FastFood.Infrastructure.Repositories
         {
             var dish = await _dbContext.Dishes
                .Include(x => x.AllowedForDiets)
-               .Include(d => d.Restaurant)
                .FirstOrDefaultAsync(d => d.Id == id);
             return dish;
         }
@@ -59,7 +57,7 @@ namespace FastFood.Infrastructure.Repositories
 
         public IQueryable<Dish> Search(int id, string? phrase)
         {
-            var dishes = _dbContext.Dishes.Where(d => d.Restaurant.Id == id
+            var dishes = _dbContext.Dishes.Where(d => d.RestaurantId == id
             && (phrase == null
             || d.Name.ToLower().Contains(phrase.ToLower())
             || d.Description.ToLower().Contains(phrase.ToLower())));

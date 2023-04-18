@@ -13,13 +13,15 @@ namespace FastFood.Application.Dish.Command.AddDietToDish
         private readonly ISpecialDietRepository _specialDietRepository;
         private readonly IAuthorizationService _authorization;
         private readonly IUserContextService _userContext;
+        private readonly IRestaurantRepository _restaurantRepository;
 
-        public AddDietToDishCommandHandler(IDishRepository dishRepository, ISpecialDietRepository specialDietRepository, IAuthorizationService authorization, IUserContextService userContext)
+        public AddDietToDishCommandHandler(IDishRepository dishRepository, ISpecialDietRepository specialDietRepository, IAuthorizationService authorization, IUserContextService userContext, IRestaurantRepository restaurantRepository)
         {
             _dishRepository = dishRepository;
             _specialDietRepository = specialDietRepository;
             _authorization = authorization;
             _userContext = userContext;
+            _restaurantRepository = restaurantRepository;
         }
 
         public async Task Handle(AddDietToDishCommand request, CancellationToken cancellationToken)
@@ -29,7 +31,8 @@ namespace FastFood.Application.Dish.Command.AddDietToDish
             {
                 throw new NotFoundException("Dish not found");
             }
-            var authorizationResult = await _authorization.AuthorizeAsync(_userContext.User, dish.Restaurant, new ResourceOperationRequirement(ResourceOperation.Update));
+            var restaurant = _restaurantRepository.GetById(dish.RestaurantId);
+            var authorizationResult = await _authorization.AuthorizeAsync(_userContext.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Update));
 
             if (!authorizationResult.Succeeded)
             {

@@ -15,8 +15,8 @@ namespace FastFood.Infrastructure.Persistance
 
         public FastFoodDbContext(DbContextOptions<FastFoodDbContext> options) : base(options)
         {
-        }
 
+        } 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -36,8 +36,7 @@ namespace FastFood.Infrastructure.Persistance
                 .OwnsOne(e => e.ContactDetails);
 
                 eb
-                .HasMany(e => e.Dishes)
-                .WithOne(e => e.Restaurant);
+                .HasMany(e => e.Dishes);
             });
 
             modelBuilder.Entity<Dish>(eb =>
