@@ -182,7 +182,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Delete_ForValidId_RetursOk()
+        public async Task Delete_ForValidId_RetursNoContent()
         {
             //arrange
             var diet = new SpecialDiet()
@@ -198,6 +198,25 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task Delete_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            seedDiet(diet);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/3524");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
