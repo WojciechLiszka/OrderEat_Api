@@ -206,24 +206,6 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
-        [Fact]
-        public async Task GetById_ForValidId_ReturnsOk()
-        {
-            //arrange
-
-            var diet = new SpecialDiet()
-            {
-                Name = "Name",
-                Description = "Description"
-            };
-            await seedDiet(diet);
-            //act
-
-            var response = await _adminClient.GetAsync($"{_route}/{diet.Id}");
-            //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        }
-
         [Theory]
         [InlineData("", "Description")]
         [InlineData("Name", "")]
@@ -300,6 +282,86 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task GetById_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            await seedDiet(diet);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}/5436");
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GetById_ForValidId_ReturnsOk()
+        {
+            //arrange
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            await seedDiet(diet);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}/{diet.Id}");
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
+        public async Task Get_ForValidQueryParams_ReturnsOk(string query)
+        {
+            //arrange
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            await seedDiet(diet);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}{query}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=7")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
+        public async Task Get_ForInvalidQueryParams_ReturnsBadRequest(string query)
+        {
+            //arrange
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            await seedDiet(diet);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}{query}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
 
         [Fact]
