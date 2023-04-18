@@ -181,6 +181,25 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public async Task Delete_ForValidId_RetursOk()
+        {
+            //arrange
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            seedDiet(diet);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/{diet.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
