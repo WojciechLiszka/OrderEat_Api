@@ -28,7 +28,7 @@ namespace FastFood.Api.Controllers
         [HttpPatch]
         [Route("{dietId}/dish/{dishId}")]
         [Authorize(Roles = "Admin,Owner")]
-        public async Task<ActionResult> AddDietToDish([FromRoute] int dishId, [FromRoute] int dietId)
+        public async Task<ActionResult> AddDishToDiet([FromRoute] int dishId, [FromRoute] int dietId)
         {
             var request = new AddDietToDishCommand()
             {
@@ -50,6 +50,7 @@ namespace FastFood.Api.Controllers
             var response = await _mediator.Send(command);
             return Created($"api/specialDiet/{response}", null);
         }
+
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
@@ -67,7 +68,6 @@ namespace FastFood.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<PagedResult<GetDietDto>>> Get([FromQuery] PagedResultDto dto)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest();

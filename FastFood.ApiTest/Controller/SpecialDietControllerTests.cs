@@ -59,6 +59,55 @@ namespace FastFood.ApiTest.Controller
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
         }
 
+        [Fact]
+        public async Task AddDishToDiet_ForValidId_ReturnsOK()
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Test Name",
+                Description = "TestDescription",
+
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await seedDish(dish);
+            //act
+
+            var response = await _adminClient.PatchAsync($"{_route}/{diet.Id}/dish/{dish.Id}", null);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
         [Theory]
         [InlineData("", "Description")]
         [InlineData("Name", "")]
@@ -100,7 +149,45 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Update_ForValidModel_RetursOK()
+        public async Task Delete_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/3524");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_ForValidId_RetursNoContent()
+        {
+            //arrange
+            var diet = new SpecialDiet()
+            {
+                Name = "Name",
+                Description = "Description",
+            };
+            await seedDiet(diet);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/{diet.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task Update_ForInvalidId_ReturnsNotFound()
         {
             //arrange
 
@@ -119,10 +206,10 @@ namespace FastFood.ApiTest.Controller
             var httpContent = dto.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PutAsync($"{_route}/{diet.Id}", httpContent);
+            var response = await _adminClient.PutAsync($"{_route}/35234", httpContent);
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
         [Theory]
@@ -156,7 +243,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Update_ForInvalidId_ReturnsNotFound()
+        public async Task Update_ForValidModel_RetursOK()
         {
             //arrange
 
@@ -175,48 +262,10 @@ namespace FastFood.ApiTest.Controller
             var httpContent = dto.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PutAsync($"{_route}/35234", httpContent);
+            var response = await _adminClient.PutAsync($"{_route}/{diet.Id}", httpContent);
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Delete_ForValidId_RetursNoContent()
-        {
-            //arrange
-            var diet = new SpecialDiet()
-            {
-                Name = "Name",
-                Description = "Description",
-            };
-            seedDiet(diet);
-
-            //act
-
-            var response = await _adminClient.DeleteAsync($"{_route}/{diet.Id}");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
-        }
-
-        [Fact]
-        public async Task Delete_ForInvalidId_ReturnsNotFound()
-        {
-            //arrange
-            var diet = new SpecialDiet()
-            {
-                Name = "Name",
-                Description = "Description",
-            };
-            seedDiet(diet);
-
-            //act
-
-            var response = await _adminClient.DeleteAsync($"{_route}/3524");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
@@ -250,6 +299,26 @@ namespace FastFood.ApiTest.Controller
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
             _dbContext.Diets.Add(diet);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task seedDish(Dish dish)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Dishes.Add(dish);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedRestaurant(Restaurant restaurant)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync();
         }
     }
