@@ -59,6 +59,56 @@ namespace FastFood.ApiTest.Controller
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
         }
 
+        [Fact]
+        public async Task Create_ForNotRestauranOwner_ReturnsForbidden()
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 3
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await SeedDish(dish);
+
+            var dto = new IngredientDto()
+            {
+                Name = "Name",
+                Description = "Description",
+                Prize = (decimal)10.50,
+                IsRequired = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PostAsync($"{_route}/dish/{dish.Id}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
         [Theory]
         [InlineData(null, "Description", 10.5, true)]
         [InlineData("TestName", "", 10.5, true)]
@@ -81,7 +131,7 @@ namespace FastFood.ApiTest.Controller
                     Street = "TestStreet",
                     ApartmentNumber = "1/10"
                 },
-                CreatedById = 2
+                CreatedById = 3
             };
             await SeedRestaurant(restaurant);
 
