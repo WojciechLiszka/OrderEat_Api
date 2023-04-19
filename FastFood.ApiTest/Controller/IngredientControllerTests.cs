@@ -109,6 +109,61 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
+        [Theory]
+        [InlineData(null, "Description", 10.5, true)]
+        [InlineData("TestName", "", 10.5, true)]
+        [InlineData("", "TestDescription", 10.5, true)]
+        [InlineData("TestName", "TestDescription", 0, true)]
+        [InlineData("TestName", "TestDescription", 10.5, null)]
+        public async Task Create_ForInvalidModelAndValidId_ReturnsBadRequest(string name, string description, decimal prize, bool isRequired)
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 2
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await SeedDish(dish);
+
+            var dto = new IngredientDto()
+            {
+                Name = name,
+                Description = description,
+                Prize = prize,
+                IsRequired = isRequired
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync($"{_route}/dish/{dish.Id}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()

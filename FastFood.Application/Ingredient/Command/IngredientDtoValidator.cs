@@ -21,6 +21,10 @@ namespace FastFood.Application.Ingredient.Command
             RuleFor(c => c.Prize)
                 .NotEmpty()
                 .NotNull();
+
+            RuleFor(c => c.IsRequired)
+                .NotEmpty()
+                .NotNull();
                 
         }
     }
