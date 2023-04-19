@@ -24,7 +24,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPost]
-        [Route("api/dish/{dishId}/ingredient")]
+        [Route("dish/{dishId}/ingredient")]
         [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult<string>> Create([FromRoute] int dishId, [FromBody] IngredientDto dto)
         {
@@ -47,7 +47,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("api/ingredient/{id}")]
+        [Route("ingredient/{id}")]
         [Authorize(Roles = "Admin,Owner")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
@@ -62,7 +62,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("api/ingredient/{id}")]
+        [Route("ingredient/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<GetIngredientDto>> GetById([FromRoute] int id)
         {
@@ -74,7 +74,7 @@ namespace FastFood.Api.Controllers
             return Ok(response);
         }
         [HttpGet]
-        [Route("api/dish/{id}/ingredient")]
+        [Route("dish/{id}/ingredient")]
         [AllowAnonymous]
         public async Task<ActionResult<List<GetIngredientDto>>> GetFromDish([FromRoute] int id)
         {
@@ -89,7 +89,7 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpPut]
-        [Route("api/ingredient")]
+        [Route("ingredient")]
         public async Task<ActionResult> Update([FromBody] UpdateIngredientCommand command)
         {
             if (!ModelState.IsValid)
