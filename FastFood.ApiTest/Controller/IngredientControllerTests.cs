@@ -1,5 +1,6 @@
 ﻿using FastFood.ApiTest.Helpers;
 using FastFood.Application.Ingredient.Command;
+using FastFood.Application.Ingredient.Command.UpdateIngredient;
 using FastFood.Domain.Entities;
 using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
@@ -215,6 +216,37 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public async Task Update_ForValidModelAndId_ReturnsOk()
+        {
+            //arrange
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Name",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+            SeedIngredient(ingredient);
+
+            var dto = new UpdateIngredientCommand()
+            {
+                Id = ingredient.Id,
+                Name = "Name",
+                Description = "Description",
+                Prize = (decimal)10.50,
+                IsRequired = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
         private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
@@ -256,6 +288,16 @@ namespace FastFood.ApiTest.Controller
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
             _dbContext.Restaurants.Add(restaurant);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedIngredient(Ingredient ingredient)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Ingredients.Add(ingredient);
             await _dbContext.SaveChangesAsync();
         }
     }
