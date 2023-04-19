@@ -1,6 +1,9 @@
-﻿using FastFood.Domain.Entities;
+﻿using FastFood.ApiTest.Helpers;
+using FastFood.Application.Ingredient.Command;
+using FastFood.Domain.Entities;
 using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +19,7 @@ namespace FastFood.ApiTest.Controller
 {
     public class IngredientControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
+        private const string _route = "/api";
         private readonly HttpClient _adminClient;
         private readonly AuthenticationSettings _authenticationSettings;
         private readonly IConfiguration _configuration;
@@ -52,6 +56,57 @@ namespace FastFood.ApiTest.Controller
             _ownerClient = _factory.CreateClient();
             var ownerToken = GenerateJwtToken("Owner", "2");
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
+        }
+
+        [Fact]
+        public async Task Create_ForValidModelAndDishId_ReturnsCreated()
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 2
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await SeedDish(dish);
+
+            var dto = new IngredientDto()
+            {
+                Name = "Name",
+                Description = "Description",
+                Prize = (decimal)10.50,
+                IsRequired = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PostAsync($"{_route}/dish/{dish.Id}/ingredient", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
