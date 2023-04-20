@@ -59,56 +59,6 @@ namespace FastFood.ApiTest.Controller
             _ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
         }
 
-        [Fact]
-        public async Task Create_ForNotRestauranOwner_ReturnsForbidden()
-        {
-            //arrange
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                },
-                CreatedById = 3
-            };
-            await SeedRestaurant(restaurant);
-
-            var dish = new Dish()
-            {
-                Name = "TestName",
-                Description = "description",
-
-                BasePrize = (decimal)10.56,
-                BaseCaloricValue = 1000,
-
-                AllowedCustomization = true,
-                IsAvilable = true,
-                RestaurantId = restaurant.Id
-            };
-            await SeedDish(dish);
-
-            var dto = new IngredientDto()
-            {
-                Name = "Name",
-                Description = "Description",
-                Prize = (decimal)10.50,
-                IsRequired = true
-            };
-            var httpContent = dto.ToJsonHttpContent();
-            //act
-
-            var response = await _ownerClient.PostAsync($"{_route}/dish/{dish.Id}/ingredient", httpContent);
-            //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
-        }
-
         [Theory]
         [InlineData(null, "Description", 10.5, true)]
         [InlineData("TestName", "", 10.5, true)]
@@ -162,6 +112,56 @@ namespace FastFood.ApiTest.Controller
             var response = await _adminClient.PostAsync($"{_route}/dish/{dish.Id}/ingredient", httpContent);
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Create_ForNotRestauranOwner_ReturnsForbidden()
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 3
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await SeedDish(dish);
+
+            var dto = new IngredientDto()
+            {
+                Name = "Name",
+                Description = "Description",
+                Prize = (decimal)10.50,
+                IsRequired = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PostAsync($"{_route}/dish/{dish.Id}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -279,7 +279,7 @@ namespace FastFood.ApiTest.Controller
                 Prize = (decimal)10.5,
                 IsRequired = true
             };
-            SeedIngredient(ingredient);
+            await SeedIngredient(ingredient);
 
             var dto = new UpdateIngredientCommand()
             {
@@ -295,6 +295,37 @@ namespace FastFood.ApiTest.Controller
             var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Update_ForValidModelAndInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Name",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+            await SeedIngredient(ingredient);
+
+            var dto = new UpdateIngredientCommand()
+            {
+                Id = 4532,
+                Name = "Name",
+                Description = "Description",
+                Prize = (decimal)10.50,
+                IsRequired = true
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
@@ -331,16 +362,6 @@ namespace FastFood.ApiTest.Controller
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task SeedRestaurant(Restaurant restaurant)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
-
-            _dbContext.Restaurants.Add(restaurant);
-            await _dbContext.SaveChangesAsync();
-        }
-
         private async Task SeedIngredient(Ingredient ingredient)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
@@ -348,6 +369,16 @@ namespace FastFood.ApiTest.Controller
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
             _dbContext.Ingredients.Add(ingredient);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedRestaurant(Restaurant restaurant)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync();
         }
     }
