@@ -328,7 +328,42 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
-        private string GenerateJwtToken(string roleName, string userId)
+        [Theory]
+        [InlineData(null, "Description", 10.5, true)]
+        [InlineData("TestName", "", 10.5, true)]
+        [InlineData("", "TestDescription", 10.5, true)]
+        [InlineData("TestName", "TestDescription", 0, true)]
+        [InlineData("TestName", "TestDescription", 10.5, null)]
+        public async Task Update_ForInvalidModelAndValidId_ReturnsBadReques(string name, string description, decimal prize, bool isRequired)
+        {
+            //arrange
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Name",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+            await SeedIngredient(ingredient);
+
+            var dto = new UpdateIngredientCommand()
+            {
+                Id = ingredient.Id,
+                Name = name,
+                Description = description,
+                Prize = prize,
+                IsRequired = isRequired
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+        public string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
             {
