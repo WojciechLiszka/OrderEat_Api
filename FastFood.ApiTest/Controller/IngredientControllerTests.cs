@@ -120,7 +120,7 @@ namespace FastFood.ApiTest.Controller
             //arrange
             var restaurant = new Restaurant()
             {
-                Name = "Name",
+                Name = "RestaurantName",
                 Description = "TestDescription",
                 ContactDetails = new RestaurantContactDetails
                 {
@@ -137,7 +137,7 @@ namespace FastFood.ApiTest.Controller
 
             var dish = new Dish()
             {
-                Name = "TestName",
+                Name = "DishName",
                 Description = "description",
 
                 BasePrize = (decimal)10.56,
@@ -266,6 +266,42 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
+        [Theory]
+        [InlineData(null, "Description", 10.5, true)]
+        [InlineData("TestName", "", 10.5, true)]
+        [InlineData("", "TestDescription", 10.5, true)]
+        [InlineData("TestName", "TestDescription", 0, true)]
+        [InlineData("TestName", "TestDescription", 10.5, null)]
+        public async Task Update_ForInvalidModelAndValidId_ReturnsBadRequest(string name, string description, decimal prize, bool isRequired)
+        {
+            //arrange
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Name",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+            await SeedIngredient(ingredient);
+
+            var dto = new UpdateIngredientCommand()
+            {
+                Id = ingredient.Id,
+                Name = name,
+                Description = description,
+                Prize = prize,
+                IsRequired = isRequired
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
         [Fact]
         public async Task Update_ForValidModelAndId_ReturnsOk()
         {
@@ -328,42 +364,72 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
-        [Theory]
-        [InlineData(null, "Description", 10.5, true)]
-        [InlineData("TestName", "", 10.5, true)]
-        [InlineData("", "TestDescription", 10.5, true)]
-        [InlineData("TestName", "TestDescription", 0, true)]
-        [InlineData("TestName", "TestDescription", 10.5, null)]
-        public async Task Update_ForInvalidModelAndValidId_ReturnsBadReques(string name, string description, decimal prize, bool isRequired)
+        [Fact]
+        public async Task Update_ForNotRestaurantOwner_ReturnsForbidden()
         {
             //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
 
             var ingredient = new Ingredient()
             {
-                Name = "Name",
+                Name = "Ingredient",
                 Description = "Description",
 
                 Prize = (decimal)10.5,
                 IsRequired = true
+                
             };
             await SeedIngredient(ingredient);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients=new List<Ingredient> 
+                { 
+                    ingredient 
+                }
+            };
 
             var dto = new UpdateIngredientCommand()
             {
                 Id = ingredient.Id,
-                Name = name,
-                Description = description,
-                Prize = prize,
-                IsRequired = isRequired
+                Name = "Name",
+                Description = "Description",
+                Prize = (decimal)10.50,
+                IsRequired = true,
             };
             var httpContent = dto.ToJsonHttpContent();
             //act
 
             var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
-        public string GenerateJwtToken(string roleName, string userId)
+
+        private string GenerateJwtToken(string roleName, string userId)
         {
             var claims = new List<Claim>()
             {

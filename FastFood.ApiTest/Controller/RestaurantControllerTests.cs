@@ -105,7 +105,7 @@ namespace FastFood.ApiTest.Controller
 
             var command = new CreateRestaurantCommand()
             {
-                Name = "TestName",
+                Name = "UniqueName",
                 Description = "TestDescription",
                 ContactNumber = "111111111",
                 Email = "test@email.com",
