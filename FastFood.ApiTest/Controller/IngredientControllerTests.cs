@@ -392,7 +392,6 @@ namespace FastFood.ApiTest.Controller
 
                 Prize = (decimal)10.5,
                 IsRequired = true
-                
             };
             await SeedIngredient(ingredient);
 
@@ -407,9 +406,9 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients=new List<Ingredient> 
-                { 
-                    ingredient 
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
                 }
             };
 
@@ -427,6 +426,28 @@ namespace FastFood.ApiTest.Controller
             var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Delete_ForValidIdReturns_NoContent()
+        {
+            //arrange
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+            await SeedIngredient(ingredient);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/{ingredient.Id}");
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
