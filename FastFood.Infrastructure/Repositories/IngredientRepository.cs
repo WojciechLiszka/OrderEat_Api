@@ -33,7 +33,10 @@ namespace FastFood.Infrastructure.Repositories
 
         public async Task<Ingredient?> GetById(int Id)
         {
-            var ingredient = await _dbContext.Ingredients.FirstOrDefaultAsync(x => x.Id == Id);
+            var ingredient = await _dbContext.Ingredients
+                .Where(x => x.Id == Id)
+                .Include(x => x.Dish)
+                .FirstOrDefaultAsync();
             return ingredient;
         }
     }

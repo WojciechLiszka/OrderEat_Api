@@ -307,15 +307,49 @@ namespace FastFood.ApiTest.Controller
         {
             //arrange
 
-            var ingredient = new Ingredient()
+            var restaurant = new Restaurant()
             {
                 Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
                 Description = "Description",
 
                 Prize = (decimal)10.5,
                 IsRequired = true
             };
-            await SeedIngredient(ingredient);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
 
             var dto = new UpdateIngredientCommand()
             {
@@ -367,7 +401,6 @@ namespace FastFood.ApiTest.Controller
         [Fact]
         public async Task Update_ForNotRestaurantOwner_ReturnsForbidden()
         {
-            //arrange
             var restaurant = new Restaurant()
             {
                 Name = "Name",
@@ -393,7 +426,6 @@ namespace FastFood.ApiTest.Controller
                 Prize = (decimal)10.5,
                 IsRequired = true
             };
-            await SeedIngredient(ingredient);
 
             var dish = new Dish()
             {
@@ -411,6 +443,7 @@ namespace FastFood.ApiTest.Controller
                     ingredient
                 }
             };
+            await SeedDish(dish);
 
             var dto = new UpdateIngredientCommand()
             {
@@ -423,13 +456,70 @@ namespace FastFood.ApiTest.Controller
             var httpContent = dto.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
+            var response = await _ownerClient.PutAsync($"{_route}/ingredient", httpContent);
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         [Fact]
         public async Task Delete_ForValidIdReturns_NoContent()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/{ingredient.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
+        [Fact]
+        public async Task Delete_ForInvalidIdReturns_NotFound()
         {
             //arrange
 
@@ -445,9 +535,15 @@ namespace FastFood.ApiTest.Controller
 
             //act
 
-            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/{ingredient.Id}");
+            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/7656");
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_ForNotRestautantOwner_ReturnsForbiden()
+        {
         }
 
         private string GenerateJwtToken(string roleName, string userId)
@@ -480,7 +576,7 @@ namespace FastFood.ApiTest.Controller
             using var scope = scopeFactory.CreateScope();
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
-            _dbContext.Dishes.Add(dish);
+            _dbContext.Add(dish);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -490,7 +586,7 @@ namespace FastFood.ApiTest.Controller
             using var scope = scopeFactory.CreateScope();
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
-            _dbContext.Ingredients.Add(ingredient);
+            _dbContext.Add(ingredient);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -500,7 +596,7 @@ namespace FastFood.ApiTest.Controller
             using var scope = scopeFactory.CreateScope();
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
-            _dbContext.Restaurants.Add(restaurant);
+            _dbContext.Add(restaurant);
             await _dbContext.SaveChangesAsync();
         }
     }

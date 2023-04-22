@@ -33,7 +33,7 @@ namespace FastFood.Application.Ingredient.Command.CreateIngredient
                 throw new NotFoundException("Dish not found");
             }
 
-            var restaurant =await _restaurantRepository.GetById(dish.Id);
+            var restaurant = await _restaurantRepository.GetById(dish.Id);
 
             if (restaurant == null)
             {
