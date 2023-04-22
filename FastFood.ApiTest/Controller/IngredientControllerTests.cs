@@ -266,6 +266,143 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public async Task Delete_ForInvalidIdReturns_NotFound()
+        {
+            //arrange
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+            await SeedIngredient(ingredient);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/7656");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task Delete_ForNotRestautantOwner_ReturnsForbiden()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            //act
+
+            var response = await _ownerClient.DeleteAsync($"{_route}/ingredient/{ingredient.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public async Task Delete_ForValidIdReturns_NoContent()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            //act
+
+            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/{ingredient.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        }
+
         [Theory]
         [InlineData(null, "Description", 10.5, true)]
         [InlineData("TestName", "", 10.5, true)]
@@ -300,6 +437,69 @@ namespace FastFood.ApiTest.Controller
             var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Update_ForNotRestaurantOwner_ReturnsForbidden()
+        {
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            var dto = new UpdateIngredientCommand()
+            {
+                Id = ingredient.Id,
+                Name = "Name",
+                Description = "Description",
+                Prize = (decimal)10.50,
+                IsRequired = true,
+            };
+            var httpContent = dto.ToJsonHttpContent();
+            //act
+
+            var response = await _ownerClient.PutAsync($"{_route}/ingredient", httpContent);
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -396,154 +596,6 @@ namespace FastFood.ApiTest.Controller
             var response = await _adminClient.PutAsync($"{_route}/ingredient", httpContent);
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Update_ForNotRestaurantOwner_ReturnsForbidden()
-        {
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                },
-                CreatedById = 4
-            };
-            await SeedRestaurant(restaurant);
-
-            var ingredient = new Ingredient()
-            {
-                Name = "Ingredient",
-                Description = "Description",
-
-                Prize = (decimal)10.5,
-                IsRequired = true
-            };
-
-            var dish = new Dish()
-            {
-                Name = "TestName",
-                Description = "description",
-
-                BasePrize = (decimal)10.56,
-                BaseCaloricValue = 1000,
-
-                AllowedCustomization = true,
-                IsAvilable = true,
-                RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
-                {
-                    ingredient
-                }
-            };
-            await SeedDish(dish);
-
-            var dto = new UpdateIngredientCommand()
-            {
-                Id = ingredient.Id,
-                Name = "Name",
-                Description = "Description",
-                Prize = (decimal)10.50,
-                IsRequired = true,
-            };
-            var httpContent = dto.ToJsonHttpContent();
-            //act
-
-            var response = await _ownerClient.PutAsync($"{_route}/ingredient", httpContent);
-            //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
-        }
-
-        [Fact]
-        public async Task Delete_ForValidIdReturns_NoContent()
-        {
-            //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                },
-                CreatedById = 4
-            };
-            await SeedRestaurant(restaurant);
-
-            var ingredient = new Ingredient()
-            {
-                Name = "Ingredient",
-                Description = "Description",
-
-                Prize = (decimal)10.5,
-                IsRequired = true
-            };
-
-            var dish = new Dish()
-            {
-                Name = "TestName",
-                Description = "description",
-
-                BasePrize = (decimal)10.56,
-                BaseCaloricValue = 1000,
-
-                AllowedCustomization = true,
-                IsAvilable = true,
-                RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
-                {
-                    ingredient
-                }
-            };
-            await SeedDish(dish);
-
-            //act
-
-            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/{ingredient.Id}");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
-        }
-
-        [Fact]
-        public async Task Delete_ForInvalidIdReturns_NotFound()
-        {
-            //arrange
-
-            var ingredient = new Ingredient()
-            {
-                Name = "Ingredient",
-                Description = "Description",
-
-                Prize = (decimal)10.5,
-                IsRequired = true
-            };
-            await SeedIngredient(ingredient);
-
-            //act
-
-            var response = await _adminClient.DeleteAsync($"{_route}/ingredient/7656");
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task Delete_ForNotRestautantOwner_ReturnsForbiden()
-        {
         }
 
         private string GenerateJwtToken(string roleName, string userId)
