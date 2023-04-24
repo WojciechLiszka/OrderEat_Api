@@ -571,6 +571,62 @@ namespace FastFood.ApiTest.Controller
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
+        [Fact]
+        public async Task GetFromDish_FormInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}/dish/5636/ingredient");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
         [Theory]
         [InlineData(null, "Description", 10.5, true)]
         [InlineData("TestName", "", 10.5, true)]
