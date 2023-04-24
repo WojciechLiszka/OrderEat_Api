@@ -603,8 +603,6 @@ namespace FastFood.ApiTest.Controller
         {
             //arrange
 
-            //arrange
-
             var restaurant = new Restaurant()
             {
                 Name = "Name",
@@ -654,6 +652,62 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task GetById_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                },
+                CreatedById = 4
+            };
+            await SeedRestaurant(restaurant);
+
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                BaseIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+            //act
+
+            var response = await _adminClient.GetAsync($"{_route}/ingredient/23564");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
