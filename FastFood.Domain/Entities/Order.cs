@@ -11,6 +11,6 @@ namespace FastFood.Domain.Entities
         public Decimal Fee { get; set; }
         public int UserId { get; set; }
         public int RestaurantId { get; set; }
-        public List<OrderedDish> OrderedDishes { get; set; } = new List<OrderedDish>(); 
+        public List<OrderedDish> OrderedDishes { get; set; } = new List<OrderedDish>();
     }
 }

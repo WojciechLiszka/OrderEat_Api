@@ -34,6 +34,8 @@ namespace FastFood.Infrastructure.Extensions
             services.AddScoped<ISpecialDietRepository, SpecialDietRepository>();
 
             services.AddScoped<IRoleRepository, RoleRepository>();
+
+            services.AddScoped<IOrderRepository, OrderRepository>();
         }
     }
 }
