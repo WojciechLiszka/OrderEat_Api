@@ -12,6 +12,7 @@ namespace FastFood.Infrastructure.Persistance
         public DbSet<Allergen> Allergens { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public FastFoodDbContext(DbContextOptions<FastFoodDbContext> options) : base(options)
         {
@@ -121,6 +122,11 @@ namespace FastFood.Infrastructure.Persistance
                 .Property(e => e.Description)
                 .IsRequired()
                 .HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<Order>(eb =>
+            {
+                eb.OwnsOne(e => e.OrderedDishes);
             });
         }
     }
