@@ -1,6 +1,7 @@
 ﻿using FastFood.Domain.Entities;
 using FastFood.Domain.Interfaces;
 using FastFood.Infrastructure.Persistance;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastFood.Infrastructure.Repositories
 {
@@ -17,6 +18,15 @@ namespace FastFood.Infrastructure.Repositories
         {
             await _dbContext.Orders.AddAsync(order);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Order?> GetById(int id)
+        {
+            var order= await _dbContext.Orders
+                .Include(o => o.OrderedDishes)
+                .Where(o => o.Id == id)
+                .FirstOrDefaultAsync();
+            return order;
         }
     }
 }

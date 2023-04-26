@@ -47,7 +47,8 @@ namespace FastFood.Application.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
                 };
             });
-            services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
+            services.AddScoped<IAuthorizationHandler, RestaurantResourceOperationRequirementHandler>();
+            services.AddScoped<IAuthorizationHandler, OrderRsourceOperationRequirementHandler>();
 
             services.AddAuthorization();
         }

@@ -42,7 +42,7 @@ namespace FastFood.Application.Ingredient.Command.UpdateIngredient
             {
                 throw new NotFoundException("Restaurant not found");
             }
-            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContext.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete));
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContext.User, restaurant, new RestaurantResourceOperationRequirement(ResourceOperation.Delete));
 
             if (!authorizationResult.Succeeded)
             {

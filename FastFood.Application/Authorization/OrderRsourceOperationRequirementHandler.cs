@@ -3,11 +3,11 @@ using System.Security.Claims;
 
 namespace FastFood.Application.Authorization
 {
-    public class ResourceOperationRequirementHandler : AuthorizationHandler<ResourceOperationRequirement, Domain.Entities.Restaurant>
+    public class OrderRsourceOperationRequirementHandler : AuthorizationHandler<OrderRsourceOperationRequirement, Domain.Entities.Order>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement, Domain.Entities.Restaurant resource)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OrderRsourceOperationRequirement requirement, Domain.Entities.Order resource)
         {
-            if (requirement.ResourceOperation is ResourceOperation.Create or ResourceOperation.Read)
+            if (requirement.resourceOperation is ResourceOperation.Create)
             {
                 context.Succeed(requirement);
             }
@@ -15,7 +15,7 @@ namespace FastFood.Application.Authorization
             var userId = int.Parse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var userRole = context.User.FindFirst(c => c.Type == ClaimTypes.Role).Value;
 
-            if (resource.CreatedById == userId || userRole == "Admin")
+            if (resource.UserId == userId || userRole == "Admin")
             {
                 context.Succeed(requirement);
             }

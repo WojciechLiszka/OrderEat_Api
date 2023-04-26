@@ -10,11 +10,11 @@ namespace FastFood.Application.Authorization
         Delete
     }
 
-    public class ResourceOperationRequirement : IAuthorizationRequirement
+    public class RestaurantResourceOperationRequirement : IAuthorizationRequirement
     {
         public ResourceOperation ResourceOperation { get; set; }
 
-        public ResourceOperationRequirement(ResourceOperation resourceOperation)
+        public RestaurantResourceOperationRequirement(ResourceOperation resourceOperation)
         {
             ResourceOperation = resourceOperation;
         }

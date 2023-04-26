@@ -27,7 +27,7 @@ namespace FastFood.Application.Restaurant.Commands.UpdateRestaurant
             {
                 throw new NotFoundException("Restaurant not found");
             }
-            var authorizationresult = await _authorizationService.AuthorizeAsync(_userContextService.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Update));
+            var authorizationresult = await _authorizationService.AuthorizeAsync(_userContextService.User, restaurant, new RestaurantResourceOperationRequirement(ResourceOperation.Update));
 
             if (!authorizationresult.Succeeded)
             {

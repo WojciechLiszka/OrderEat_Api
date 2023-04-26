@@ -28,7 +28,7 @@ namespace FastFood.Application.Restaurant.Commands.DeleteRestaurant
             {
                 throw new NotFoundException("Restaurant not found");
             }
-            var authorizationResult = await _authorization.AuthorizeAsync(_userContext.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete));
+            var authorizationResult = await _authorization.AuthorizeAsync(_userContext.User, restaurant, new RestaurantResourceOperationRequirement(ResourceOperation.Delete));
             if (!authorizationResult.Succeeded)
             {
                 throw new ForbiddenException();

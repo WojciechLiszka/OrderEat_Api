@@ -31,7 +31,7 @@ namespace FastFood.Application.Dish.Command.UpdateDish
                 throw new NotFoundException("Dish not found");
             }
             var restaurant = await _restaurantRepository.GetById(dish.RestaurantId);
-            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContext.User, restaurant, new ResourceOperationRequirement(ResourceOperation.Delete));
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContext.User, restaurant, new RestaurantResourceOperationRequirement(ResourceOperation.Delete));
 
             if (!authorizationResult.Succeeded)
             {

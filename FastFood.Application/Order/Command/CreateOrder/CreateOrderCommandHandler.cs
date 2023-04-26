@@ -4,7 +4,7 @@ using FastFood.Domain.Interfaces;
 using FastFood.Domain.Models;
 using MediatR;
 
-namespace FastFood.Application.Order.CreateOrder
+namespace FastFood.Application.Order.Command.CreateOrder
 {
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, string>
     {
