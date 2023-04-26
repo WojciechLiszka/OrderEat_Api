@@ -1,6 +1,7 @@
 ﻿using Domain.Domain.Exceptions;
 using FastFood.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
+using FastFood.Domain.Models;
 using MediatR;
 
 namespace FastFood.Application.Order.CreateOrder
@@ -37,6 +38,7 @@ namespace FastFood.Application.Order.CreateOrder
             {
                 UserId = (int)userId,
                 RestaurantId = request.RestaurantId,
+                Status = OrderStatus.InCart
             };
 
             await _orderRepository.Create(order);

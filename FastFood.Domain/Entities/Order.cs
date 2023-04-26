@@ -12,5 +12,6 @@ namespace FastFood.Domain.Entities
         public int UserId { get; set; }
         public int RestaurantId { get; set; }
         public List<OrderedDish> OrderedDishes { get; set; } = new List<OrderedDish>();
+        public OrderStatus Status { get; set; }
     }
 }
