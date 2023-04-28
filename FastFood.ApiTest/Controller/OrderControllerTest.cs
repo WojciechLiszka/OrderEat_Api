@@ -139,6 +139,8 @@ namespace FastFood.ApiTest.Controller
         [Fact]
         public async Task GetById_ForInvalidId_RetursNotFound()
         {
+            //arrange
+
             var order = new Order()
             {
                 Fee = 10,
@@ -153,6 +155,27 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public async Task GetById_ForInvalidUser_ReturnsForbidden()
+        {
+            //arrange
+
+            var order = new Order()
+            {
+                Fee = 10,
+                UserId = 4,
+
+                Status = OrderStatus.InCart
+            };
+            await SeedOrder(order);
+            //act
+
+            var response = await _userClient.GetAsync($"/api/order/{order.Id}");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
         }
 
         private string GenerateJwtToken(string roleName, string userId)

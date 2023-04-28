@@ -7,7 +7,7 @@ namespace FastFood.Application.Authorization
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OrderRsourceOperationRequirement requirement, Domain.Entities.Order resource)
         {
-            if (requirement.resourceOperation is ResourceOperation.Create)
+            if (requirement.ResourceOperation is ResourceOperation.Create)
             {
                 context.Succeed(requirement);
             }

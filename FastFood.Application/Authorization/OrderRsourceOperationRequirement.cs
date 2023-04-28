@@ -4,12 +4,11 @@ namespace FastFood.Application.Authorization
 {
     public class OrderRsourceOperationRequirement : IAuthorizationRequirement
     {
-        public ResourceOperation resourceOperation;
+        public ResourceOperation ResourceOperation { get; set; }
 
         public OrderRsourceOperationRequirement(ResourceOperation resourceOperation)
         {
-            resourceOperation = resourceOperation;
+            ResourceOperation = resourceOperation;
         }
-
     }
 }

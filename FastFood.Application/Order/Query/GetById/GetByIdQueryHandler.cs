@@ -29,7 +29,7 @@ namespace FastFood.Application.Order.Query.GetById
                 throw new NotFoundException("Order Not Found");
             }
 
-            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, order, new OrderRsourceOperationRequirement(ResourceOperation.Delete));
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, order, new OrderRsourceOperationRequirement(ResourceOperation.Read));
 
             if (!authorizationResult.Succeeded)
             {
