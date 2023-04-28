@@ -60,9 +60,38 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
+        public async Task Create_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+            //act
+
+            var response = await _userClient.PostAsync($"/api/restaurant/7453/order", null);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
+        [Fact]
         public async Task Create_ForValidId_ReturnsOk()
         {
             //arrange
+
             var restaurant = new Restaurant()
             {
                 Name = "Name",
@@ -81,6 +110,27 @@ namespace FastFood.ApiTest.Controller
             //act
 
             var response = await _userClient.PostAsync($"/api/restaurant/{restaurant.Id}/order", null);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task GetNyId_ForValid_ReturnsOk()
+        {
+            //arrange
+
+            var order = new Order()
+            {
+                Fee = 10,
+                UserId = 3,
+
+                Status = OrderStatus.InCart
+            };
+            await SeedOrder(order);
+            //act
+
+            var response = await _userClient.GetAsync($"/api/order/{order.Id}");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -117,6 +167,16 @@ namespace FastFood.ApiTest.Controller
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
             _dbContext.Add(restaurant);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedOrder(Order order)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Add(order);
             await _dbContext.SaveChangesAsync();
         }
     }
