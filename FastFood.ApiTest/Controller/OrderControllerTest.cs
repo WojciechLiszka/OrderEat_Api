@@ -116,7 +116,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task GetNyId_ForValid_ReturnsOk()
+        public async Task GetById_ForValId_ReturnsOk()
         {
             //arrange
 
@@ -134,6 +134,25 @@ namespace FastFood.ApiTest.Controller
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task GetById_ForInvalidId_RetursNotFound()
+        {
+            var order = new Order()
+            {
+                Fee = 10,
+                UserId = 3,
+
+                Status = OrderStatus.InCart
+            };
+            await SeedOrder(order);
+            //act
+
+            var response = await _userClient.GetAsync("/api/order/54235");
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
         private string GenerateJwtToken(string roleName, string userId)
@@ -160,16 +179,6 @@ namespace FastFood.ApiTest.Controller
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task SeedRestaurant(Restaurant restaurant)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
-
-            _dbContext.Add(restaurant);
-            await _dbContext.SaveChangesAsync();
-        }
-
         private async Task SeedOrder(Order order)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
@@ -177,6 +186,16 @@ namespace FastFood.ApiTest.Controller
             var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
 
             _dbContext.Add(order);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedRestaurant(Restaurant restaurant)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            _dbContext.Add(restaurant);
             await _dbContext.SaveChangesAsync();
         }
     }
