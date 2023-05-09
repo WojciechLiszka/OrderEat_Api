@@ -49,7 +49,7 @@ namespace FastFood.Infrastructure.Repositories
         public async Task<Dish?> GetByIdWithIngredients(int id)
         {
             var dish = await _dbContext.Dishes
-                .Include(x => x.BaseIngreedients)
+                .Include(x => x.AllowedIngreedients)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             return dish;

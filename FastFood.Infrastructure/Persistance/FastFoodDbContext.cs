@@ -57,7 +57,7 @@ namespace FastFood.Infrastructure.Persistance
                 .WithMany(e => e.Dishes);
 
                 eb
-                .HasMany(e => e.BaseIngreedients)
+                .HasMany(e => e.AllowedIngreedients)
                 .WithOne(e => e.Dish);
             });
             modelBuilder.Entity<Ingredient>(eb =>

@@ -7,5 +7,7 @@ namespace FastFood.Domain.Interfaces
         Task Create(Order order);
 
         Task<Order?> GetById(int id);
+
+        Task Commit();
     }
 }

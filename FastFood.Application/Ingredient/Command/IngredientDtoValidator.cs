@@ -23,7 +23,6 @@ namespace FastFood.Application.Ingredient.Command
                 .NotNull();
 
             RuleFor(c => c.IsRequired)
-                .NotEmpty()
                 .NotNull();
                 
         }

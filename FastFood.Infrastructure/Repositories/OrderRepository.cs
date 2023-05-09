@@ -14,6 +14,11 @@ namespace FastFood.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task Commit()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task Create(Order order)
         {
             await _dbContext.Orders.AddAsync(order);
@@ -22,7 +27,7 @@ namespace FastFood.Infrastructure.Repositories
 
         public async Task<Order?> GetById(int id)
         {
-            var order= await _dbContext.Orders
+            var order = await _dbContext.Orders
                 .Include(o => o.OrderedDishes)
                 .Where(o => o.Id == id)
                 .FirstOrDefaultAsync();

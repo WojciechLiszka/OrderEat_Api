@@ -27,7 +27,7 @@ namespace FastFood.Application.Ingredient.Queries.GetIngredientsFromDish
                 throw new NotFoundException("Dish not found");
             }
 
-            var dtos = _mapper.Map<List<GetIngredientDto>>(dish.BaseIngreedients);
+            var dtos = _mapper.Map<List<GetIngredientDto>>(dish.AllowedIngreedients);
 
             return dtos;
         }

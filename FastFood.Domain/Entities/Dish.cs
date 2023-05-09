@@ -17,7 +17,7 @@ namespace FastFood.Domain.Entities
 
         public int RestaurantId { get; set; }=default!;
 
-        public List<Ingredient> BaseIngreedients { get; set; } = new List<Ingredient>();
+        public List<Ingredient> AllowedIngreedients { get; set; } = new List<Ingredient>();
         public List<SpecialDiet> AllowedForDiets { get; set; } = new List<SpecialDiet>();
         
     }

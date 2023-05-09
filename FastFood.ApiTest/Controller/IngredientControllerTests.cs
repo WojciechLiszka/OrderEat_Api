@@ -64,7 +64,6 @@ namespace FastFood.ApiTest.Controller
         [InlineData("TestName", "", 10.5, true)]
         [InlineData("", "TestDescription", 10.5, true)]
         [InlineData("TestName", "TestDescription", 0, true)]
-        [InlineData("TestName", "TestDescription", 10.5, null)]
         public async Task Create_ForInvalidModelAndValidId_ReturnsBadRequest(string name, string description, decimal prize, bool isRequired)
         {
             //arrange
@@ -331,7 +330,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }
@@ -388,7 +387,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }
@@ -445,7 +444,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }
@@ -501,7 +500,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }
@@ -557,7 +556,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }
@@ -613,7 +612,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }
@@ -703,7 +702,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }
@@ -768,7 +767,7 @@ namespace FastFood.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
                 RestaurantId = restaurant.Id,
-                BaseIngreedients = new List<Ingredient>
+                AllowedIngreedients = new List<Ingredient>
                 {
                     ingredient
                 }

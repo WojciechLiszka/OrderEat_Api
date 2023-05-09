@@ -326,7 +326,7 @@ namespace FastFood.Infrastructure.Migrations
             modelBuilder.Entity("FastFood.Domain.Entities.Ingredient", b =>
                 {
                     b.HasOne("FastFood.Domain.Entities.Dish", "Dish")
-                        .WithMany("BaseIngreedients")
+                        .WithMany("AllowedIngreedients")
                         .HasForeignKey("DishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -447,7 +447,7 @@ namespace FastFood.Infrastructure.Migrations
 
             modelBuilder.Entity("FastFood.Domain.Entities.Dish", b =>
                 {
-                    b.Navigation("BaseIngreedients");
+                    b.Navigation("AllowedIngreedients");
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.Restaurant", b =>

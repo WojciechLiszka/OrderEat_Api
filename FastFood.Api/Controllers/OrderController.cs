@@ -1,5 +1,7 @@
-﻿using FastFood.Application.Order.Command.CreateOrder;
+﻿using FastFood.Application.Order.Command.AddDishToOrder;
+using FastFood.Application.Order.Command.CreateOrder;
 using FastFood.Application.Order.Query.GetById;
+using FastFood.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +43,21 @@ namespace FastFood.Api.Controllers
 
             var order = await _mediator.Send(query);
             return Ok(order);
+        }
+
+        [HttpPatch]
+        [Route("order/{orderId}/dish/{dishId}")]
+        public async Task<ActionResult> AddDishToOrder([FromRoute] int orderId, [FromRoute] int dishId, [FromBody] Sheet aditionalIngredient)
+        {
+            var command = new AddDishToOrderCommand()
+            {
+                OrderId = orderId,
+                DishId = dishId,
+                AditionalIngrediens = aditionalIngredient
+            };
+
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }
