@@ -280,6 +280,79 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
+        public async Task AddDishToOrder_ForInvalidUser_ReturnsForbidden()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                AllowedIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            var order = new Order()
+            {
+                Fee = 10,
+                UserId = 1,
+
+                Status = OrderStatus.InCart,
+                RestaurantId = restaurant.Id,
+            };
+            await SeedOrder(order);
+            var httpContent = new Sheet()
+            {
+                IngredientsId = new List<int>
+                {
+                    ingredient.Id
+                }
+            }
+            .ToJsonHttpContent();
+            //act
+
+            var response = await _userClient.PatchAsync($"api/order/{order.Id}/dish/{dish.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
         public async Task Create_ForInvalidId_ReturnsNotFound()
         {
             //arrange
