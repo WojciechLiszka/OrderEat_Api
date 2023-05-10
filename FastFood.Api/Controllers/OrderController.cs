@@ -1,5 +1,6 @@
 ﻿using FastFood.Application.Order.Command.AddDishToOrder;
 using FastFood.Application.Order.Command.CreateOrder;
+using FastFood.Application.Order.Command.RealizeOrder;
 using FastFood.Application.Order.Query.GetById;
 using FastFood.Domain.Models;
 using MediatR;
@@ -54,6 +55,19 @@ namespace FastFood.Api.Controllers
                 OrderId = orderId,
                 DishId = dishId,
                 AditionalIngrediens = aditionalIngredient
+            };
+
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Route("order/{orderId}")]
+        public async Task<ActionResult> RealizeOrder([FromRoute] int orderId)
+        {
+            var command = new RealizeOrderCommand()
+            {
+                Orderid = orderId
             };
 
             await _mediator.Send(command);

@@ -207,7 +207,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task AddDishToOrder_ForValidparams_ReturnsOk()
+        public async Task AddDishToOrder_ForValidParams_ReturnsOk()
         {
             //arrange
 
@@ -278,6 +278,7 @@ namespace FastFood.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
         [Fact]
         public async Task Create_ForInvalidId_ReturnsNotFound()
         {

@@ -40,6 +40,10 @@ namespace FastFood.Application.Order.Command.AddDishToOrder
             {
                 throw new NotFoundException("Dish not Found");
             }
+            if (dish.IsAvilable == false)
+            {
+                throw new ForbiddenException();
+            }
             var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, order, new OrderRsourceOperationRequirement(ResourceOperation.Read));
 
             if (!authorizationResult.Succeeded)
