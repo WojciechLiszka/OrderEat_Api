@@ -1,5 +1,6 @@
 ﻿using FastFood.Domain.Entities;
 using FastFood.Domain.Interfaces;
+using FastFood.Domain.Models;
 using FastFood.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,15 @@ namespace FastFood.Infrastructure.Repositories
                 .Where(o => o.Id == id)
                 .FirstOrDefaultAsync();
             return order;
+        }
+
+        public async Task<IQueryable<Order>> GetOrdersToRealizeFromRestaurant(int restaurantId)
+        {
+            var orders =  _dbContext
+                 .Orders
+                 .Where(c => c.RestaurantId == restaurantId && c.Status == OrderStatus.Ordered);
+
+            return  orders;
         }
     }
 }

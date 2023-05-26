@@ -9,5 +9,7 @@ namespace FastFood.Domain.Interfaces
         Task<Order?> GetById(int id);
 
         Task Commit();
+
+        Task<IQueryable<Order>> GetOrdersToRealizeFromRestaurant(int restaurantId);
     }
 }

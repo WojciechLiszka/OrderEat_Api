@@ -126,7 +126,8 @@ namespace FastFood.Infrastructure.Persistance
 
             modelBuilder.Entity<Order>(eb =>
             {
-                eb.OwnsOne(e => e.OrderedDishes);
+                eb.OwnsMany(e => e.OrderedDishes)
+                .Ignore(x => x.Ingredients);
             });
         }
     }

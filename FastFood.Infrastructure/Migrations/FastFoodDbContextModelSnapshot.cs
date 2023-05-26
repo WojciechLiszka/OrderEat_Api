@@ -34,7 +34,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasIndex("IngredientsId");
 
-                    b.ToTable("AllergenIngredient");
+                    b.ToTable("AllergenIngredient", (string)null);
                 });
 
             modelBuilder.Entity("DishSpecialDiet", b =>
@@ -49,7 +49,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasIndex("DishesId");
 
-                    b.ToTable("DishSpecialDiet");
+                    b.ToTable("DishSpecialDiet", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.Allergen", b =>
@@ -72,7 +72,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Allergens");
+                    b.ToTable("Allergens", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.Dish", b =>
@@ -112,7 +112,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Dishes");
+                    b.ToTable("Dishes", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.Ingredient", b =>
@@ -146,7 +146,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasIndex("DishId");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.Order", b =>
@@ -174,7 +174,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.Restaurant", b =>
@@ -200,7 +200,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurants");
+                    b.ToTable("Restaurants", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.Role", b =>
@@ -218,7 +218,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.SpecialDiet", b =>
@@ -241,7 +241,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Diets");
+                    b.ToTable("Diets", (string)null);
                 });
 
             modelBuilder.Entity("FastFood.Domain.Entities.User", b =>
@@ -278,7 +278,7 @@ namespace FastFood.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AllergenIngredient", b =>
@@ -333,7 +333,7 @@ namespace FastFood.Infrastructure.Migrations
 
             modelBuilder.Entity("FastFood.Domain.Entities.Order", b =>
                 {
-                    b.OwnsOne("System.Collections.Generic.List<FastFood.Domain.Models.OrderedDish>", "OrderedDishes", b1 =>
+                    b.OwnsOne("FastFood.Domain.Entities.Order.OrderedDishes#System.Collections.Generic.List<FastFood.Domain.Models.OrderedDish>", "OrderedDishes", b1 =>
                         {
                             b1.Property<int>("OrderId")
                                 .HasColumnType("int");
@@ -343,7 +343,7 @@ namespace FastFood.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Orders");
+                            b1.ToTable("Orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
@@ -355,7 +355,7 @@ namespace FastFood.Infrastructure.Migrations
 
             modelBuilder.Entity("FastFood.Domain.Entities.Restaurant", b =>
                 {
-                    b.OwnsOne("FastFood.Domain.Entities.RestaurantContactDetails", "ContactDetails", b1 =>
+                    b.OwnsOne("FastFood.Domain.Entities.Restaurant.ContactDetails#FastFood.Domain.Entities.RestaurantContactDetails", "ContactDetails", b1 =>
                         {
                             b1.Property<int>("RestaurantId")
                                 .HasColumnType("int");
@@ -386,7 +386,7 @@ namespace FastFood.Infrastructure.Migrations
 
                             b1.HasKey("RestaurantId");
 
-                            b1.ToTable("Restaurants");
+                            b1.ToTable("Restaurants", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("RestaurantId");
@@ -406,7 +406,7 @@ namespace FastFood.Infrastructure.Migrations
                         .WithMany("Users")
                         .HasForeignKey("RoleId");
 
-                    b.OwnsOne("FastFood.Domain.Entities.UserContactDetails", "ContactDetails", b1 =>
+                    b.OwnsOne("FastFood.Domain.Entities.User.ContactDetails#FastFood.Domain.Entities.UserContactDetails", "ContactDetails", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("int");
@@ -428,7 +428,7 @@ namespace FastFood.Infrastructure.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("Users", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

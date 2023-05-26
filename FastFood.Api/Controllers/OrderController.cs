@@ -2,6 +2,7 @@
 using FastFood.Application.Order.Command.CreateOrder;
 using FastFood.Application.Order.Command.RealizeOrder;
 using FastFood.Application.Order.Query.GetById;
+using FastFood.Application.Order.Query.GetOrdersToRealizeFromRestaurant;
 using FastFood.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -72,6 +73,23 @@ namespace FastFood.Api.Controllers
 
             await _mediator.Send(command);
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("restaurant/{restaurantId}/order/ordered")]
+        public async Task<ActionResult> GetOrdersToRealize([FromBody] int restaurantId, [FromQuery] PagedResultDto queryParams)
+        {
+            var command = new GetOrdersToRealizeFromRestaurantQuery()
+            {
+                RestaurantId = restaurantId,
+                PageNumber = queryParams.PageNumber,
+                PageSize = queryParams.PageSize,
+                SearchPhrase = queryParams.SearchPhrase,
+                SortBy = queryParams.SortBy,
+                SortDirection = queryParams.SortDirection,
+            };
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }

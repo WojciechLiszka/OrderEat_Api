@@ -29,7 +29,7 @@ namespace FastFood.Application.Order.Command.RealizeOrder
             {
                 throw new NotFoundException();
             }
-            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, order, new OrderRsourceOperationRequirement(ResourceOperation.Read));
+            var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, order, new OrderRsourceOperationRequirement(ResourceOperation.Update));
             if (order.OrderedDishes.IsNullOrEmpty())
             {
                 throw new BadRequestException("You need to add dishes to order");

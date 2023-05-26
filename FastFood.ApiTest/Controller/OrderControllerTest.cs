@@ -207,79 +207,6 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task AddDishToOrder_ForValidParams_ReturnsOk()
-        {
-            //arrange
-
-            var restaurant = new Restaurant()
-            {
-                Name = "Name",
-                Description = "TestDescription",
-                ContactDetails = new RestaurantContactDetails
-                {
-                    ContactNumber = "111111111",
-                    Email = "test@email.com",
-                    Country = "TestCountry",
-                    City = "TestCity",
-                    Street = "TestStreet",
-                    ApartmentNumber = "1/10"
-                }
-            };
-            var ingredient = new Ingredient()
-            {
-                Name = "Ingredient",
-                Description = "Description",
-
-                Prize = (decimal)10.5,
-                IsRequired = true
-            };
-
-            await SeedRestaurant(restaurant);
-
-            var dish = new Dish()
-            {
-                Name = "Name",
-                Description = "description",
-
-                BasePrize = (decimal)10.56,
-                BaseCaloricValue = 1000,
-
-                AllowedCustomization = true,
-                IsAvilable = true,
-                RestaurantId = restaurant.Id,
-                AllowedIngreedients = new List<Ingredient>
-                {
-                    ingredient
-                }
-            };
-            await SeedDish(dish);
-
-            var order = new Order()
-            {
-                Fee = 10,
-                UserId = 1,
-
-                Status = OrderStatus.InCart,
-                RestaurantId = restaurant.Id,
-            };
-            await SeedOrder(order);
-            var httpContent = new Sheet()
-            {
-                IngredientsId = new List<int>
-                {
-                    ingredient.Id
-                }
-            }
-            .ToJsonHttpContent();
-            //act
-
-            var response = await _adminClient.PatchAsync($"api/order/{order.Id}/dish/{dish.Id}", httpContent);
-            //assert
-
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        }
-
-        [Fact]
         public async Task AddDishToOrder_ForInvalidUser_ReturnsForbidden()
         {
             //arrange
@@ -353,6 +280,163 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
+        public async Task AddDishToOrder_ForValidParams_ReturnsOk()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                AllowedIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            var order = new Order()
+            {
+                Fee = 10,
+                UserId = 1,
+
+                Status = OrderStatus.InCart,
+                RestaurantId = restaurant.Id,
+                OrderedDishes = new List<OrderedDish>
+                {
+                }
+            };
+            await SeedOrder(order);
+            var httpContent = new Sheet()
+            {
+                IngredientsId = new List<int>
+                {
+                    ingredient.Id
+                }
+            }
+            .ToJsonHttpContent();
+            //act
+
+            var response = await _adminClient.PatchAsync($"api/order/{order.Id}/dish/{dish.Id}", httpContent);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task RealizeOrder_ForValidid_ReturnsOK()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                AllowedIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            var order = new Order()
+            {
+                Fee = 10,
+                UserId = 1,
+
+                Status = OrderStatus.InCart,
+                RestaurantId = restaurant.Id,
+                OrderedDishes = new List<OrderedDish>()
+                {
+                }
+            };
+
+            await SeedOrder(order);
+            var orderedDish = new OrderedDish()
+            {
+                DishId = dish.Id,
+                Name = dish.Name,
+
+                Ingredients = new List<Ingredient>()
+                        {
+                            ingredient
+                        },
+                prize = (decimal)10.5
+            };
+            await AddDishToOrder(order.Id, orderedDish);
+            //act
+
+            var response = await _adminClient.PatchAsync($"/api/order/{order.Id}", null);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Fact]
         public async Task Create_ForInvalidId_ReturnsNotFound()
         {
             //arrange
@@ -409,7 +493,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task GetById_ForInvalidId_RetursNotFound()
+        public async Task GetById_ForInvalidId_ReturnsNotFound()
         {
             //arrange
 
@@ -493,6 +577,23 @@ namespace FastFood.ApiTest.Controller
 
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
+        }
+
+        private async Task AddDishToOrder(int id, OrderedDish orderedDish)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+
+            var order = await _dbContext.Orders
+                .Include(x => x.OrderedDishes)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            order.OrderedDishes = new List<OrderedDish>()
+            {
+                orderedDish
+            };
+            await _dbContext.SaveChangesAsync();
         }
 
         private async Task SeedDish(Dish dish)
