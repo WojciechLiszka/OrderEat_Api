@@ -76,7 +76,8 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("restaurant/{restaurantId}/order/ordered")]
+        [Authorize(Roles = "Admin,Owner")]
+        [Route("restaurant/{restaurantId}/orderedOrder")]
         public async Task<ActionResult> GetOrdersToRealize([FromBody] int restaurantId, [FromQuery] PagedResultDto queryParams)
         {
             var command = new GetOrdersToRealizeFromRestaurantQuery()
