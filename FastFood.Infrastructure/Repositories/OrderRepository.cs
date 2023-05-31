@@ -35,13 +35,13 @@ namespace FastFood.Infrastructure.Repositories
             return order;
         }
 
-        public async Task<IQueryable<Order>> GetOrdersToRealizeFromRestaurant(int restaurantId)
+        public async Task<IQueryable<Order>> GetOrdersToRealizeFromRestaurant(int restaurantId, OrderStatus selectedStatus)
         {
-            var orders =  _dbContext
+            var orders = _dbContext
                  .Orders
-                 .Where(c => c.RestaurantId == restaurantId && c.Status == OrderStatus.Ordered);
+                 .Where(c => c.RestaurantId == restaurantId && c.Status == selectedStatus);
 
-            return  orders;
+            return orders;
         }
     }
 }

@@ -2,14 +2,14 @@
 
 namespace FastFood.Application.Order.Query.GetOrdersToRealizeFromRestaurant
 {
-    public class GetOrdersToRealizeFromRestaurantQueryValidator : AbstractValidator<GetOrdersToRealizeFromRestaurantQuery>
+    public class GetSelectedOrdersFromRestaurantQueryValidator : AbstractValidator<GetSelectedOrdersRestaurantQuery>
     {
         private int[] allowedPageSizes = new[] { 5, 10, 15 };
 
         private string[] allowedSortByColumnNames =
             {nameof(Domain.Entities.Order.OrderDate)};
 
-        public GetOrdersToRealizeFromRestaurantQueryValidator()
+        public GetSelectedOrdersFromRestaurantQueryValidator()
         {
             RuleFor(r => r.PageNumber).GreaterThanOrEqualTo(1);
             RuleFor(r => r.PageSize).Custom((value, context) =>

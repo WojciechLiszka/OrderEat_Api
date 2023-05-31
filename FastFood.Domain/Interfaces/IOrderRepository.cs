@@ -1,4 +1,5 @@
 ﻿using FastFood.Domain.Entities;
+using FastFood.Domain.Models;
 
 namespace FastFood.Domain.Interfaces
 {
@@ -10,6 +11,6 @@ namespace FastFood.Domain.Interfaces
 
         Task Commit();
 
-        Task<IQueryable<Order>> GetOrdersToRealizeFromRestaurant(int restaurantId);
+        Task<IQueryable<Order>> GetOrdersToRealizeFromRestaurant(int restaurantId, OrderStatus selectedStatus);
     }
 }

@@ -66,7 +66,7 @@ namespace FastFood.Api.Controllers
         [Route("order/{orderId}")]
         public async Task<ActionResult> RealizeOrder([FromRoute] int orderId)
         {
-            var command = new RealizeOrderCommand()
+            var command = new OrderOrderCommand()
             {
                 Orderid = orderId
             };
@@ -77,10 +77,11 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin,Owner")]
-        [Route("restaurant/{restaurantId}/orderedOrder")]
-        public async Task<ActionResult> GetOrdersToRealize([FromBody] int restaurantId, [FromQuery] PagedResultDto queryParams)
+        [Route("restaurant/{restaurantId}/order")]
+        public async Task<ActionResult<PagedResult<Domain.Entities.Order>>> GetSelctedOrdersFromRestaurant([FromBody] int restaurantId, [FromQuery] PagedResultDto queryParams, [FromQuery] OrderStatus selectedStatus)
         {
-            var command = new GetOrdersToRealizeFromRestaurantQuery()
+            var command = new GetSelectedOrdersRestaurantQuery()
+
             {
                 RestaurantId = restaurantId,
                 PageNumber = queryParams.PageNumber,
@@ -88,8 +89,11 @@ namespace FastFood.Api.Controllers
                 SearchPhrase = queryParams.SearchPhrase,
                 SortBy = queryParams.SortBy,
                 SortDirection = queryParams.SortDirection,
+                SelectedStatus = selectedStatus
             };
+
             var result = await _mediator.Send(command);
+
             return Ok(result);
         }
     }
