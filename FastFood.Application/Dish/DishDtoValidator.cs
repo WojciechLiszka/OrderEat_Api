@@ -2,7 +2,7 @@
 
 namespace FastFood.Application.Dish
 {
-    public class DishDtoValidator : AbstractValidator<DishDto>
+    public class DishDtoValidator : AbstractValidator<GetDishDto>
     {
         public DishDtoValidator()
         {

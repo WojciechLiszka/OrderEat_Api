@@ -84,7 +84,7 @@ namespace FastFood.ApiTest.Controller
                 }
             };
             await SeedRestaurant(restaurant);
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = name,
                 Description = description,
@@ -124,7 +124,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedRestaurant(restaurant);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = "TestName",
                 Description = "TestDescription",
@@ -165,7 +165,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedRestaurant(restaurant);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = "TestName",
                 Description = "TestDescription",
@@ -206,7 +206,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedRestaurant(restaurant);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = "TestName",
                 Description = "TestDescription",
@@ -522,7 +522,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedDish(dish);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = "TestName",
                 Description = "TestDescription",
@@ -568,7 +568,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedDish(dish);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = name,
                 Description = description,
@@ -622,7 +622,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedDish(dish);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = "TestName",
                 Description = "TestDescription",
@@ -678,7 +678,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedDish(dish);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = "TestName",
                 Description = "TestDescription",
@@ -734,7 +734,7 @@ namespace FastFood.ApiTest.Controller
             };
             await SeedDish(dish);
 
-            var dto = new DishDto()
+            var dto = new GetDishDto()
             {
                 Name = "TestName",
                 Description = "TestDescription",

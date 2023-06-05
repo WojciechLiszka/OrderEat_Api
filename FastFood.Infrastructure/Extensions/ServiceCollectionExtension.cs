@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-
 namespace FastFood.Infrastructure.Extensions
 {
     public static class ServiceCollectionExtension
@@ -17,7 +16,6 @@ namespace FastFood.Infrastructure.Extensions
             services.AddDbContext<FastFoodDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("FastFood")));
 
             services.AddScoped<FastFoodSeeder>();
-
 
             services.AddScoped<IUserContextService, UserContextService>();
 
@@ -36,6 +34,8 @@ namespace FastFood.Infrastructure.Extensions
             services.AddScoped<IRoleRepository, RoleRepository>();
 
             services.AddScoped<IOrderRepository, OrderRepository>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

@@ -5,6 +5,8 @@ using FastFood.Application.Dish.Command.UpdateDish;
 using FastFood.Application.Dish.Queries;
 using FastFood.Application.Dish.Queries.GedDishesFromRestaurant;
 using FastFood.Application.Dish.Queries.GetDishById;
+using FastFood.Application.Dish.Queries.SmartSearchDish;
+using FastFood.Application.Dish.Queries.SmartSearchDishFromRestaurant;
 using FastFood.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +29,7 @@ namespace FastFood.Api.Controllers
         [HttpPost]
         [Route("restaurant/{restaurantid}/dish")]
         [Authorize(Roles = "Admin,Owner")]
-        public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromBody] DishDto dto)
+        public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromBody] Application.Dish.GetDishDto dto)
         {
             if (!ModelState.IsValid)
             {
@@ -69,7 +71,7 @@ namespace FastFood.Api.Controllers
         [HttpGet]
         [Route("dish/{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<GetDishDto>> GetById([FromRoute] int id)
+        public async Task<ActionResult<Application.Dish.Queries.GetDishDto>> GetById([FromRoute] int id)
         {
             var request = new GetDishByIdQuery()
             {
@@ -84,7 +86,7 @@ namespace FastFood.Api.Controllers
         [HttpGet]
         [Route("restaurant/{restaurantid}/dish")]
         [AllowAnonymous]
-        public async Task<ActionResult<PagedResult<GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
+        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()
             {
@@ -107,11 +109,36 @@ namespace FastFood.Api.Controllers
 
             return Ok(result);
         }
+        [HttpGet]
+        [Route("restaurant/{restaurantid}/dish/smart")]
+        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
+        {
+            var request = new SmartSearchDishFromRestaurantQuery()
+            {
+                RestaurantId = restaurantid,
+                SearchPhrase = dto.SearchPhrase,
+                PageNumber = dto.PageNumber,
+                PageSize = dto.PageSize,
+                SortBy = dto.SortBy,
+                SortDirection = dto.SortDirection
+            };
+
+            var validator = new SmartSearchDishFromRestaurantQueryValidator();
+            var validationResult = await validator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _mediator.Send(request);
+
+            return Ok(result);
+        }
 
         [HttpPut]
         [Route("dish/{id}")]
         [Authorize(Roles = "Admin,Owner")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] DishDto dto)
+        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] Application.Dish.GetDishDto dto)
         {
             if (!ModelState.IsValid)
             {

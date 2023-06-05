@@ -1,6 +1,6 @@
 ﻿namespace FastFood.Application.Dish
 {
-    public class DishDto
+    public class GetDishDto
     {
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
