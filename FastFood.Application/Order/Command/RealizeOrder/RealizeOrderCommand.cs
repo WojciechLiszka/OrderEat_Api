@@ -1,11 +1,9 @@
-﻿using FastFood.Domain.Models;
-using MediatR;
+﻿using MediatR;
 
 namespace FastFood.Application.Order.Command.RealizeOrder
 {
-    public class OrderOrderCommand : IRequest
+    public class RealizeOrderCommand :IRequest
     {
         public int Orderid { get; set; }
-        
     }
 }

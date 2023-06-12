@@ -9,14 +9,14 @@ using System.Linq.Expressions;
 
 namespace FastFood.Application.Order.Query.GetOrdersToRealizeFromRestaurant
 {
-    public class GetSelectedOrdersFromRestaurantQueryHandler : IRequestHandler<GetSelectedOrdersRestaurantQuery, PagedResult<Domain.Entities.Order>>
+    public class GetOrdersToRealizeFromRestaurantQueryHandler : IRequestHandler<GetOrdersToRealizeFromRestaurantQuery, PagedResult<Domain.Entities.Order>>
     {
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IAuthorizationService _authorizationService;
         private readonly IUserContextService _userContextService;
 
-        public GetSelectedOrdersFromRestaurantQueryHandler(IRestaurantRepository restaurantRepository, IOrderRepository orderRepository, IAuthorizationService authorizationService, IUserContextService userContextService)
+        public GetOrdersToRealizeFromRestaurantQueryHandler(IRestaurantRepository restaurantRepository, IOrderRepository orderRepository, IAuthorizationService authorizationService, IUserContextService userContextService)
         {
             _restaurantRepository = restaurantRepository;
             _orderRepository = orderRepository;
@@ -24,7 +24,7 @@ namespace FastFood.Application.Order.Query.GetOrdersToRealizeFromRestaurant
             _userContextService = userContextService;
         }
 
-        async Task<PagedResult<Domain.Entities.Order>> IRequestHandler<GetSelectedOrdersRestaurantQuery, PagedResult<Domain.Entities.Order>>.Handle(GetSelectedOrdersRestaurantQuery request, CancellationToken cancellationToken)
+        async Task<PagedResult<Domain.Entities.Order>> IRequestHandler<GetOrdersToRealizeFromRestaurantQuery, PagedResult<Domain.Entities.Order>>.Handle(GetOrdersToRealizeFromRestaurantQuery request, CancellationToken cancellationToken)
         {
             var restaurant = _restaurantRepository.GetById(request.RestaurantId);
 
@@ -33,7 +33,7 @@ namespace FastFood.Application.Order.Query.GetOrdersToRealizeFromRestaurant
                 throw new NotFoundException("Restaurant not Found");
             }
             var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, restaurant, new RestaurantResourceOperationRequirement(ResourceOperation.Read));
-            var baseQuery = await _orderRepository.GetOrdersToRealizeFromRestaurant(restaurant.Id, request.SelectedStatus);
+            var baseQuery = await _orderRepository.GetOrdersToRealizeFromRestaurant(restaurant.Id);
             if (!string.IsNullOrEmpty(request.SortBy))
             {
                 var columnsSelectors = new Dictionary<string, Expression<Func<Domain.Entities.Order, object>>>

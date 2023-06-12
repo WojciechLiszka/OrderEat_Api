@@ -8,20 +8,20 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FastFood.Application.Order.Command.RealizeOrder
 {
-    public class OrderOrderCommandHandler : IRequestHandler<OrderOrderCommand>
+    public class RealizeOrderCommandHandler : IRequestHandler<RealizeOrderCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUserContextService _userContextService;
         private readonly IAuthorizationService _authorizationService;
 
-        public OrderOrderCommandHandler(IOrderRepository orderRepository, IUserContextService userContextService, IAuthorizationService authorizationService)
+        public RealizeOrderCommandHandler(IOrderRepository orderRepository, IUserContextService userContextService, IAuthorizationService authorizationService)
         {
             _orderRepository = orderRepository;
             _userContextService = userContextService;
             _authorizationService = authorizationService;
         }
 
-        public async Task Handle(OrderOrderCommand request, CancellationToken cancellationToken)
+        public async Task Handle(RealizeOrderCommand request, CancellationToken cancellationToken)
         {
             var order = await _orderRepository.GetById(request.Orderid);
 
@@ -36,7 +36,7 @@ namespace FastFood.Application.Order.Command.RealizeOrder
             }
             if (order.Status != Domain.Models.OrderStatus.InCart)
             {
-                throw new BadRequestException("This order is already ordered");
+                throw new BadRequestException("This order is already realized");
             }
             order.OrderDate = DateTime.Now;
             order.Status = Domain.Models.OrderStatus.Ordered;
