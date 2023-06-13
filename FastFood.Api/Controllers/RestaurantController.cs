@@ -14,6 +14,7 @@ namespace FastFood.Api.Controllers
     [ApiController]
     [Route("/api/restaurant")]
     [Authorize]
+    
     public class RestaurantController : Controller
     {
         private readonly IMediator _mediator;

@@ -29,9 +29,19 @@ var seeder = scope.ServiceProvider.GetRequiredService<FastFoodSeeder>();
 await seeder.Seed();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+try
+{
+    // Kod generuj¹cy Swaggera
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+catch (Exception ex)
+{
+    var exceptionDetails = $"{ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}";
+    Console.WriteLine(exceptionDetails );
+}
 
-app.UseSwagger();
-app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 

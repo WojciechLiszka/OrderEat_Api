@@ -71,6 +71,7 @@ namespace FastFood.Api.Controllers
         [HttpGet]
         [Route("dish/{id}")]
         [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<Application.Dish.Queries.GetDishDto>> GetById([FromRoute] int id)
         {
             var request = new GetDishByIdQuery()
@@ -84,13 +85,14 @@ namespace FastFood.Api.Controllers
         }
 
         [HttpGet]
-        [Route("restaurant/{restaurantid}/dish")]
-        [AllowAnonymous]
-        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
+        [Route("restaurant/{restaurantId}/dish")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+
+        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()
             {
-                RestaurantId = restaurantid,
+                RestaurantId = restaurantId,
                 SearchPhrase = dto.SearchPhrase,
                 PageNumber = dto.PageNumber,
                 PageSize = dto.PageSize,
@@ -110,12 +112,13 @@ namespace FastFood.Api.Controllers
             return Ok(result);
         }
         [HttpGet]
-        [Route("restaurant/{restaurantid}/dish/smart")]
-        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantid, [FromQuery] PagedResultDto dto)
+        [Route("restaurant/{restaurantId}/dishSmart")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new SmartSearchDishFromRestaurantQuery()
             {
-                RestaurantId = restaurantid,
+                RestaurantId = restaurantId,
                 SearchPhrase = dto.SearchPhrase,
                 PageNumber = dto.PageNumber,
                 PageSize = dto.PageSize,
@@ -138,6 +141,7 @@ namespace FastFood.Api.Controllers
         [HttpPut]
         [Route("dish/{id}")]
         [Authorize(Roles = "Admin,Owner")]
+        
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] Application.Dish.GetDishDto dto)
         {
             if (!ModelState.IsValid)

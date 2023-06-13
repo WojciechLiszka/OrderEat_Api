@@ -13,6 +13,7 @@ namespace FastFood.Api.Controllers
     [ApiController]
     [Route("api")]
     [Authorize]
+    
     public class OrderController : Controller
     {
         private readonly IMediator _mediator;
@@ -74,7 +75,6 @@ namespace FastFood.Api.Controllers
             await _mediator.Send(command);
             return Ok();
         }
-
         [HttpGet]
         [Authorize(Roles = "Admin,Owner")]
         [Route("restaurant/{restaurantId}/orderedOrder")]

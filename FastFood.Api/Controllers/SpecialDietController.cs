@@ -66,6 +66,7 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        
         public async Task<ActionResult<PagedResult<GetDietDto>>> Get([FromQuery] GetSpecialDietsQuery dto)
         {
             if (!ModelState.IsValid)
