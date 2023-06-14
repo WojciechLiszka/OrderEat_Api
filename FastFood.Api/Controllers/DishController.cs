@@ -67,28 +67,24 @@ namespace FastFood.Api.Controllers
 
             return NoContent();
         }
-
         [HttpGet]
         [Route("dish/{id}")]
-        [AllowAnonymous]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<ActionResult<Application.Dish.Queries.GetDishDto>> GetById([FromRoute] int id)
+        public async Task<ActionResult<Application.Dish.GetDishDto>> GetById([FromRoute] int Id)
         {
             var request = new GetDishByIdQuery()
             {
-                DishId = id
+                DishId = Id
             };
-
-            var dto = await _mediator.Send(request);
-
-            return Ok(dto);
+            var response= await _mediator.Send(request);
+            return Ok(response);
         }
+        
 
         [HttpGet]
         [Route("restaurant/{restaurantId}/dish")]
-        [ApiExplorerSettings(IgnoreApi = true)]
+        
 
-        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
+        public async Task<ActionResult<PagedResult<Application.Dish.GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()
             {
@@ -113,8 +109,8 @@ namespace FastFood.Api.Controllers
         }
         [HttpGet]
         [Route("restaurant/{restaurantId}/dishSmart")]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<ActionResult<PagedResult<Application.Dish.Queries.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
+        
+        public async Task<ActionResult<PagedResult<Application.Dish.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new SmartSearchDishFromRestaurantQuery()
             {
