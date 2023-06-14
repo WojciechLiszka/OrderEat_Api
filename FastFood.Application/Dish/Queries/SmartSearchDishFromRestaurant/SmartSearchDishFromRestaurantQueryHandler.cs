@@ -5,7 +5,6 @@ using FastFood.Domain.Exceptions;
 using FastFood.Domain.Interfaces;
 using FastFood.Domain.Models;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace FastFood.Application.Dish.Queries.SmartSearchDishFromRestaurant
@@ -18,7 +17,7 @@ namespace FastFood.Application.Dish.Queries.SmartSearchDishFromRestaurant
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public SmartSearchDishFromRestaurantQueryHandler(IUserContextService userContextService,IRestaurantRepository restaurantRepository,IDishRepository dishRepository,IUserRepository userRepository,IMapper mapper)
+        public SmartSearchDishFromRestaurantQueryHandler(IUserContextService userContextService, IRestaurantRepository restaurantRepository, IDishRepository dishRepository, IUserRepository userRepository, IMapper mapper)
         {
             _userContextService = userContextService;
             _restaurantRepository = restaurantRepository;
@@ -26,15 +25,16 @@ namespace FastFood.Application.Dish.Queries.SmartSearchDishFromRestaurant
             _userRepository = userRepository;
             _mapper = mapper;
         }
+
         public async Task<PagedResult<GetDishDto>> Handle(SmartSearchDishFromRestaurantQuery request, CancellationToken cancellationToken)
         {
             var userId = _userContextService.GetUserId;
-            if(userId == null) 
+            if (userId == null)
             {
                 throw new BadRequestException("Invalid user token");
             }
-            var user=await _userRepository.GetUserById((int)userId);
-            if (user == null) 
+            var user = await _userRepository.GetUserById((int)userId);
+            if (user == null)
             {
                 throw new BadRequestException("Invalid user token");
             }
@@ -58,24 +58,23 @@ namespace FastFood.Application.Dish.Queries.SmartSearchDishFromRestaurant
                    ? baseQuery.OrderBy(selectedColumn)
                    : baseQuery.OrderByDescending(selectedColumn);
             }
-            var list= (List<Domain.Entities.Dish>)baseQuery;
-            
+            var list = new List<Domain.Entities.Dish>();
+
             if (diet != null)
             {
-                foreach(var dish in  list) 
+                foreach (var dish in baseQuery)
                 {
-                    if (dish.AllowedForDiets.Contains(diet)==false)
+                    if (dish.AllowedForDiets.Contains(diet) != false)
                     {
-                       list.Remove(dish);
+                        list.Add(dish);
                     }
                 }
             }
 
-            var dishes =  list
+            var dishes = list
                 .Skip(request.PageSize * (request.PageNumber - 1))
                 .Take(request.PageSize)
                 .ToList();
-            
 
             var totalItemsCount = baseQuery.Count();
             var dtos = _mapper.Map<List<GetDishDto>>(dishes);

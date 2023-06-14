@@ -498,14 +498,66 @@ namespace FastFood.ApiTest.Controller
             await SeedDish(dish);
             //act
 
-            var response = await _adminClient.GetAsync($"api/dish/3456");
+            var response = await _adminClient.GetAsync("api/dish/3456");
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
         }
 
+        [Theory]
+        [InlineData("?PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Name")]
+        [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=Description")]
+        public async Task GetSmart_ForValidQueryParams_ReturnsOK(string query)
+        {
+            //arrange
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                CreatedById = 1,
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "TestName",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id
+            };
+            await SeedDish(dish);
+            var user = new User()
+            {
+                Id = 1,
+                Name = "John Doe",
+                Email = "test@email.com"
+            };
+            await SeedUser(user);
+
+            //act
+            var response = await _adminClient.GetAsync($"/api/restaurant/{restaurant.Id}/dishSmart{query}");
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
         [Fact]
-        public async Task Updade_ForInvalidId_ReturnsNotFound()
+        public async Task Update_ForInvalidId_ReturnsNotFound()
         {
             //arrange
 
@@ -536,7 +588,7 @@ namespace FastFood.ApiTest.Controller
             var httpContent = dto.ToJsonHttpContent();
             //act
 
-            var response = await _adminClient.PutAsync($"api/dish/5342", httpContent);
+            var response = await _adminClient.PutAsync("api/dish/5342", httpContent);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
@@ -796,6 +848,18 @@ namespace FastFood.ApiTest.Controller
 
             _dbContext.Restaurants.Add(restaurant);
             await _dbContext.SaveChangesAsync();
+        }
+
+        private async Task SeedUser(User user)
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<FastFoodDbContext>();
+            if (!_dbContext.Users.Contains(user))
+            {
+                _dbContext.Users.Add(user);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

@@ -82,8 +82,6 @@ namespace FastFood.Api.Controllers
 
         [HttpGet]
         [Route("restaurant/{restaurantId}/dish")]
-        
-
         public async Task<ActionResult<PagedResult<Application.Dish.GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()
@@ -109,6 +107,7 @@ namespace FastFood.Api.Controllers
         }
         [HttpGet]
         [Route("restaurant/{restaurantId}/dishSmart")]
+        [Authorize]
         
         public async Task<ActionResult<PagedResult<Application.Dish.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {

@@ -458,7 +458,7 @@ namespace FastFood.ApiTest.Controller
             await SeedRestaurant(restaurant);
             //act
 
-            var response = await _userClient.PostAsync($"/api/restaurant/7453/order", null);
+            var response = await _userClient.PostAsync("/api/restaurant/7453/order", null);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
