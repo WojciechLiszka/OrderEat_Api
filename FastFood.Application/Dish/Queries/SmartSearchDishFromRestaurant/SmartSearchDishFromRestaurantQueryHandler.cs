@@ -64,7 +64,7 @@ namespace FastFood.Application.Dish.Queries.SmartSearchDishFromRestaurant
             {
                 foreach (var dish in baseQuery)
                 {
-                    if (dish.AllowedForDiets.Contains(diet) != false)
+                    if (dish.AllowedForDiets.Contains(diet))
                     {
                         list.Add(dish);
                     }

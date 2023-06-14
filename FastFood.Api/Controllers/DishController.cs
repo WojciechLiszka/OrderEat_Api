@@ -1,8 +1,6 @@
-﻿using FastFood.Application.Dish;
-using FastFood.Application.Dish.Command.CreateDish;
+﻿using FastFood.Application.Dish.Command.CreateDish;
 using FastFood.Application.Dish.Command.DeleteDish;
 using FastFood.Application.Dish.Command.UpdateDish;
-using FastFood.Application.Dish.Queries;
 using FastFood.Application.Dish.Queries.GedDishesFromRestaurant;
 using FastFood.Application.Dish.Queries.GetDishById;
 using FastFood.Application.Dish.Queries.SmartSearchDish;
@@ -67,6 +65,7 @@ namespace FastFood.Api.Controllers
 
             return NoContent();
         }
+
         [HttpGet]
         [Route("dish/{id}")]
         public async Task<ActionResult<Application.Dish.GetDishDto>> GetById([FromRoute] int Id)
@@ -75,10 +74,9 @@ namespace FastFood.Api.Controllers
             {
                 DishId = Id
             };
-            var response= await _mediator.Send(request);
+            var response = await _mediator.Send(request);
             return Ok(response);
         }
-        
 
         [HttpGet]
         [Route("restaurant/{restaurantId}/dish")]
@@ -105,10 +103,10 @@ namespace FastFood.Api.Controllers
 
             return Ok(result);
         }
+
         [HttpGet]
         [Route("restaurant/{restaurantId}/dishSmart")]
         [Authorize]
-        
         public async Task<ActionResult<PagedResult<Application.Dish.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new SmartSearchDishFromRestaurantQuery()
@@ -136,7 +134,6 @@ namespace FastFood.Api.Controllers
         [HttpPut]
         [Route("dish/{id}")]
         [Authorize(Roles = "Admin,Owner")]
-        
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] Application.Dish.GetDishDto dto)
         {
             if (!ModelState.IsValid)
