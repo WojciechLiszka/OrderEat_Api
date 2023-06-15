@@ -334,9 +334,7 @@ namespace FastFood.ApiTest.Controller
 
                 Status = OrderStatus.InCart,
                 RestaurantId = restaurant.Id,
-                OrderedDishes = new List<OrderedDish>
-                {
-                }
+                OrderedDishes = new List<OrderedDish>()
             };
             await SeedOrder(order);
             var httpContent = new Sheet()
@@ -356,7 +354,7 @@ namespace FastFood.ApiTest.Controller
         }
 
         [Fact]
-        public async Task RealizeOrder_ForValidid_ReturnsOK()
+        public async Task RealizeOrder_ForValidId_ReturnsOK()
         {
             //arrange
 
@@ -411,8 +409,6 @@ namespace FastFood.ApiTest.Controller
                 Status = OrderStatus.InCart,
                 RestaurantId = restaurant.Id,
                 OrderedDishes = new List<OrderedDish>()
-                {
-                }
             };
 
             await SeedOrder(order);

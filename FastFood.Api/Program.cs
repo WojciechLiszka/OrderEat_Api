@@ -41,8 +41,6 @@ catch (Exception ex)
     Console.WriteLine(exceptionDetails );
 }
 
-
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

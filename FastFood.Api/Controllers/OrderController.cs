@@ -12,7 +12,7 @@ namespace FastFood.Api.Controllers
 {
     [ApiController]
     [Route("api")]
-    [Authorize]   
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IMediator _mediator;
