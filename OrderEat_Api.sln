@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Application", "FastFood.Application\OrderEat.Application.csproj", "{1DA389AB-FC8F-49F7-8D90-FA7DA695F6AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Application", "OrderEat.Application\OrderEat.Application.csproj", "{1DA389AB-FC8F-49F7-8D90-FA7DA695F6AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Domain", "FastFood.Domain\OrderEat.Domain.csproj", "{4CF1D12D-B71B-4C26-9817-5061B2AF0616}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Domain", "OrderEat.Domain\OrderEat.Domain.csproj", "{4CF1D12D-B71B-4C26-9817-5061B2AF0616}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Infrastructure", "FastFood.Infrastructure\OrderEat.Infrastructure.csproj", "{EB5AA169-9FCC-41B5-8DC8-387199EF156A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Infrastructure", "OrderEat.Infrastructure\OrderEat.Infrastructure.csproj", "{EB5AA169-9FCC-41B5-8DC8-387199EF156A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Api", "FastFood.Api\OrderEat.Api.csproj", "{60C3EE5B-43D7-4F89-9B46-0545E9E261BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.Api", "OrderEat.Api\OrderEat.Api.csproj", "{60C3EE5B-43D7-4F89-9B46-0545E9E261BA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.ApiTest", "FastFood.ApiTest\OrderEat.ApiTest.csproj", "{9FCC32BB-9914-4B1A-91FB-1116DE7920B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderEat.ApiTest", "OrderEat.ApiTest\OrderEat.ApiTest.csproj", "{9FCC32BB-9914-4B1A-91FB-1116DE7920B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

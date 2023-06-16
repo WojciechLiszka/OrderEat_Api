@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FastFood.Application\OrderEat.Application.csproj" />
-    <ProjectReference Include="..\FastFood.Infrastructure\OrderEat.Infrastructure.csproj" />
+    <ProjectReference Include="..\OrderEat.Application\OrderEat.Application.csproj" />
+    <ProjectReference Include="..\OrderEat.Infrastructure\OrderEat.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
