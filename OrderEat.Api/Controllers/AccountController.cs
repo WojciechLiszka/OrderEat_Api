@@ -1,10 +1,12 @@
-﻿using OrderEat.Application.Account.Command;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using OrderEat.Application.Account.Command;
 using OrderEat.Application.Account.Command.DeleteUser;
 using OrderEat.Application.Account.Command.RegisterUser;
 using OrderEat.Application.Account.Command.UpdateUserDetails;
 using OrderEat.Application.Account.Commands.UpdateUserRole;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace OrderEat.Api.Controllers
 {
@@ -20,7 +22,12 @@ namespace OrderEat.Api.Controllers
         }
 
         [HttpPatch]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
         [Route("{userEmail}/role/{roleId}")]
+        [Authorize("Admin")]
+        [SwaggerOperation("Changes user role")]
         public async Task<ActionResult> ChangeRole([FromRoute] string userEmail, [FromRoute] int roleId)
         {
             if (!ModelState.IsValid)
@@ -37,6 +44,11 @@ namespace OrderEat.Api.Controllers
         }
 
         [HttpDelete]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Delete user account")]
+        [Authorize]
         public async Task<ActionResult> Delete([FromBody] DeleteUserCommand command)
         {
             if (!ModelState.IsValid)
@@ -49,6 +61,9 @@ namespace OrderEat.Api.Controllers
 
         [HttpPost]
         [Route("login")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [SwaggerOperation("Login to user account")]
         public async Task<ActionResult<string>> Login([FromBody] LoginUserCommand command)
         {
             if (!ModelState.IsValid)
@@ -61,6 +76,9 @@ namespace OrderEat.Api.Controllers
 
         [HttpPost]
         [Route("register")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [SwaggerOperation("Register user account")]
         public async Task<ActionResult> Register([FromBody] RegisterUserCommand command)
         {
             if (!ModelState.IsValid)
@@ -70,7 +88,11 @@ namespace OrderEat.Api.Controllers
             await _mediator.Send(command);
             return Ok();
         }
+
         [HttpPut]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [SwaggerOperation("Change user details")]
         public async Task<ActionResult> Update([FromBody] UpdateUserDetailsCommand command)
         {
             if (!ModelState.IsValid)

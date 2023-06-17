@@ -234,7 +234,7 @@ namespace OrderEat.ApiTest.Controller
 
             var command = new CreateSpecialDietCommand()
             {
-                Name = "TestName",
+                Name = "DietName",
                 Description = "Description"
             };
             var httpContent = command.ToJsonHttpContent();
