@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderEat.Application.Order.Command.AddDishToOrder;
 using OrderEat.Application.Order.Command.CreateOrder;
+using OrderEat.Application.Order.Command.FinishOrder;
 using OrderEat.Application.Order.Command.RealizeOrder;
 using OrderEat.Application.Order.Query.GetById;
 using OrderEat.Application.Order.Query.GetOrdersToRealizeFromRestaurant;
@@ -74,6 +75,7 @@ namespace OrderEat.Api.Controllers
             var order = await _mediator.Send(query);
             return Ok(order);
         }
+
         [HttpGet]
         [Authorize(Roles = "Admin,Owner")]
         [Route("restaurant/{restaurantId}/orderedOrder")]
@@ -109,6 +111,22 @@ namespace OrderEat.Api.Controllers
                 Orderid = orderId
             };
 
+            await _mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Route("order/{orderId}/ordered")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation($"Change order status to realized")]
+        public async Task<ActionResult> FinishOrder([FromRoute] int id)
+        {
+            var command = new FishOrderCommand()
+            {
+                Id = id
+            };
             await _mediator.Send(command);
             return Ok();
         }

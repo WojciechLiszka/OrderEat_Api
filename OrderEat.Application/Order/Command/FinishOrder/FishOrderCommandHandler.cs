@@ -6,44 +6,42 @@ using OrderEat.Application.Authorization;
 using OrderEat.Domain.Exceptions;
 using OrderEat.Domain.Interfaces;
 
-namespace OrderEat.Application.Order.Command.RealizeOrder
+namespace OrderEat.Application.Order.Command.FinishOrder
 {
-    public class RealizeOrderCommandHandler : IRequestHandler<RealizeOrderCommand>
+    public class FishOrderCommandHandler : IRequestHandler<FishOrderCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IUserContextService _userContextService;
         private readonly IAuthorizationService _authorizationService;
 
-        public RealizeOrderCommandHandler(IOrderRepository orderRepository, IUserContextService userContextService, IAuthorizationService authorizationService)
+        public FishOrderCommandHandler(IOrderRepository orderRepository, IUserContextService userContextService, IAuthorizationService authorizationService)
         {
             _orderRepository = orderRepository;
             _userContextService = userContextService;
             _authorizationService = authorizationService;
         }
 
-        public async Task Handle(RealizeOrderCommand request, CancellationToken cancellationToken)
+        public async Task Handle(FishOrderCommand request, CancellationToken cancellationToken)
         {
-            var order = await _orderRepository.GetById(request.Orderid);
-
+            var order = await _orderRepository.GetById(request.Id);
             if (order == null)
             {
-                throw new NotFoundException("Order not found");
+                throw new NotFoundException();
             }
             var authorizationResult = await _authorizationService.AuthorizeAsync(_userContextService.User, order, new OrderRsourceOperationRequirement(ResourceOperation.Update));
             if (order.OrderedDishes.IsNullOrEmpty())
             {
                 throw new BadRequestException("You need to add dishes to order");
             }
-            if (order.Status == Domain.Models.OrderStatus.Ordered)
+            if (order.Status == Domain.Models.OrderStatus.InCart)
             {
-                throw new BadRequestException("This order is already realized");
+                throw new BadRequestException("This order is not ordered yet");
             }
             if (order.Status == Domain.Models.OrderStatus.Realized)
             {
-                throw new BadRequestException("This order is finished");
+                throw new BadRequestException("This order is already finished");
             }
-            order.OrderDate = DateTime.Now;
-            order.Status = Domain.Models.OrderStatus.Ordered;
+            order.Status = Domain.Models.OrderStatus.Realized;
             await _orderRepository.Commit();
         }
     }
