@@ -6,6 +6,7 @@ using OrderEat.Application.Allergen.Queries.GetAllergens;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace OrderEat.Api.Controllers
 {
@@ -23,6 +24,9 @@ namespace OrderEat.Api.Controllers
 
         [HttpPost]
         [Authorize(Roles ="Admin")]
+        [ProducesResponseType(typeof(string), 201)]
+        [ProducesResponseType(typeof(string), 400)]
+        [SwaggerOperation("Create allergen")]
         public async Task<ActionResult<string>> Create([FromBody] CreateAllergenCommand command)
         {
             if (!ModelState.IsValid)
@@ -37,6 +41,10 @@ namespace OrderEat.Api.Controllers
         [HttpDelete]
         [Route("{id}")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(string), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Delete allergen")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             await _mediator.Send(new DeleteAllergenCommand()
@@ -49,6 +57,9 @@ namespace OrderEat.Api.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(List<AllergenDto>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [SwaggerOperation("Get allergens from query")]
         public async Task<ActionResult<List<AllergenDto>>> Get([FromQuery] GetAllergensQuery query)
         {
             if (!ModelState.IsValid)
@@ -62,6 +73,10 @@ namespace OrderEat.Api.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("{id}")]
+        [ProducesResponseType(typeof(AllergenDto), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Get allergen by id")]
         public async Task<ActionResult<AllergenDto>> GetById([FromRoute] int id)
         {
             var result = await _mediator.Send(new GetAllergenByIdQuery()
@@ -75,6 +90,10 @@ namespace OrderEat.Api.Controllers
         [HttpPut]
         [Route("{id}")]
         [Authorize(Roles ="Admin")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Update allergen")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] UpdateAllergenDto dto)
         {
             if (!ModelState.IsValid)

@@ -1,14 +1,14 @@
-﻿using OrderEat.ApiTest.Helpers;
-using OrderEat.Domain.Entities;
-using OrderEat.Domain.Models;
-using OrderEat.Infrastructure.Persistance;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OrderEat.ApiTest.Helpers;
+using OrderEat.Domain.Entities;
+using OrderEat.Domain.Models;
+using OrderEat.Infrastructure.Persistance;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -461,7 +461,7 @@ namespace OrderEat.ApiTest.Controller
         }
 
         [Fact]
-        public async Task Create_ForValidId_ReturnsOk()
+        public async Task Create_ForValidId_ReturnsCreated()
         {
             //arrange
 
@@ -485,7 +485,7 @@ namespace OrderEat.ApiTest.Controller
             var response = await _userClient.PostAsync($"/api/restaurant/{restaurant.Id}/order", null);
             //assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
         }
 
         [Fact]

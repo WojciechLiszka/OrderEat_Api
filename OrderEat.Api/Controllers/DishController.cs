@@ -1,4 +1,7 @@
-﻿using OrderEat.Application.Dish.Command.CreateDish;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using OrderEat.Application.Dish.Command.CreateDish;
 using OrderEat.Application.Dish.Command.DeleteDish;
 using OrderEat.Application.Dish.Command.UpdateDish;
 using OrderEat.Application.Dish.Queries.GedDishesFromRestaurant;
@@ -6,9 +9,7 @@ using OrderEat.Application.Dish.Queries.GetDishById;
 using OrderEat.Application.Dish.Queries.SmartSearchDish;
 using OrderEat.Application.Dish.Queries.SmartSearchDishFromRestaurant;
 using OrderEat.Domain.Models;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace OrderEat.Api.Controllers
 {
@@ -27,6 +28,10 @@ namespace OrderEat.Api.Controllers
         [HttpPost]
         [Route("restaurant/{restaurantid}/dish")]
         [Authorize(Roles = "Admin,Owner")]
+        [ProducesResponseType(typeof(string), 201)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Crate dish in restaurant")]
         public async Task<ActionResult<string>> Create([FromRoute] int restaurantid, [FromBody] Application.Dish.GetDishDto dto)
         {
             if (!ModelState.IsValid)
@@ -54,6 +59,10 @@ namespace OrderEat.Api.Controllers
         [HttpDelete]
         [Route("dish/{id}")]
         [Authorize(Roles = "Admin,Owner")]
+        [ProducesResponseType(typeof(string), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Delete dish")]
         public async Task<ActionResult> Delete([FromRoute] int id)
         {
             var request = new DeleteDishCommand()
@@ -68,6 +77,10 @@ namespace OrderEat.Api.Controllers
 
         [HttpGet]
         [Route("dish/{id}")]
+        [ProducesResponseType(typeof(Application.Dish.GetDishDto), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Get dish by id")]
         public async Task<ActionResult<Application.Dish.GetDishDto>> GetById([FromRoute] int Id)
         {
             var request = new GetDishByIdQuery()
@@ -80,6 +93,10 @@ namespace OrderEat.Api.Controllers
 
         [HttpGet]
         [Route("restaurant/{restaurantId}/dish")]
+        [ProducesResponseType(typeof(PagedResult<Application.Dish.GetDishDto>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Get dishes from restaurant")]
         public async Task<ActionResult<PagedResult<Application.Dish.GetDishDto>>> GetFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new GetDishesFromRestaurantQuery()
@@ -107,6 +124,10 @@ namespace OrderEat.Api.Controllers
         [HttpGet]
         [Route("restaurant/{restaurantId}/dishSmart")]
         [Authorize]
+        [ProducesResponseType(typeof(PagedResult<Application.Dish.GetDishDto>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Get user personalized dishes from restaurant")]
         public async Task<ActionResult<PagedResult<Application.Dish.GetDishDto>>> GetSmartFromRestaurant([FromRoute] int restaurantId, [FromQuery] PagedResultDto dto)
         {
             var request = new SmartSearchDishFromRestaurantQuery()
@@ -134,6 +155,10 @@ namespace OrderEat.Api.Controllers
         [HttpPut]
         [Route("dish/{id}")]
         [Authorize(Roles = "Admin,Owner")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Update dish details")]
         public async Task<ActionResult> Update([FromRoute] int id, [FromBody] Application.Dish.GetDishDto dto)
         {
             if (!ModelState.IsValid)

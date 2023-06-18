@@ -1,7 +1,8 @@
-﻿using OrderEat.Domain.Exceptions;
+﻿using Domain.Domain.Exceptions;
+using MediatR;
+using OrderEat.Domain.Exceptions;
 using OrderEat.Domain.Interfaces;
 using OrderEat.Infrastructure.Repositories;
-using MediatR;
 
 namespace OrderEat.Application.Restaurant.Commands.CreateRestaurant
 {
@@ -50,6 +51,10 @@ namespace OrderEat.Application.Restaurant.Commands.CreateRestaurant
             if (useRole == "User")
             {
                 var user = await _accountRepository.GetByEmail(_userContextService.GetUserEmail);
+                if (user == null)
+                {
+                    throw new NotFoundException("Account not found");
+                }
                 var ownerRole = await _roleRepository.GetByName("Owner");
                 user.Role = ownerRole;
                 await _accountRepository.Commit();
