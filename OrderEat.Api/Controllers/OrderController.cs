@@ -24,6 +24,25 @@ namespace OrderEat.Api.Controllers
             _mediator = mediator;
         }
 
+        [HttpPatch]
+        [Route("order/{orderId}/dish/{dishId}")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation("Add customized dish to order")]
+        public async Task<ActionResult> AddDishToOrder([FromRoute] int orderId, [FromRoute] int dishId, [FromBody] Sheet additionalIngredient)
+        {
+            var command = new AddDishToOrderCommand()
+            {
+                OrderId = orderId,
+                DishId = dishId,
+                AditionalIngrediens = additionalIngredient
+            };
+
+            await _mediator.Send(command);
+            return Ok();
+        }
+
         [HttpPost]
         [Route("restaurant/{id}/order")]
         [ProducesResponseType(typeof(string), 201)]
@@ -55,43 +74,6 @@ namespace OrderEat.Api.Controllers
             var order = await _mediator.Send(query);
             return Ok(order);
         }
-
-        [HttpPatch]
-        [Route("order/{orderId}/dish/{dishId}")]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(typeof(string), 400)]
-        [ProducesResponseType(typeof(string), 404)]
-        [SwaggerOperation("Add customized dish to order")]
-        public async Task<ActionResult> AddDishToOrder([FromRoute] int orderId, [FromRoute] int dishId, [FromBody] Sheet additionalIngredient)
-        {
-            var command = new AddDishToOrderCommand()
-            {
-                OrderId = orderId,
-                DishId = dishId,
-                AditionalIngrediens = additionalIngredient
-            };
-
-            await _mediator.Send(command);
-            return Ok();
-        }
-
-        [HttpPatch]
-        [Route("order/{orderId}")]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(typeof(string), 400)]
-        [ProducesResponseType(typeof(string), 404)]
-        [SwaggerOperation($"Change order status to ordered")]
-        public async Task<ActionResult> RealizeOrder([FromRoute] int orderId)
-        {
-            var command = new RealizeOrderCommand()
-            {
-                Orderid = orderId
-            };
-
-            await _mediator.Send(command);
-            return Ok();
-        }
-
         [HttpGet]
         [Authorize(Roles = "Admin,Owner")]
         [Route("restaurant/{restaurantId}/orderedOrder")]
@@ -112,6 +94,23 @@ namespace OrderEat.Api.Controllers
             };
             var result = await _mediator.Send(command);
             return Ok(result);
+        }
+
+        [HttpPatch]
+        [Route("order/{orderId}")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        [SwaggerOperation($"Change order status to ordered")]
+        public async Task<ActionResult> RealizeOrder([FromRoute] int orderId)
+        {
+            var command = new RealizeOrderCommand()
+            {
+                Orderid = orderId
+            };
+
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }
