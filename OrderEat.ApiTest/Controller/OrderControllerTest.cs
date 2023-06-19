@@ -550,6 +550,86 @@ namespace OrderEat.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
+        [Fact]
+        public async Task RealizeOrder_ForInvalidId_ReturnsNotFound()
+        {
+            //arrange
+
+            var restaurant = new Restaurant()
+            {
+                Name = "Name",
+                Description = "TestDescription",
+                ContactDetails = new RestaurantContactDetails
+                {
+                    ContactNumber = "111111111",
+                    Email = "test@email.com",
+                    Country = "TestCountry",
+                    City = "TestCity",
+                    Street = "TestStreet",
+                    ApartmentNumber = "1/10"
+                }
+            };
+            var ingredient = new Ingredient()
+            {
+                Name = "Ingredient",
+                Description = "Description",
+
+                Prize = (decimal)10.5,
+                IsRequired = true
+            };
+
+            await SeedRestaurant(restaurant);
+
+            var dish = new Dish()
+            {
+                Name = "Name",
+                Description = "description",
+
+                BasePrize = (decimal)10.56,
+                BaseCaloricValue = 1000,
+
+                AllowedCustomization = true,
+                IsAvilable = true,
+                RestaurantId = restaurant.Id,
+                AllowedIngreedients = new List<Ingredient>
+                {
+                    ingredient
+                }
+            };
+            await SeedDish(dish);
+
+            var order = new Order()
+            {
+                Fee = 10,
+                UserId = 1,
+
+                Status = OrderStatus.InCart,
+                RestaurantId = restaurant.Id,
+                OrderedDishes = new List<OrderedDish>()
+            };
+
+            await SeedOrder(order);
+            var orderedDish = new OrderedDish()
+            {
+                DishId = dish.Id,
+                Name = dish.Name,
+
+                Ingredients = new List<Ingredient>()
+                        {
+                            ingredient
+                        },
+                prize = (decimal)10.5
+            };
+            await AddDishToOrder(order.Id, orderedDish);
+            //act
+
+            var response = await _adminClient.PatchAsync($"/api/order/6453", null);
+            //assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        }
+
         private async Task AddDishToOrder(int id, OrderedDish orderedDish)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
@@ -590,6 +670,7 @@ namespace OrderEat.ApiTest.Controller
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
+
         private async Task SeedDish(Dish dish)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
