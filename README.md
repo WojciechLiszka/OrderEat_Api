@@ -24,7 +24,15 @@ List the ready features here:
 
 
 ## Screenshots
-<!--To do -->
+
+### Swagger
+![Account Controller](src/swagger1.png)
+![Allergen Controller](src/swagger2.png)
+![Dish Controller](src/swagger1.png)
+![Ingredient Controller](src/swagger1.png)
+![Order Controller](src/swagger1.png)
+![Restaurant Controller](src/swagger1.png)
+![SpecialDiet Controller](src/swagger1.png)
 
 
 ## Setup
