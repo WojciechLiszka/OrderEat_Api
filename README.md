@@ -66,10 +66,10 @@ OrderEat.Api is a api wich can be used to meanage service wchere you can order f
 - Update restaurant details
 
 ### SpecialDiet Controller
--Create Diet
--Delete Diet
--Added Diet to allowed for diet dish property
--Update Diet details
+- Create Diet
+- Delete Diet
+- Added Diet to allowed for diet dish property
+- Update Diet details
 
 
 
