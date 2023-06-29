@@ -87,15 +87,12 @@ OrderEat.Api is a api wich can be used to meanage service wchere you can order f
 ![SpecialDiet Controller](src/swagger7.png)
 
 
-## Setup
-<!--To do -->
 
 ## Project Status
-Project is: in progress
+Project is: Finished
 
 
-## Room for Improvement
-<!--To do -->
+
 
 
 
