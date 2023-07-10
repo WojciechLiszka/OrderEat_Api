@@ -144,7 +144,7 @@ namespace OrderEat.ApiTest.Controller
                 }
             };
 
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             //act
 
             var response = await _adminClient.DeleteAsync($"{_route}/63345");
@@ -173,7 +173,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 21451
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             //act
 
             var response = await _ownerClient.DeleteAsync($"{_route}/{restaurant.Id}");
@@ -202,7 +202,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 2
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             //act
 
             var response = await _ownerClient.DeleteAsync($"{_route}/{restaurant.Id}");
@@ -231,7 +231,7 @@ namespace OrderEat.ApiTest.Controller
                 }
             };
 
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             //act
 
             var response = await _adminClient.DeleteAsync($"{_route}/{restaurant.Id}");
@@ -291,7 +291,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/452345");
@@ -319,7 +319,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/{restaurant.Id}");
@@ -347,7 +347,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var command = new UpdateRestaurantCommand()
             {
@@ -399,7 +399,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var command = new UpdateRestaurantCommand()
             {
@@ -438,7 +438,7 @@ namespace OrderEat.ApiTest.Controller
                 CreatedById = 21345
             };
 
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var command = new UpdateRestaurantDto()
             {
@@ -478,7 +478,7 @@ namespace OrderEat.ApiTest.Controller
                 CreatedById = 2
             };
 
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var command = new UpdateRestaurantDto()
             {
@@ -519,7 +519,7 @@ namespace OrderEat.ApiTest.Controller
                 }
             };
 
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var command = new UpdateRestaurantDto()
             {
@@ -564,13 +564,15 @@ namespace OrderEat.ApiTest.Controller
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task SeedRestaurant(Restaurant restaurant)
+
+        private async Task Seed<T>(T obj) where T : class
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
             var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
 
-            _dbContext.Restaurants.Add(restaurant);
+            _dbContext.Add(obj);
+
             await _dbContext.SaveChangesAsync();
         }
     }

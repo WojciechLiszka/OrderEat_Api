@@ -1,16 +1,16 @@
-﻿using OrderEat.ApiTest.Helpers;
-using OrderEat.Application.Ingredient.Command;
-using OrderEat.Application.Ingredient.Command.UpdateIngredient;
-using OrderEat.Domain.Entities;
-using OrderEat.Domain.Models;
-using OrderEat.Infrastructure.Persistance;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OrderEat.ApiTest.Helpers;
+using OrderEat.Application.Ingredient.Command;
+using OrderEat.Application.Ingredient.Command.UpdateIngredient;
+using OrderEat.Domain.Entities;
+using OrderEat.Domain.Models;
+using OrderEat.Infrastructure.Persistance;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -82,7 +82,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 3
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -96,7 +96,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new IngredientDto()
             {
@@ -132,7 +132,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 3
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -146,7 +146,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new IngredientDto()
             {
@@ -182,7 +182,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 2
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -196,7 +196,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new IngredientDto()
             {
@@ -233,7 +233,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 2
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -247,7 +247,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new IngredientDto()
             {
@@ -278,7 +278,7 @@ namespace OrderEat.ApiTest.Controller
                 Prize = (decimal)10.5,
                 IsRequired = true
             };
-            await SeedIngredient(ingredient);
+            await Seed(ingredient);
 
             //act
 
@@ -308,7 +308,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -335,7 +335,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             //act
 
@@ -365,7 +365,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -392,7 +392,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             //act
 
@@ -422,7 +422,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -449,7 +449,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/ingredient/23564");
@@ -478,7 +478,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -505,7 +505,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/ingredient/{ingredient.Id}");
@@ -534,7 +534,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -561,7 +561,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/dish/5636/ingredient");
@@ -590,7 +590,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -617,7 +617,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/dish/{dish.Id}/ingredient");
@@ -625,6 +625,7 @@ namespace OrderEat.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
         [Theory]
         [InlineData(null, "Description", 10.5, true)]
         [InlineData("TestName", "", 10.5, true)]
@@ -643,7 +644,7 @@ namespace OrderEat.ApiTest.Controller
                 Prize = (decimal)10.5,
                 IsRequired = true
             };
-            await SeedIngredient(ingredient);
+            await Seed(ingredient);
 
             var dto = new UpdateIngredientCommand()
             {
@@ -679,7 +680,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -706,7 +707,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new UpdateIngredientCommand()
             {
@@ -744,7 +745,7 @@ namespace OrderEat.ApiTest.Controller
                 },
                 CreatedById = 4
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var ingredient = new Ingredient()
             {
@@ -771,7 +772,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new UpdateIngredientCommand()
             {
@@ -802,7 +803,7 @@ namespace OrderEat.ApiTest.Controller
                 Prize = (decimal)10.5,
                 IsRequired = true
             };
-            await SeedIngredient(ingredient);
+            await Seed(ingredient);
 
             var dto = new UpdateIngredientCommand()
             {
@@ -844,33 +845,14 @@ namespace OrderEat.ApiTest.Controller
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task SeedDish(Dish dish)
+        private async Task Seed<T>(T obj) where T : class
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
             var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
 
-            _dbContext.Add(dish);
-            await _dbContext.SaveChangesAsync();
-        }
+            _dbContext.Add(obj);
 
-        private async Task SeedIngredient(Ingredient ingredient)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
-
-            _dbContext.Add(ingredient);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        private async Task SeedRestaurant(Restaurant restaurant)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
-
-            _dbContext.Add(restaurant);
             await _dbContext.SaveChangesAsync();
         }
     }

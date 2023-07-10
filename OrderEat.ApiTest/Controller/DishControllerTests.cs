@@ -1,15 +1,15 @@
-﻿using OrderEat.ApiTest.Helpers;
-using OrderEat.Application.Dish;
-using OrderEat.Domain.Entities;
-using OrderEat.Domain.Models;
-using OrderEat.Infrastructure.Persistance;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OrderEat.ApiTest.Helpers;
+using OrderEat.Application.Dish;
+using OrderEat.Domain.Entities;
+using OrderEat.Domain.Models;
+using OrderEat.Infrastructure.Persistance;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -83,7 +83,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             var dto = new GetDishDto()
             {
                 Name = name,
@@ -122,7 +122,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dto = new GetDishDto()
             {
@@ -163,7 +163,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dto = new GetDishDto()
             {
@@ -204,7 +204,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dto = new GetDishDto()
             {
@@ -241,7 +241,7 @@ namespace OrderEat.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.DeleteAsync("api/dish/23452");
@@ -270,7 +270,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -284,7 +284,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _ownerClient.DeleteAsync($"api/dish/{dish.Id}");
@@ -313,7 +313,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -327,7 +327,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.DeleteAsync($"api/dish/{dish.Id}");
@@ -355,7 +355,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -369,7 +369,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.GetAsync("api/dish/3456");
@@ -399,7 +399,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             var dish = new Dish()
             {
                 Name = "Name",
@@ -411,7 +411,7 @@ namespace OrderEat.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             //act
             var response = await _adminClient.GetAsync($"api/restaurant/{restaurant.Id}/dish/{query}");
@@ -442,7 +442,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
             var dish = new Dish()
             {
                 Name = "Name",
@@ -454,7 +454,7 @@ namespace OrderEat.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true,
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             //act
             var response = await _adminClient.GetAsync($"api/restaurant/{restaurant.Id}/dish/{query}");
@@ -481,7 +481,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -495,7 +495,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
             //act
 
             var response = await _adminClient.GetAsync($"api/dish/{dish.Id}");
@@ -503,6 +503,7 @@ namespace OrderEat.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
         [Theory]
         [InlineData("?PageNumber=1&PageSize=7")]
         [InlineData("?SearchPhrase=phrase&PageNumber=1&PageSize=15&SortBy=InvalidProperty")]
@@ -524,7 +525,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -538,7 +539,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
             var user = new User()
             {
                 Id = 1,
@@ -576,7 +577,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -590,7 +591,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
             var user = new User()
             {
                 Id = 1,
@@ -604,6 +605,7 @@ namespace OrderEat.ApiTest.Controller
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
         [Fact]
         public async Task Update_ForInvalidId_ReturnsNotFound()
         {
@@ -620,7 +622,7 @@ namespace OrderEat.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new GetDishDto()
             {
@@ -666,7 +668,7 @@ namespace OrderEat.ApiTest.Controller
                 AllowedCustomization = true,
                 IsAvilable = true
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new GetDishDto()
             {
@@ -706,7 +708,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -720,7 +722,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new GetDishDto()
             {
@@ -762,7 +764,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -776,7 +778,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new GetDishDto()
             {
@@ -818,7 +820,7 @@ namespace OrderEat.ApiTest.Controller
                     ApartmentNumber = "1/10"
                 }
             };
-            await SeedRestaurant(restaurant);
+            await Seed(restaurant);
 
             var dish = new Dish()
             {
@@ -832,7 +834,7 @@ namespace OrderEat.ApiTest.Controller
                 IsAvilable = true,
                 RestaurantId = restaurant.Id
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var dto = new GetDishDto()
             {
@@ -878,26 +880,6 @@ namespace OrderEat.ApiTest.Controller
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task SeedDish(Dish dish)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
-
-            _dbContext.Dishes.Add(dish);
-            await _dbContext.SaveChangesAsync();
-        }
-
-        private async Task SeedRestaurant(Restaurant restaurant)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
-
-            _dbContext.Restaurants.Add(restaurant);
-            await _dbContext.SaveChangesAsync();
-        }
-
         private async Task SeedUser(User user)
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
@@ -908,6 +890,17 @@ namespace OrderEat.ApiTest.Controller
                 _dbContext.Users.Add(user);
                 await _dbContext.SaveChangesAsync();
             }
+        }
+
+        private async Task Seed<T>(T obj) where T : class
+        {
+            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
+
+            _dbContext.Add(obj);
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

@@ -106,7 +106,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var order = new Order()
             {
@@ -116,7 +116,7 @@ namespace OrderEat.ApiTest.Controller
                 Status = OrderStatus.InCart,
                 RestaurantId = restaurant.Id,
             };
-            await SeedOrder(order);
+            await Seed(order);
             var httpContent = new Sheet()
             {
                 IngredientsId = new List<int>
@@ -179,7 +179,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var order = new Order()
             {
@@ -189,7 +189,7 @@ namespace OrderEat.ApiTest.Controller
                 Status = OrderStatus.InCart,
                 RestaurantId = restaurant.Id,
             };
-            await SeedOrder(order);
+            await Seed(order);
             var httpContent = new Sheet()
             {
                 IngredientsId = new List<int>
@@ -252,7 +252,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var order = new Order()
             {
@@ -262,7 +262,7 @@ namespace OrderEat.ApiTest.Controller
                 Status = OrderStatus.InCart,
                 RestaurantId = restaurant.Id,
             };
-            await SeedOrder(order);
+            await Seed(order);
             var httpContent = new Sheet()
             {
                 IngredientsId = new List<int>
@@ -325,7 +325,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var order = new Order()
             {
@@ -336,7 +336,7 @@ namespace OrderEat.ApiTest.Controller
                 RestaurantId = restaurant.Id,
                 OrderedDishes = new List<OrderedDish>()
             };
-            await SeedOrder(order);
+            await   Seed(order);
             var httpContent = new Sheet()
             {
                 IngredientsId = new List<int>
@@ -421,7 +421,7 @@ namespace OrderEat.ApiTest.Controller
 
                 Status = OrderStatus.InCart
             };
-            await SeedOrder(order);
+            await Seed(order);
             //act
 
             var response = await _userClient.GetAsync("/api/order/54235");
@@ -442,7 +442,7 @@ namespace OrderEat.ApiTest.Controller
 
                 Status = OrderStatus.InCart
             };
-            await SeedOrder(order);
+            await Seed(order);
             //act
 
             var response = await _userClient.GetAsync($"/api/order/{order.Id}");
@@ -463,7 +463,7 @@ namespace OrderEat.ApiTest.Controller
 
                 Status = OrderStatus.InCart
             };
-            await SeedOrder(order);
+            await Seed(order);
             //act
 
             var response = await _userClient.GetAsync($"/api/order/{order.Id}");
@@ -518,7 +518,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var order = new Order()
             {
@@ -530,7 +530,7 @@ namespace OrderEat.ApiTest.Controller
                 OrderedDishes = new List<OrderedDish>()
             };
 
-            await SeedOrder(order);
+            await Seed(order);
             var orderedDish = new OrderedDish()
             {
                 DishId = dish.Id,
@@ -597,7 +597,7 @@ namespace OrderEat.ApiTest.Controller
                     ingredient
                 }
             };
-            await SeedDish(dish);
+            await Seed(dish);
 
             var order = new Order()
             {
@@ -609,7 +609,7 @@ namespace OrderEat.ApiTest.Controller
                 OrderedDishes = new List<OrderedDish>()
             };
 
-            await SeedOrder(order);
+            await Seed(order);
             var orderedDish = new OrderedDish()
             {
                 DishId = dish.Id,
@@ -624,7 +624,7 @@ namespace OrderEat.ApiTest.Controller
             await AddDishToOrder(order.Id, orderedDish);
             //act
 
-            var response = await _adminClient.PatchAsync($"/api/order/6453", null);
+            var response = await _adminClient.PatchAsync("/api/order/6453", null);
             //assert
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
@@ -671,23 +671,14 @@ namespace OrderEat.ApiTest.Controller
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task SeedDish(Dish dish)
+        private async Task Seed<T>(T obj) where T : class
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
             var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
 
-            _dbContext.Add(dish);
-            await _dbContext.SaveChangesAsync();
-        }
+            _dbContext.Add(obj);
 
-        private async Task SeedOrder(Order order)
-        {
-            var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
-            using var scope = scopeFactory.CreateScope();
-            var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
-
-            _dbContext.Add(order);
             await _dbContext.SaveChangesAsync();
         }
 

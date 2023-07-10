@@ -1,16 +1,16 @@
-﻿using OrderEat.ApiTest.Helpers;
-using OrderEat.Application.Allergen.Commands.CreateAllergen;
-using OrderEat.Application.Allergen.Commands.UpdateAllergen;
-using OrderEat.Domain.Entities;
-using OrderEat.Domain.Models;
-using OrderEat.Infrastructure.Persistance;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using OrderEat.ApiTest.Helpers;
+using OrderEat.Application.Allergen.Commands.CreateAllergen;
+using OrderEat.Application.Allergen.Commands.UpdateAllergen;
+using OrderEat.Domain.Entities;
+using OrderEat.Domain.Models;
+using OrderEat.Infrastructure.Persistance;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -104,7 +104,7 @@ namespace OrderEat.ApiTest.Controller
                 Name = "TestName",
                 Description = "TestDescription"
             };
-            await SeedAllergen(allergen);
+            await Seed(allergen);
             //act
 
             var response = await _adminClient.DeleteAsync($"{_route}/1543");
@@ -123,7 +123,7 @@ namespace OrderEat.ApiTest.Controller
                 Name = "TestName",
                 Description = "TestDescription"
             };
-            await SeedAllergen(allergen);
+            await Seed(allergen);
             //act
 
             var response = await _adminClient.DeleteAsync($"{_route}/{allergen.Id}");
@@ -144,7 +144,7 @@ namespace OrderEat.ApiTest.Controller
                 Name = "TestName",
                 Description = "TestDescription"
             };
-            await SeedAllergen(allergen);
+            await Seed(allergen);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}{query}");
@@ -167,7 +167,7 @@ namespace OrderEat.ApiTest.Controller
                 Name = "TestName",
                 Description = "TestDescription"
             };
-            await SeedAllergen(allergen);
+            await Seed(allergen);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}{query}");
@@ -186,7 +186,7 @@ namespace OrderEat.ApiTest.Controller
                 Name = "TestName",
                 Description = "TestDescription"
             };
-            await SeedAllergen(allergen);
+            await Seed(allergen);
             //act
 
             var response = await _adminClient.GetAsync($"{_route}/{allergen.Id}");
@@ -194,6 +194,7 @@ namespace OrderEat.ApiTest.Controller
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
         [Theory]
         [InlineData("ValidName", null)]
         [InlineData("", "ValidDescription")]
@@ -207,7 +208,7 @@ namespace OrderEat.ApiTest.Controller
                 Name = "TestName",
                 Description = "TestDescription"
             };
-            await SeedAllergen(allergen);
+            await Seed(allergen);
 
             var command = new UpdateAllergenDto()
             {
@@ -232,7 +233,7 @@ namespace OrderEat.ApiTest.Controller
                 Name = "TestName",
                 Description = "TestDescription"
             };
-            await SeedAllergen(allergen);
+            await Seed(allergen);
 
             var command = new UpdateAllergenDto()
             {
@@ -271,13 +272,14 @@ namespace OrderEat.ApiTest.Controller
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task SeedAllergen(Allergen allergen)
+        private async Task Seed<T>(T obj) where T : class
         {
             var scopeFactory = _factory.Services.GetService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
             var _dbContext = scope.ServiceProvider.GetService<OrderEatDbContext>();
 
-            _dbContext.Allergens.Add(allergen);
+            _dbContext.Add(obj);
+
             await _dbContext.SaveChangesAsync();
         }
     }
