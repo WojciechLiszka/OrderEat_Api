@@ -1,8 +1,8 @@
+using FluentValidation.AspNetCore;
 using OrderEat.Api.MiddleWare;
 using OrderEat.Application.Extensions;
 using OrderEat.Infrastructure.Extensions;
 using OrderEat.Infrastructure.Seeders;
-using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,17 +29,9 @@ var seeder = scope.ServiceProvider.GetRequiredService<OrderEatSeeder>();
 await seeder.Seed();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-try
-{
-    // Kod generuj¹cy Swaggera
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-catch (Exception ex)
-{
-    var exceptionDetails = $"{ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}";
-    Console.WriteLine(exceptionDetails );
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

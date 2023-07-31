@@ -18,7 +18,7 @@ OrderEat.Api is a api wich can be used to meanage service wchere you can order f
 - EntityFrameworkCore - version 7.0.3
 - xunit - version 2.4.2
 ### Architecture 
--Clean Architecture with CQRS
+- Clean Architecture with CQRS
 
 ## Features
 
